@@ -18,16 +18,20 @@
 <v t="amd.20160714225847.1"><vh>@edit README.md</vh></v>
 <v t="amd.20160714230137.1"><vh>@edit .gitignore</vh></v>
 <v t="amd.20160714230155.1"><vh>@edit LICENSE</vh></v>
-<v t="amd.20160715000709.1" a="E"><vh>註解</vh>
+<v t="amd.20160715000709.1"><vh>註解</vh>
 <v t="amd.20160715211540.1"><vh>處理 url 與 edit</vh></v>
 <v t="amd.20160715213810.1"><vh>必須處理 downloads 與 images 目錄</vh></v>
 </v>
+<v t="amd.20160717220157.1"><vh>Flask 開講</vh></v>
 </v>
 <v t="amd.20160714230112.1"><vh>@edit config</vh></v>
 <v t="amd.20160714225914.1"><vh>@edit setup.py</vh></v>
 <v t="amd.20160714230029.1"><vh>@edit config.py</vh></v>
 <v t="amd.20160714230021.1"><vh>@edit init.py</vh></v>
 <v t="amd.20160714230050.1"><vh>@edit nocache.py</vh></v>
+<v t="amd.20160717222221.1" a="E"><vh>@path static</vh>
+<v t="amd.20160717222242.1"><vh>@edit axuploader.js</vh></v>
+</v>
 <v t="amd.20160714230058.1" a="E"><vh>@clean wsgi.py</vh>
 <v t="amd.20160714230122.1"><vh>wsgi declarations</vh></v>
 </v>
@@ -45,16 +49,23 @@
 <v t="amd.20160714231359.1"><vh>render_menu</vh></v>
 <v t="amd.20160714231440.1"><vh>search_content</vh></v>
 <v t="amd.20160714231555.1"><vh>editorhead (#4)</vh></v>
+<v t="amd.20160715161642.1"><vh>edit_config</vh></v>
 <v t="amd.20160715000858.1"><vh>editorfoot</vh></v>
+<v t="amd.20160714233320.1"><vh>edit_page</vh></v>
 <v t="amd.20160714231606.1"><vh>tinymce_editor (#4)</vh></v>
 <v t="amd.20160714231619.1"><vh>parse_config</vh></v>
+<v t="amd.20160715154923.1"><vh>fileuploadform</vh></v>
+<v t="amd.20160715155334.1"><vh>fileaxupload</vh></v>
+<v t="amd.20160715155703.1"><vh>flvplayer</vh></v>
 <v t="amd.20160714231628.1"><vh>file_selector_script (#4)</vh></v>
 <v t="amd.20160714231640.1"><vh>file_lister</vh></v>
+<v t="amd.20160715160325.1"><vh>file_selector (#4)</vh></v>
 <v t="amd.20160714232140.1"><vh>downloadselect_access_list</vh></v>
-<v t="amd.20160714232156.1"><vh>loadlist_access_list</vh></v>
 <v t="amd.20160714231903.1"><vh>downloadlist_access_list</vh></v>
+<v t="amd.20160715160505.1"><vh>download_list</vh></v>
 <v t="amd.20160714232205.1"><vh>imageselect_access_list</vh></v>
 <v t="amd.20160714231915.1"><vh>imagelist_access_list</vh></v>
+<v t="amd.20160714232156.1"><vh>loadlist_access_list</vh></v>
 <v t="amd.20160714231925.1"><vh>sizeof_fmt</vh></v>
 <v t="amd.20160714232232.1"><vh>unique</vh></v>
 <v t="amd.20160714231934.1"><vh>set_admin_css</vh></v>
@@ -66,25 +77,19 @@
 <v t="amd.20160714232921.1"><vh>login</vh></v>
 <v t="amd.20160715154321.1"><vh>logout</vh></v>
 <v t="amd.20160714233131.1"><vh>checkLogin</vh></v>
-<v t="amd.20160714233320.1"><vh>edit_page</vh></v>
+<v t="amd.20160715161730.1"><vh>saveConfig</vh></v>
 <v t="amd.20160715154534.1"><vh>savePage</vh></v>
 <v t="amd.20160715154701.1"><vh>ssavePage</vh></v>
-<v t="amd.20160715154923.1"><vh>fileuploadform</vh></v>
-<v t="amd.20160715155334.1"><vh>fileaxupload</vh></v>
-<v t="amd.20160715155703.1"><vh>flvplayer</vh></v>
 <v t="amd.20160715155918.1"><vh>imageuploadform</vh></v>
 <v t="amd.20160715160036.1"><vh>imageaxupload</vh></v>
-<v t="amd.20160715160325.1"><vh>file_selector (#4)</vh></v>
-<v t="amd.20160715160505.1"><vh>download_list</vh></v>
 <v t="amd.20160715160642.1"><vh>image_list</vh></v>
 <v t="amd.20160715160836.1"><vh>load_list</vh></v>
 <v t="amd.20160715161018.1"><vh>image_delete_file</vh></v>
+<v t="amd.20160717235504.1"><vh>delete_file</vh></v>
 <v t="amd.20160715161158.1"><vh>doDelete</vh></v>
 <v t="amd.20160715161251.1"><vh>image_doDelete</vh></v>
 <v t="amd.20160715161352.1"><vh>search_form</vh></v>
 <v t="amd.20160715161508.1"><vh>doSearch</vh></v>
-<v t="amd.20160715161642.1"><vh>edit_config</vh></v>
-<v t="amd.20160715161730.1"><vh>saveConfig</vh></v>
 <v t="amd.20160715161923.1"><vh>listdir</vh></v>
 <v t="amd.20160715162003.1"><vh>sitemap</vh></v>
 <v t="amd.20160715154211.1"><vh>error_log</vh></v>
@@ -209,10 +214,15 @@ else:
 
 </t>
 <t tx="amd.20160714230833.1"></t>
-<t tx="amd.20160714230833.16">@app.route('/downloads/&lt;path:filename&gt;', methods=['GET', 'POST'])
-def download(filename):
-    #return send_from_directory(download_dir, filename=filename, as_attachment=True)
-    return send_from_directory(download_dir, filename=filename)
+<t tx="amd.20160714230833.16">@app.route('/download/', methods=['GET'])
+def download():
+    filename = request.args.get('filename')
+    type = request.args.get('type')
+    if type == "files":
+        return send_from_directory(download_dir, filename=filename)
+    else:
+    # for image files
+        return send_from_directory(image_dir, filename=filename)
     
 
 
@@ -257,7 +267,7 @@ import os
 # init.py 為自行建立的起始物件
 import init
 # from config.py 導入 CONFIG
-from config import CONFIG
+#from config import CONFIG
 # 利用 nocache.py 建立 @nocache decorator, 讓頁面不會留下 cache
 from nocache import nocache
 # the followings are for cmsimfly
@@ -274,11 +284,11 @@ import cgi
 _curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
 import sys
 sys.path.append(_curdir)
+
 if 'OPENSHIFT_REPO_DIR' in os.environ.keys():
     inOpenshift = True
 else:
     inOpenshift = False
-import cherrypy
 #ends for cmsimfly
 
 #g1
@@ -293,11 +303,13 @@ if 'OPENSHIFT_REPO_DIR' in os.environ.keys():
     data_dir = os.environ['OPENSHIFT_DATA_DIR']
     static_dir = os.environ['OPENSHIFT_REPO_DIR']+"/static"
     download_dir = os.environ['OPENSHIFT_DATA_DIR']+"/downloads"
+    image_dir = os.environ['OPENSHIFT_DATA_DIR']+"/images"
 else:
     # 表示程式在近端執行
     data_dir = _curdir + "/local_data/"
     static_dir = _curdir + "/static"
     download_dir = _curdir + "/local_data/downloads/"
+    image_dir = _curdir + "/local_data/images/"
 
 # 利用 init.py 啟動, 建立所需的相關檔案
 initobj = init.Init()
@@ -376,7 +388,7 @@ def get_page(heading, edit):
         else:
             if len(page_order_list) &gt; 1:
                 # 若碰到重複頁面頁印, 且要求編輯, 則導向 edit_page
-                #raise cherrypy.HTTPRedirect("edit_page")
+                #return redirect("/edit_page")
                 for i in range(len(page_order_list)):
                     outstring_duplicate += outstring_list[i]+"&lt;br /&gt;&lt;hr&gt;"
                 return outstring_duplicate
@@ -605,7 +617,7 @@ function setLink (url, objVals) {
 '''
 </t>
 <t tx="amd.20160714231640.1">def file_lister(directory, type=None, page=1, item_per_page=10):
-    files = os.listdir(download_dir+directory)
+    files = os.listdir(directory)
     total_rows = len(files)
     totalpage = math.ceil(total_rows/int(item_per_page))
     starti = int(item_per_page) * (int(page) - 1) + 1
@@ -618,11 +630,11 @@ function setLink (url, objVals) {
             notlast = True
         if int(page) &gt; 1:
             outstring += "&lt;a href='"
-            outstring += "file_selector?type="+type+"&amp;amp;page=1&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+            outstring += "file_selector?type="+type+"&amp;amp;page=1&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
             outstring += "'&gt;&lt;&lt;&lt;/a&gt; "
             page_num = int(page) - 1
             outstring += "&lt;a href='"
-            outstring += "file_selector?type="+type+"&amp;amp;page="+str(page_num)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+            outstring += "file_selector?type="+type+"&amp;amp;page="+str(page_num)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
             outstring += "'&gt;Previous&lt;/a&gt; "
         span = 10
         for index in range(int(page)-span, int(page)+span):
@@ -633,16 +645,16 @@ function setLink (url, objVals) {
                     outstring += "&lt;font size='+1' color='red'&gt;"+str(page)+" &lt;/font&gt;"
                 else:
                     outstring += "&lt;a href='"
-                    outstring += "file_selector?type="+type+"&amp;amp;page="+str(page_now)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+                    outstring += "file_selector?type="+type+"&amp;amp;page="+str(page_now)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
                     outstring += "'&gt;"+str(page_now)+"&lt;/a&gt; "
 
         if notlast == True:
             nextpage = int(page) + 1
             outstring += " &lt;a href='"
-            outstring += "file_selector?type="+type+"&amp;amp;page="+str(nextpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+            outstring += "file_selector?type="+type+"&amp;amp;page="+str(nextpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
             outstring += "'&gt;Next&lt;/a&gt;"
             outstring += " &lt;a href='"
-            outstring += "file_selector?type="+type+"&amp;amp;page="+str(totalpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+            outstring += "file_selector?type="+type+"&amp;amp;page="+str(totalpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
             outstring += "'&gt;&gt;&gt;&lt;/a&gt;&lt;br /&gt;&lt;br /&gt;"
         if (int(page) * int(item_per_page)) &lt; total_rows:
             notlast = True
@@ -658,11 +670,11 @@ function setLink (url, objVals) {
                 outstring += imageselect_access_list(files, starti, total_rows)+"&lt;br /&gt;"
         if int(page) &gt; 1:
             outstring += "&lt;a href='"
-            outstring += "file_selector?type="+type+"&amp;amp;page=1&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+            outstring += "file_selector?type="+type+"&amp;amp;page=1&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
             outstring += "'&gt;&lt;&lt;&lt;/a&gt; "
             page_num = int(page) - 1
             outstring += "&lt;a href='"
-            outstring += "file_selector?type="+type+"&amp;amp;page="+str(page_num)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+            outstring += "file_selector?type="+type+"&amp;amp;page="+str(page_num)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
             outstring += "'&gt;Previous&lt;/a&gt; "
         span = 10
         for index in range(int(page)-span, int(page)+span):
@@ -673,15 +685,15 @@ function setLink (url, objVals) {
                     outstring += "&lt;font size='+1' color='red'&gt;"+str(page)+" &lt;/font&gt;"
                 else:
                     outstring += "&lt;a href='"
-                    outstring += "file_selector?type="+type+"&amp;amp;page="+str(page_now)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+                    outstring += "file_selector?type="+type+"&amp;amp;page="+str(page_now)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
                     outstring += "'&gt;"+str(page_now)+"&lt;/a&gt; "
         if notlast == True:
             nextpage = int(page) + 1
             outstring += " &lt;a href='"
-            outstring += "file_selector?type="+type+"&amp;amp;page="+str(nextpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+            outstring += "file_selector?type="+type+"&amp;amp;page="+str(nextpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
             outstring += "'&gt;Next&lt;/a&gt;"
             outstring += " &lt;a href='"
-            outstring += "file_selector?type="+type+"&amp;amp;page="+str(totalpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+            outstring += "file_selector?type="+type+"&amp;amp;page="+str(totalpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
             outstring += "'&gt;&gt;&gt;&lt;/a&gt;"
     else:
         outstring += "no data!"
@@ -699,7 +711,7 @@ function setLink (url, objVals) {
     for index in range(int(starti)-1, int(endi)):
         fileName, fileExtension = os.path.splitext(files[index])
         fileExtension = fileExtension.lower()
-        fileSize = sizeof_fmt(os.path.getsize(download_dir+"downloads/"+files[index]))
+        fileSize = sizeof_fmt(os.path.getsize(download_dir+files[index]))
         # images files
         if fileExtension == ".png" or fileExtension == ".jpg" or fileExtension == ".gif":
             outstring += '&lt;input type="checkbox" name="filename" value="'+files[index]+'"&gt;&lt;a href="javascript:;" onClick="window.open(\'/downloads/'+ \
@@ -726,7 +738,7 @@ function setLink (url, objVals) {
     for index in range(int(starti)-1, int(endi)):
         fileName, fileExtension = os.path.splitext(files[index])
         fileExtension = fileExtension.lower()
-        fileSize = sizeof_fmt(os.path.getsize(download_dir+"images/"+files[index]))
+        fileSize = sizeof_fmt(os.path.getsize(image_dir+files[index]))
         # images files
         if fileExtension == ".png" or fileExtension == ".jpg" or fileExtension == ".gif":
             outstring += '&lt;input type="checkbox" name="filename" value="'+files[index]+'"&gt;&lt;a href="javascript:;" onClick="window.open(\'/images/'+ \
@@ -778,6 +790,7 @@ window.location= 'https://' + location.host + location.pathname + location.searc
 &lt;li&gt;&lt;a href="/edit_config"&gt;Config&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="/search_form"&gt;Search&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="/imageuploadform"&gt;Image Upload&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="/image_list"&gt;Image List&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="/fileuploadform"&gt;File Upload&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="/download_list"&gt;File List&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="/logout"&gt;Logout&lt;/a&gt;&lt;/li&gt;
@@ -789,7 +802,6 @@ window.location= 'https://' + location.host + location.pathname + location.searc
     return outstring
 </t>
 <t tx="amd.20160714231944.1">def set_footer():
-    # Extra consideration for cherrypy.url(qs=cherrypy.request.query_string) return no data
     return "&lt;footer&gt; \
         &lt;a href='/edit_page'&gt;Edit All&lt;/a&gt;| \
         &lt;a href='"+str(request.url)+"/1'&gt;Edit&lt;/a&gt;| \
@@ -826,8 +838,8 @@ window.location= 'https://' + location.host + location.pathname + location.searc
     for index in range(int(starti)-1, int(endi)):
         fileName, fileExtension = os.path.splitext(files[index])
         fileSize = os.path.getsize(download_dir+files[index])
-        outstring += '''&lt;input type="checkbox" name="filename" value="'''+files[index]+'''"&gt;&lt;a href="#" onclick='window.setLink("/download/?filepath='''+ \
-        download_dir.replace('\\', '/')+'''/downloads/'''+files[index]+'''",0); return false;'&gt;'''+ \
+        outstring += '''&lt;input type="checkbox" name="filename" value="'''+files[index]+'''"&gt;&lt;a href="#" onclick='window.setLink("/download/?type=files&amp;filename='''+ \
+        files[index]+'''",0); return false;'&gt;'''+ \
         files[index]+'''&lt;/a&gt; ('''+str(sizeof_fmt(fileSize))+''')&lt;br /&gt;'''
     return outstring</t>
 <t tx="amd.20160714232156.1">def loadlist_access_list(files, starti, endi, filedir):
@@ -884,12 +896,12 @@ a.xhfbfile:hover{
 '''
     for index in range(int(starti)-1, int(endi)):
         fileName, fileExtension = os.path.splitext(files[index])
-        fileSize = os.path.getsize(download_dir+"/images/"+files[index])
-        outstring += '''&lt;a class="xhfbfile" href="#" onclick='window.setLink("/download/?filepath='''+ \
-        download_dir.replace('\\', '/')+'''/images/'''+files[index]+'''",0); return false;'&gt;'''+ \
+        fileSize = os.path.getsize(image_dir+files[index])
+        outstring += '''&lt;a class="xhfbfile" href="#" onclick='window.setLink("/download/?type=images&amp;filename='''+ \
+        files[index]+'''",0); return false;'&gt;'''+ \
         files[index]+'''&lt;span style="position: absolute; z-index: 4;"&gt;&lt;br /&gt;
-        &lt;img src="/download/?filepath='''+ \
-        download_dir.replace('\\', '/')+'''/images/'''+files[index]+'''" width="150px"/&gt;&lt;/span&gt;&lt;/a&gt; ('''+str(sizeof_fmt(fileSize))+''')&lt;br /&gt;'''
+        &lt;img src="/download/?type=images&amp;filename='''+ \
+        files[index]+'''" width="150px"/&gt;&lt;/span&gt;&lt;/a&gt; ('''+str(sizeof_fmt(fileSize))+''')&lt;br /&gt;'''
     return outstring</t>
 <t tx="amd.20160714232232.1">def unique(items):
     found = set([])
@@ -944,6 +956,7 @@ window.location= 'https://' + location.host + location.pathname + location.searc
 &lt;li&gt;&lt;a href="/edit_config"&gt;Config&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="/search_form"&gt;Search&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="/imageuploadform"&gt;image upload&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="/image_list"&gt;image list&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="/fileuploadform"&gt;file upload&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="/download_list"&gt;file list&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="/logout"&gt;logout&lt;/a&gt;&lt;/li&gt;
@@ -1189,14 +1202,14 @@ def imageuploadform():
 &lt;script src="/static/axuploader.js" type="text/javascript"&gt;&lt;/script&gt;
 &lt;script&gt;
 $(document).ready(function(){
-$('.prova').axuploader({url:'fileaxupload', allowExt:['jpg','png','gif'],
+$('.prova').axuploader({url:'imageaxupload', allowExt:['jpg','png','gif'],
 finish:function(x,files)
     {
         alert('All files have been uploaded: '+files);
     },
 enable:true,
 remotePath:function(){
-return 'downloads/';
+return 'images/';
 }
 });
 });
@@ -1230,20 +1243,25 @@ def imageaxupload():
     
     
 </t>
-<t tx="amd.20160715160325.1">@app.route('/file_selector')
-def file_selector(type=None, page=1, item_per_page=10, keyword=None):
+<t tx="amd.20160715160325.1">@app.route('/file_selector', methods=['GET'])
+#def file_selector(type=None, page=1, item_per_page=10, keyword=None):
+def file_selector():
     if not isAdmin():
         return redirect("/login")
     else:
+        type = request.args.get('type')
+        page = request.args.get('page', 1)
+        item_per_page = request.args.get('item_per_page', 10)
+        keyword = request.args.get('keyword')
         #if type == "downloads":
         if type == "file":
             #return downloads_file_selector()
             # 請注意因為在 editorhead 以 meta 判斷 filetyp, 所以前段 type 為 file, 但是後段必須與 file_lister 中的 type = downloads 配合, 所以目前前後的 type 字串不同, 之後整合修改時將修正, 設法讓  type 前後一致
             type = 'downloads'
-            return file_lister("downloads", type, page, item_per_page)
+            return file_lister(download_dir, type, page, item_per_page)
         elif type == "image":
             #return images_file_selector()
-            return file_lister("images", type, page, item_per_page)
+            return file_lister(image_dir, type, page, item_per_page)
 </t>
 <t tx="amd.20160715160505.1">@app.route('/download_list')
 def download_list(item_per_page=5, page=1, keyword=None):
@@ -1262,11 +1280,11 @@ def download_list(item_per_page=5, page=1, keyword=None):
             notlast = True
         if int(page) &gt; 1:
             outstring += "&lt;a href='"
-            outstring += "download_list?&amp;amp;page=1&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+            outstring += "download_list?&amp;amp;page=1&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
             outstring += "'&gt;&lt;&lt;&lt;/a&gt; "
             page_num = int(page) - 1
             outstring += "&lt;a href='"
-            outstring += "download_list?&amp;amp;page="+str(page_num)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+            outstring += "download_list?&amp;amp;page="+str(page_num)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
             outstring += "'&gt;Previous&lt;/a&gt; "
         span = 10
         for index in range(int(page)-span, int(page)+span):
@@ -1276,16 +1294,16 @@ def download_list(item_per_page=5, page=1, keyword=None):
                     outstring += "&lt;font size='+1' color='red'&gt;"+str(page)+" &lt;/font&gt;"
                 else:
                     outstring += "&lt;a href='"
-                    outstring += "download_list?&amp;amp;page="+str(page_now)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+                    outstring += "download_list?&amp;amp;page="+str(page_now)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
                     outstring += "'&gt;"+str(page_now)+"&lt;/a&gt; "
 
         if notlast == True:
             nextpage = int(page) + 1
             outstring += " &lt;a href='"
-            outstring += "download_list?&amp;amp;page="+str(nextpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+            outstring += "download_list?&amp;amp;page="+str(nextpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
             outstring += "'&gt;Next&lt;/a&gt;"
             outstring += " &lt;a href='"
-            outstring += "download_list?&amp;amp;page="+str(totalpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+            outstring += "download_list?&amp;amp;page="+str(totalpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
             outstring += "'&gt;&gt;&gt;&lt;/a&gt;&lt;br /&gt;&lt;br /&gt;"
         if (int(page) * int(item_per_page)) &lt; total_rows:
             notlast = True
@@ -1296,11 +1314,11 @@ def download_list(item_per_page=5, page=1, keyword=None):
         
         if int(page) &gt; 1:
             outstring += "&lt;a href='"
-            outstring += "download_list?&amp;amp;page=1&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+            outstring += "download_list?&amp;amp;page=1&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
             outstring += "'&gt;&lt;&lt;&lt;/a&gt; "
             page_num = int(page) - 1
             outstring += "&lt;a href='"
-            outstring += "download_list?&amp;amp;page="+str(page_num)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+            outstring += "download_list?&amp;amp;page="+str(page_num)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
             outstring += "'&gt;Previous&lt;/a&gt; "
         span = 10
         for index in range(int(page)-span, int(page)+span):
@@ -1311,15 +1329,15 @@ def download_list(item_per_page=5, page=1, keyword=None):
                     outstring += "&lt;font size='+1' color='red'&gt;"+str(page)+" &lt;/font&gt;"
                 else:
                     outstring += "&lt;a href='"
-                    outstring += "download_list?&amp;amp;page="+str(page_now)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+                    outstring += "download_list?&amp;amp;page="+str(page_now)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
                     outstring += "'&gt;"+str(page_now)+"&lt;/a&gt; "
         if notlast == True:
             nextpage = int(page) + 1
             outstring += " &lt;a href='"
-            outstring += "download_list?&amp;amp;page="+str(nextpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+            outstring += "download_list?&amp;amp;page="+str(nextpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
             outstring += "'&gt;Next&lt;/a&gt;"
             outstring += " &lt;a href='"
-            outstring += "download_list?&amp;amp;page="+str(totalpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+            outstring += "download_list?&amp;amp;page="+str(totalpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
             outstring += "'&gt;&gt;&gt;&lt;/a&gt;"
     else:
         outstring += "no data!"
@@ -1331,10 +1349,10 @@ def download_list(item_per_page=5, page=1, keyword=None):
     return set_css()+"&lt;div class='container'&gt;&lt;nav&gt;"+ \
         directory+"&lt;/nav&gt;&lt;section&gt;&lt;h1&gt;Download List&lt;/h1&gt;"+outstring+"&lt;br/&gt;&lt;br /&gt;&lt;/body&gt;&lt;/html&gt;"</t>
 <t tx="amd.20160715160642.1">@app.route('/image_list')
-def image_list(item_per_page=5, page=1, keyword=None, *args, **kwargs):
+def image_list(item_per_page=5, page=1, keyword=None):
     if not isAdmin():
         return redirect("/login")
-    files = os.listdir(download_dir+"images/")
+    files = os.listdir(image_dir)
     total_rows = len(files)
     totalpage = math.ceil(total_rows/int(item_per_page))
     starti = int(item_per_page) * (int(page) - 1) + 1
@@ -1347,11 +1365,11 @@ def image_list(item_per_page=5, page=1, keyword=None, *args, **kwargs):
             notlast = True
         if int(page) &gt; 1:
             outstring += "&lt;a href='"
-            outstring += "image_list?&amp;amp;page=1&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+            outstring += "image_list?&amp;amp;page=1&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
             outstring += "'&gt;&lt;&lt;&lt;/a&gt; "
             page_num = int(page) - 1
             outstring += "&lt;a href='"
-            outstring += "image_list?&amp;amp;page="+str(page_num)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+            outstring += "image_list?&amp;amp;page="+str(page_num)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
             outstring += "'&gt;Previous&lt;/a&gt; "
         span = 10
         for index in range(int(page)-span, int(page)+span):
@@ -1361,16 +1379,16 @@ def image_list(item_per_page=5, page=1, keyword=None, *args, **kwargs):
                     outstring += "&lt;font size='+1' color='red'&gt;"+str(page)+" &lt;/font&gt;"
                 else:
                     outstring += "&lt;a href='"
-                    outstring += "image_list?&amp;amp;page="+str(page_now)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+                    outstring += "image_list?&amp;amp;page="+str(page_now)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
                     outstring += "'&gt;"+str(page_now)+"&lt;/a&gt; "
 
         if notlast == True:
             nextpage = int(page) + 1
             outstring += " &lt;a href='"
-            outstring += "image_list?&amp;amp;page="+str(nextpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+            outstring += "image_list?&amp;amp;page="+str(nextpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
             outstring += "'&gt;Next&lt;/a&gt;"
             outstring += " &lt;a href='"
-            outstring += "image_list?&amp;amp;page="+str(totalpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+            outstring += "image_list?&amp;amp;page="+str(totalpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
             outstring += "'&gt;&gt;&gt;&lt;/a&gt;&lt;br /&gt;&lt;br /&gt;"
         if (int(page) * int(item_per_page)) &lt; total_rows:
             notlast = True
@@ -1381,11 +1399,11 @@ def image_list(item_per_page=5, page=1, keyword=None, *args, **kwargs):
         
         if int(page) &gt; 1:
             outstring += "&lt;a href='"
-            outstring += "image_list?&amp;amp;page=1&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+            outstring += "image_list?&amp;amp;page=1&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
             outstring += "'&gt;&lt;&lt;&lt;/a&gt; "
             page_num = int(page) - 1
             outstring += "&lt;a href='"
-            outstring += "image_list?&amp;amp;page="+str(page_num)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+            outstring += "image_list?&amp;amp;page="+str(page_num)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
             outstring += "'&gt;Previous&lt;/a&gt; "
         span = 10
         for index in range(int(page)-span, int(page)+span):
@@ -1396,15 +1414,15 @@ def image_list(item_per_page=5, page=1, keyword=None, *args, **kwargs):
                     outstring += "&lt;font size='+1' color='red'&gt;"+str(page)+" &lt;/font&gt;"
                 else:
                     outstring += "&lt;a href='"
-                    outstring += "image_list?&amp;amp;page="+str(page_now)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+                    outstring += "image_list?&amp;amp;page="+str(page_now)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
                     outstring += "'&gt;"+str(page_now)+"&lt;/a&gt; "
         if notlast == True:
             nextpage = int(page) + 1
             outstring += " &lt;a href='"
-            outstring += "image_list?&amp;amp;page="+str(nextpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+            outstring += "image_list?&amp;amp;page="+str(nextpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
             outstring += "'&gt;Next&lt;/a&gt;"
             outstring += " &lt;a href='"
-            outstring += "image_list?&amp;amp;page="+str(totalpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('download_keyword'))
+            outstring += "image_list?&amp;amp;page="+str(totalpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('download_keyword'))
             outstring += "'&gt;&gt;&gt;&lt;/a&gt;"
     else:
         outstring += "no data!"
@@ -1453,11 +1471,11 @@ function keywordSearch(){
             notlast = True
         if int(page) &gt; 1:
             outstring += "&lt;a href='"
-            outstring += "brython?&amp;amp;page=1&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('search_keyword'))
+            outstring += "brython?&amp;amp;page=1&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('search_keyword'))
             outstring += "'&gt;{{&lt;/a&gt; "
             page_num = int(page) - 1
             outstring += "&lt;a href='"
-            outstring += "brython?&amp;amp;page="+str(page_num)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('search_keyword'))
+            outstring += "brython?&amp;amp;page="+str(page_num)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('search_keyword'))
             outstring += "'&gt;Previous&lt;/a&gt; "
         span = 10
         for index in range(int(page)-span, int(page)+span):
@@ -1467,16 +1485,16 @@ function keywordSearch(){
                     outstring += "&lt;font size='+1' color='red'&gt;"+str(page)+" &lt;/font&gt;"
                 else:
                     outstring += "&lt;a href='"
-                    outstring += "brython?&amp;amp;page="+str(page_now)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('search_keyword'))
+                    outstring += "brython?&amp;amp;page="+str(page_now)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('search_keyword'))
                     outstring += "'&gt;"+str(page_now)+"&lt;/a&gt; "
 
         if notlast == True:
             nextpage = int(page) + 1
             outstring += " &lt;a href='"
-            outstring += "brython?&amp;amp;page="+str(nextpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('search_keyword'))
+            outstring += "brython?&amp;amp;page="+str(nextpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('search_keyword'))
             outstring += "'&gt;Next&lt;/a&gt;"
             outstring += " &lt;a href='"
-            outstring += "brython?&amp;amp;page="+str(totalpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('search_keyword'))
+            outstring += "brython?&amp;amp;page="+str(totalpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('search_keyword'))
             outstring += "'&gt;}}&lt;/a&gt;&lt;br /&gt;&lt;br /&gt;"
         '''
         if (int(page) * int(item_per_page)) &lt; total_rows:
@@ -1488,11 +1506,11 @@ function keywordSearch(){
         
         if int(page) &gt; 1:
             outstring += "&lt;a href='"
-            outstring += "/"+filedir+"?&amp;amp;page=1&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('search_keyword'))
+            outstring += "/"+filedir+"?&amp;amp;page=1&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('search_keyword'))
             outstring += "'&gt;{{&lt;/a&gt; "
             page_num = int(page) - 1
             outstring += "&lt;a href='"
-            outstring += "/"+filedir+"?&amp;amp;page="+str(page_num)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('search_keyword'))
+            outstring += "/"+filedir+"?&amp;amp;page="+str(page_num)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('search_keyword'))
             outstring += "'&gt;Previous&lt;/a&gt; "
         span = 5
         for index in range(int(page)-span, int(page)+span):
@@ -1503,27 +1521,27 @@ function keywordSearch(){
                     outstring += "&lt;font size='+1' color='red'&gt;"+str(page)+" &lt;/font&gt;"
                 else:
                     outstring += "&lt;a href='"
-                    outstring += "/"+filedir+"?&amp;amp;page="+str(page_now)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('search_keyword'))
+                    outstring += "/"+filedir+"?&amp;amp;page="+str(page_now)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('search_keyword'))
                     outstring += "'&gt;"+str(page_now)+"&lt;/a&gt; "
         if notlast == True:
             nextpage = int(page) + 1
             outstring += " &lt;a href='"
-            outstring += "/"+filedir+"?&amp;amp;page="+str(nextpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('search_keyword'))
+            outstring += "/"+filedir+"?&amp;amp;page="+str(nextpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('search_keyword'))
             outstring += "'&gt;Next&lt;/a&gt;"
             outstring += " &lt;a href='"
-            outstring += "/"+filedir+"?&amp;amp;page="+str(totalpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(cherrypy.session.get('search_keyword'))
+            outstring += "/"+filedir+"?&amp;amp;page="+str(totalpage)+"&amp;amp;item_per_page="+str(item_per_page)+"&amp;amp;keyword="+str(session.get('search_keyword'))
             outstring += "'&gt;}}&lt;/a&gt;"
     else:
         outstring += "no data!"
     #outstring += "&lt;br /&gt;&lt;br /&gt;&lt;input type='submit' value='load'&gt;&lt;input type='reset' value='reset'&gt;&lt;/form&gt;"
     outstring += "&lt;br /&gt;&lt;br /&gt;&lt;/form&gt;"
 
-    return outstring
-</t>
-<t tx="amd.20160715161018.1">@app.route('/image_delete_file')
-def image_delete_file(filename=None):
+    return outstring</t>
+<t tx="amd.20160715161018.1">@app.route('/image_delete_file', methods=['POST'])
+def image_delete_file():
     if not isAdmin():
         return redirect("/login")
+    filename = request.form['filename']
     head, level, page = parse_content()
     directory = render_menu(head, level, page)
     if filename == None:
@@ -1544,16 +1562,17 @@ def image_delete_file(filename=None):
     return set_css()+"&lt;div class='container'&gt;&lt;nav&gt;"+ \
         directory+"&lt;/nav&gt;&lt;section&gt;&lt;h1&gt;Download List&lt;/h1&gt;"+outstring+"&lt;br/&gt;&lt;br /&gt;&lt;/body&gt;&lt;/html&gt;"
 </t>
-<t tx="amd.20160715161158.1">@app.route('/doDelete')
-def doDelete(filename=None):
+<t tx="amd.20160715161158.1">@app.route('/doDelete', methods=['POST'])
+def doDelete():
     if not isAdmin():
         return redirect("/login")
     # delete files
+    filename = request.form['filename']
     outstring = "all these files will be deleted:&lt;br /&gt;&lt;br /&gt;"
     # only select one file
     if isinstance(filename, str):
         try:
-            os.remove(download_dir+"downloads/"+filename)
+            os.remove(download_dir+filename)
             outstring += filename+" deleted!"
         except:
             outstring += filename+"Error, can not delete files!&lt;br /&gt;"
@@ -1561,7 +1580,7 @@ def doDelete(filename=None):
         # multiple files selected
         for index in range(len(filename)):
             try:
-                os.remove(download_dir+"downloads/"+filename[index])
+                os.remove(download_dir+filename[index])
                 outstring += filename[index]+" deleted!&lt;br /&gt;"
             except:
                 outstring += filename[index]+"Error, can not delete files!&lt;br /&gt;"
@@ -1571,16 +1590,17 @@ def doDelete(filename=None):
 
     return set_css()+"&lt;div class='container'&gt;&lt;nav&gt;"+ \
         directory+"&lt;/nav&gt;&lt;section&gt;&lt;h1&gt;Download List&lt;/h1&gt;"+outstring+"&lt;br/&gt;&lt;br /&gt;&lt;/body&gt;&lt;/html&gt;"</t>
-<t tx="amd.20160715161251.1">@app.route('/image_doDelete')
-def image_doDelete(filename=None):
+<t tx="amd.20160715161251.1">@app.route('/image_doDelete', methods=['POST'])
+def image_doDelete():
     if not isAdmin():
         return redirect("/login")
     # delete files
+    filename = request.form['filename']
     outstring = "all these files will be deleted:&lt;br /&gt;&lt;br /&gt;"
     # only select one file
     if isinstance(filename, str):
         try:
-            os.remove(download_dir+"images/"+filename)
+            os.remove(image_dir+filename)
             outstring += filename+" deleted!"
         except:
             outstring += filename+"Error, can not delete files!&lt;br /&gt;"
@@ -1588,7 +1608,7 @@ def image_doDelete(filename=None):
         # multiple files selected
         for index in range(len(filename)):
             try:
-                os.remove(download_dir+"images/"+filename[index])
+                os.remove(image_dir+filename[index])
                 outstring += filename[index]+" deleted!&lt;br /&gt;"
             except:
                 outstring += filename[index]+"Error, can not delete files!&lt;br /&gt;"
@@ -1651,10 +1671,13 @@ def edit_config():
     &lt;input type='submit' value='send'&gt;&lt;/form&gt; \
     &lt;/section&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;"
 </t>
-<t tx="amd.20160715161730.1">@app.route('/saveConfig')
-def saveConfig(site_title=None, password=None, password2=None):
+<t tx="amd.20160715161730.1">@app.route('/saveConfig', methods=['POST'])
+def saveConfig():
     if not isAdmin():
         return redirect("/login")
+    site_title = request.form['site_title']
+    password = request.form['password']
+    password2 = request.form['password2']
     if site_title == None or password == None:
         return error_log("no content to save!")
     old_site_title, old_password = parse_config()
@@ -1700,5 +1723,32 @@ def sitemap(edit):
 
 主要關鍵在無 edit 時, 採用內定值, 而隨後無論有幾層 url 變數, 都包含在 path 變數中</t>
 <t tx="amd.20160715213810.1"></t>
+<t tx="amd.20160717220157.1"></t>
+<t tx="amd.20160717222221.1"></t>
+<t tx="amd.20160717235504.1">@app.route('/delete_file', methods=['POST'])
+def delete_file():
+    if not isAdmin():
+        return redirect("/login")
+    head, level, page = parse_content()
+    directory = render_menu(head, level, page)
+    filename = request.form['filename']
+    if filename == None:
+        outstring = "no file selected!"
+        return set_css()+"&lt;div class='container'&gt;&lt;nav&gt;"+ \
+        directory+"&lt;/nav&gt;&lt;section&gt;&lt;h1&gt;Delete Error&lt;/h1&gt;"+outstring+"&lt;br/&gt;&lt;br /&gt;&lt;/body&gt;&lt;/html&gt;"
+    outstring = "delete all these files?&lt;br /&gt;&lt;br /&gt;"
+    outstring += "&lt;form method='post' action='doDelete'&gt;"
+    # only one file is selected
+    if isinstance(filename, str):
+        outstring += filename+"&lt;input type='hidden' name='filename' value='"+filename+"'&gt;&lt;br /&gt;"
+    else:
+        # multiple files selected
+        for index in range(len(filename)):
+            outstring += filename[index]+"&lt;input type='hidden' name='filename' value='"+filename[index]+"'&gt;&lt;br /&gt;"
+    outstring += "&lt;br /&gt;&lt;input type='submit' value='delete'&gt;&lt;/form&gt;"
+
+    return set_css()+"&lt;div class='container'&gt;&lt;nav&gt;"+ \
+        directory+"&lt;/nav&gt;&lt;section&gt;&lt;h1&gt;Download List&lt;/h1&gt;"+outstring+"&lt;br/&gt;&lt;br /&gt;&lt;/body&gt;&lt;/html&gt;"
+</t>
 </tnodes>
 </leo_file>

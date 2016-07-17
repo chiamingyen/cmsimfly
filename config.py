@@ -1,3 +1,5 @@
+# 目前不需要使用 authomatic 模組相關應用
+'''
 from authomatic.providers import oauth2
 
 # 希望設計流程來保全 consumer_key 與 consumer_secret 字串
@@ -11,3 +13,4 @@ CONFIG = {
             'scope': ['email']
         }
     }
+'''
