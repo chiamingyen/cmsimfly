@@ -33,6 +33,7 @@
 <v t="amd.20160717222242.1"><vh>@edit axuploader.js</vh></v>
 <v t="amd.20160718125932.1"><vh>@edit viewstl.html</vh></v>
 <v t="amd.20160718125943.1"><vh>@edit stlviewer.js</vh></v>
+<v t="amd.20160718212341.1"><vh>@edit jsc3d.js</vh></v>
 </v>
 <v t="amd.20160714230058.1" a="E"><vh>@clean wsgi.py</vh>
 <v t="amd.20160714230122.1"><vh>wsgi declarations</vh></v>
@@ -43,6 +44,7 @@
 <v t="amd.20160714230833.4"><vh>&lt;&lt;registers&gt;&gt;</vh></v>
 <v t="amd.20160715152825.1"><vh>index</vh></v>
 <v t="amd.20160714230833.16"><vh>download</vh></v>
+<v t="amd.20160718212924.1"><vh>downloads</vh></v>
 <v t="amd.20160714230833.17"><vh>send_images</vh></v>
 <v t="amd.20160714230833.18"><vh>send_static</vh></v>
 <v t="amd.20160714230833.20"><vh>send_file</vh></v>
@@ -618,7 +620,8 @@ function setLink (url, objVals) {
 &lt;/script&gt;
 '''
 </t>
-<t tx="amd.20160714231640.1">def file_lister(directory, type=None, page=1, item_per_page=10):
+<t tx="amd.20160714231640.1"># 與 file_selector 配合, 用於 Tinymce4 編輯器的檔案選擇
+def file_lister(directory, type=None, page=1, item_per_page=10):
     files = os.listdir(directory)
     total_rows = len(files)
     totalpage = math.ceil(total_rows/int(item_per_page))
@@ -713,10 +716,10 @@ function setLink (url, objVals) {
     for index in range(int(starti)-1, int(endi)):
         fileName, fileExtension = os.path.splitext(files[index])
         fileExtension = fileExtension.lower()
-        fileSize = sizeof_fmt(os.path.getsize(download_dir+files[index]))
+        fileSize = sizeof_fmt(os.path.getsize(download_dir+"/"+files[index]))
         # images files
         if fileExtension == ".png" or fileExtension == ".jpg" or fileExtension == ".gif":
-            outstring += '&lt;input type="checkbox" name="filename" value="'+files[index]+'"&gt;&lt;a href="javascript:;" onClick="window.open(\'/downloads/'+ \
+            outstring += '&lt;input type="checkbox" name="filename" value="'+files[index]+'"&gt;&lt;a href="javascript:;" onClick="window.open(\'/download/?type=files&amp;filename='+ \
             files[index]+'\',\'images\', \'catalogmode\',\'scrollbars\')"&gt;'+files[index]+'&lt;/a&gt; ('+str(fileSize)+')&lt;br /&gt;'
         # stl files
         elif fileExtension == ".stl":
@@ -724,12 +727,11 @@ function setLink (url, objVals) {
             files[index]+'\',\'images\', \'catalogmode\',\'scrollbars\')"&gt;'+files[index]+'&lt;/a&gt; ('+str(fileSize)+')&lt;br /&gt;'
         # flv files
         elif fileExtension == ".flv":
-            outstring += '&lt;input type="checkbox" name="filename" value="'+files[index]+'"&gt;&lt;a href="javascript:;" onClick="window.open(\'/flvplayer?filepath=/downloads/'+ \
+            outstring += '&lt;input type="checkbox" name="filename" value="'+files[index]+'"&gt;&lt;a href="javascript:;" onClick="window.open(\'/flvplayer?filepath=/download/?type=files&amp;filename='+ \
             files[index]+'\',\'images\', \'catalogmode\',\'scrollbars\')"&gt;'+files[index]+'&lt;/a&gt; ('+str(fileSize)+')&lt;br /&gt;'
         # direct download files
         else:
-            outstring += "&lt;input type='checkbox' name='filename' value='"+files[index]+"'&gt;&lt;a href='/download/?filepath="+download_dir.replace('\\', '/')+ \
-            "downloads/"+files[index]+"'&gt;"+files[index]+"&lt;/a&gt; ("+str(fileSize)+")&lt;br /&gt;"
+            outstring += "&lt;input type='checkbox' name='filename' value='"+files[index]+"'&gt;&lt;a href='/download/?type=files&amp;filename="+files[index]+"'&gt;"+files[index]+"&lt;/a&gt; ("+str(fileSize)+")&lt;br /&gt;"
     return outstring</t>
 <t tx="amd.20160714231915.1">def imagelist_access_list(files, starti, endi):
     # different extension files, associated links were provided
@@ -740,7 +742,7 @@ function setLink (url, objVals) {
     for index in range(int(starti)-1, int(endi)):
         fileName, fileExtension = os.path.splitext(files[index])
         fileExtension = fileExtension.lower()
-        fileSize = sizeof_fmt(os.path.getsize(image_dir+files[index]))
+        fileSize = sizeof_fmt(os.path.getsize(image_dir+"/"+files[index]))
         # images files
         if fileExtension == ".png" or fileExtension == ".jpg" or fileExtension == ".gif":
             outstring += '&lt;input type="checkbox" name="filename" value="'+files[index]+'"&gt;&lt;a href="javascript:;" onClick="window.open(\'/images/'+ \
@@ -835,11 +837,12 @@ window.location= 'https://' + location.host + location.pathname + location.searc
 &lt;script type="text/javascript"&gt;SyntaxHighlighter.all();&lt;/script&gt;
 '''
 </t>
-<t tx="amd.20160714232140.1">def downloadselect_access_list(files, starti, endi):
+<t tx="amd.20160714232140.1"># 與 file_selector 搭配的取檔程式
+def downloadselect_access_list(files, starti, endi):
     outstring = ""
     for index in range(int(starti)-1, int(endi)):
         fileName, fileExtension = os.path.splitext(files[index])
-        fileSize = os.path.getsize(download_dir+files[index])
+        fileSize = os.path.getsize(download_dir+"/"+files[index])
         outstring += '''&lt;input type="checkbox" name="filename" value="'''+files[index]+'''"&gt;&lt;a href="#" onclick='window.setLink("/download/?type=files&amp;filename='''+ \
         files[index]+'''",0); return false;'&gt;'''+ \
         files[index]+'''&lt;/a&gt; ('''+str(sizeof_fmt(fileSize))+''')&lt;br /&gt;'''
@@ -874,7 +877,8 @@ window.location= 'https://' + location.host + location.pathname + location.searc
             outstring += "&lt;input type='checkbox' name='filename' value='"+files[index]+"'&gt;&lt;a href='/"+filedir+"_programs/"+files[index]+"'&gt;"+files[index]+"&lt;/a&gt; ("+str(fileSize)+")&lt;br /&gt;"
     return outstring
 </t>
-<t tx="amd.20160714232205.1">def imageselect_access_list(files, starti, endi):
+<t tx="amd.20160714232205.1"># 與 file_selector 搭配的取影像檔程式
+def imageselect_access_list(files, starti, endi):
     outstring = '''&lt;head&gt;
 &lt;style&gt;
 a.xhfbfile {padding: 0 2px 0 0; line-height: 1em;}
@@ -898,7 +902,7 @@ a.xhfbfile:hover{
 '''
     for index in range(int(starti)-1, int(endi)):
         fileName, fileExtension = os.path.splitext(files[index])
-        fileSize = os.path.getsize(image_dir+files[index])
+        fileSize = os.path.getsize(image_dir+"/"+files[index])
         outstring += '''&lt;a class="xhfbfile" href="#" onclick='window.setLink("/download/?type=images&amp;filename='''+ \
         files[index]+'''",0); return false;'&gt;'''+ \
         files[index]+'''&lt;span style="position: absolute; z-index: 4;"&gt;&lt;br /&gt;
@@ -1251,7 +1255,8 @@ def imageaxupload():
     
     
 </t>
-<t tx="amd.20160715160325.1">@app.route('/file_selector', methods=['GET'])
+<t tx="amd.20160715160325.1"># 配合 Tinymce4 讓使用者透過 html editor 引用所上傳的 files 與 images
+@app.route('/file_selector', methods=['GET'])
 #def file_selector(type=None, page=1, item_per_page=10, keyword=None):
 def file_selector():
     if not isAdmin():
@@ -1582,7 +1587,7 @@ def doDelete():
     # only select one file
     if isinstance(filename, str):
         try:
-            os.remove(download_dir+filename)
+            os.remove(download_dir+"/"+filename)
             outstring += filename+" deleted!"
         except:
             outstring += filename+"Error, can not delete files!&lt;br /&gt;"
@@ -1590,7 +1595,7 @@ def doDelete():
         # multiple files selected
         for index in range(len(filename)):
             try:
-                os.remove(download_dir+filename[index])
+                os.remove(download_dir+"/"+filename[index])
                 outstring += filename[index]+" deleted!&lt;br /&gt;"
             except:
                 outstring += filename[index]+"Error, can not delete files!&lt;br /&gt;"
@@ -1610,7 +1615,7 @@ def image_doDelete():
     # only select one file
     if isinstance(filename, str):
         try:
-            os.remove(image_dir+filename)
+            os.remove(image_dir+"/"+filename)
             outstring += filename+" deleted!"
         except:
             outstring += filename+"Error, can not delete files!&lt;br /&gt;"
@@ -1618,7 +1623,7 @@ def image_doDelete():
         # multiple files selected
         for index in range(len(filename)):
             try:
-                os.remove(image_dir+filename[index])
+                os.remove(image_dir+"/"+filename[index])
                 outstring += filename[index]+" deleted!&lt;br /&gt;"
             except:
                 outstring += filename[index]+"Error, can not delete files!&lt;br /&gt;"
@@ -1871,5 +1876,10 @@ def delete_file():
 http://stackoverflow.com/questions/12247681/tinymce-is-adding-nbsp-instead-of-the-space-when-using-the-word-paste
 
 現在標題中有空白時會使用 + 但是正確的編碼應該是 %20</t>
+<t tx="amd.20160718212924.1"># downloads 方法主要將位於 downloads 目錄下的檔案送回瀏覽器
+@app.route('/downloads/&lt;path:path&gt;')
+def downloads(path):
+  return send_from_directory(data_dir+"/downloads/", path)
+</t>
 </tnodes>
 </leo_file>

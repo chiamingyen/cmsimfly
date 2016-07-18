@@ -117,6 +117,10 @@ def download():
     
 
 
+# downloads 方法主要將位於 downloads 目錄下的檔案送回瀏覽器
+@app.route('/downloads/<path:path>')
+def downloads(path):
+  return send_from_directory(data_dir+"/downloads/", path)
 # setup static directory
 @app.route('/images/<path:path>')
 def send_images(path):
@@ -504,6 +508,7 @@ function setLink (url, objVals) {
 }
 </script>
 '''
+# 與 file_selector 配合, 用於 Tinymce4 編輯器的檔案選擇
 def file_lister(directory, type=None, page=1, item_per_page=10):
     files = os.listdir(directory)
     total_rows = len(files)
@@ -590,6 +595,7 @@ def file_lister(directory, type=None, page=1, item_per_page=10):
         return outstring+"<br /><br /><a href='fileuploadform'>file upload</a>"
     else:
         return outstring+"<br /><br /><a href='imageuploadform'>image upload</a>"
+# 配合 Tinymce4 讓使用者透過 html editor 引用所上傳的 files 與 images
 @app.route('/file_selector', methods=['GET'])
 #def file_selector(type=None, page=1, item_per_page=10, keyword=None):
 def file_selector():
@@ -609,11 +615,12 @@ def file_selector():
         elif type == "image":
             #return images_file_selector()
             return file_lister(image_dir, type, page, item_per_page)
+# 與 file_selector 搭配的取檔程式
 def downloadselect_access_list(files, starti, endi):
     outstring = ""
     for index in range(int(starti)-1, int(endi)):
         fileName, fileExtension = os.path.splitext(files[index])
-        fileSize = os.path.getsize(download_dir+files[index])
+        fileSize = os.path.getsize(download_dir+"/"+files[index])
         outstring += '''<input type="checkbox" name="filename" value="'''+files[index]+'''"><a href="#" onclick='window.setLink("/download/?type=files&filename='''+ \
         files[index]+'''",0); return false;'>'''+ \
         files[index]+'''</a> ('''+str(sizeof_fmt(fileSize))+''')<br />'''
@@ -627,10 +634,10 @@ def downloadlist_access_list(files, starti, endi):
     for index in range(int(starti)-1, int(endi)):
         fileName, fileExtension = os.path.splitext(files[index])
         fileExtension = fileExtension.lower()
-        fileSize = sizeof_fmt(os.path.getsize(download_dir+files[index]))
+        fileSize = sizeof_fmt(os.path.getsize(download_dir+"/"+files[index]))
         # images files
         if fileExtension == ".png" or fileExtension == ".jpg" or fileExtension == ".gif":
-            outstring += '<input type="checkbox" name="filename" value="'+files[index]+'"><a href="javascript:;" onClick="window.open(\'/downloads/'+ \
+            outstring += '<input type="checkbox" name="filename" value="'+files[index]+'"><a href="javascript:;" onClick="window.open(\'/download/?type=files&filename='+ \
             files[index]+'\',\'images\', \'catalogmode\',\'scrollbars\')">'+files[index]+'</a> ('+str(fileSize)+')<br />'
         # stl files
         elif fileExtension == ".stl":
@@ -638,12 +645,11 @@ def downloadlist_access_list(files, starti, endi):
             files[index]+'\',\'images\', \'catalogmode\',\'scrollbars\')">'+files[index]+'</a> ('+str(fileSize)+')<br />'
         # flv files
         elif fileExtension == ".flv":
-            outstring += '<input type="checkbox" name="filename" value="'+files[index]+'"><a href="javascript:;" onClick="window.open(\'/flvplayer?filepath=/downloads/'+ \
+            outstring += '<input type="checkbox" name="filename" value="'+files[index]+'"><a href="javascript:;" onClick="window.open(\'/flvplayer?filepath=/download/?type=files&filename='+ \
             files[index]+'\',\'images\', \'catalogmode\',\'scrollbars\')">'+files[index]+'</a> ('+str(fileSize)+')<br />'
         # direct download files
         else:
-            outstring += "<input type='checkbox' name='filename' value='"+files[index]+"'><a href='/download/?filepath="+download_dir.replace('\\', '/')+ \
-            "downloads/"+files[index]+"'>"+files[index]+"</a> ("+str(fileSize)+")<br />"
+            outstring += "<input type='checkbox' name='filename' value='"+files[index]+"'><a href='/download/?type=files&filename="+files[index]+"'>"+files[index]+"</a> ("+str(fileSize)+")<br />"
     return outstring
 @app.route('/download_list', defaults={'edit':1})
 @app.route('/download_list/<path:edit>')
@@ -731,6 +737,7 @@ def download_list(edit, item_per_page=5, page=1, keyword=None):
 
     return set_css()+"<div class='container'><nav>"+ \
         directory+"</nav><section><h1>Download List</h1>"+outstring+"<br/><br /></body></html>"
+# 與 file_selector 搭配的取影像檔程式
 def imageselect_access_list(files, starti, endi):
     outstring = '''<head>
 <style>
@@ -755,7 +762,7 @@ a.xhfbfile:hover{
 '''
     for index in range(int(starti)-1, int(endi)):
         fileName, fileExtension = os.path.splitext(files[index])
-        fileSize = os.path.getsize(image_dir+files[index])
+        fileSize = os.path.getsize(image_dir+"/"+files[index])
         outstring += '''<a class="xhfbfile" href="#" onclick='window.setLink("/download/?type=images&filename='''+ \
         files[index]+'''",0); return false;'>'''+ \
         files[index]+'''<span style="position: absolute; z-index: 4;"><br />
@@ -771,7 +778,7 @@ def imagelist_access_list(files, starti, endi):
     for index in range(int(starti)-1, int(endi)):
         fileName, fileExtension = os.path.splitext(files[index])
         fileExtension = fileExtension.lower()
-        fileSize = sizeof_fmt(os.path.getsize(image_dir+files[index]))
+        fileSize = sizeof_fmt(os.path.getsize(image_dir+"/"+files[index]))
         # images files
         if fileExtension == ".png" or fileExtension == ".jpg" or fileExtension == ".gif":
             outstring += '<input type="checkbox" name="filename" value="'+files[index]+'"><a href="javascript:;" onClick="window.open(\'/images/'+ \
@@ -1371,7 +1378,7 @@ def doDelete():
     # only select one file
     if isinstance(filename, str):
         try:
-            os.remove(download_dir+filename)
+            os.remove(download_dir+"/"+filename)
             outstring += filename+" deleted!"
         except:
             outstring += filename+"Error, can not delete files!<br />"
@@ -1379,7 +1386,7 @@ def doDelete():
         # multiple files selected
         for index in range(len(filename)):
             try:
-                os.remove(download_dir+filename[index])
+                os.remove(download_dir+"/"+filename[index])
                 outstring += filename[index]+" deleted!<br />"
             except:
                 outstring += filename[index]+"Error, can not delete files!<br />"
@@ -1399,7 +1406,7 @@ def image_doDelete():
     # only select one file
     if isinstance(filename, str):
         try:
-            os.remove(image_dir+filename)
+            os.remove(image_dir+"/"+filename)
             outstring += filename+" deleted!"
         except:
             outstring += filename+"Error, can not delete files!<br />"
@@ -1407,7 +1414,7 @@ def image_doDelete():
         # multiple files selected
         for index in range(len(filename)):
             try:
-                os.remove(image_dir+filename[index])
+                os.remove(image_dir+"/"+filename[index])
                 outstring += filename[index]+" deleted!<br />"
             except:
                 outstring += filename[index]+"Error, can not delete files!<br />"
