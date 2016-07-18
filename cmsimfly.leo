@@ -28,6 +28,7 @@
 <v t="amd.20160714225914.1"><vh>@edit setup.py</vh></v>
 <v t="amd.20160714230021.1"><vh>@edit init.py</vh></v>
 <v t="amd.20160714230050.1"><vh>@edit nocache.py</vh></v>
+<v t="amd.20160718130611.1"><vh>@edit .gitignore</vh></v>
 <v t="amd.20160717222221.1" a="E"><vh>@path static</vh>
 <v t="amd.20160717222242.1"><vh>@edit axuploader.js</vh></v>
 <v t="amd.20160718125932.1"><vh>@edit viewstl.html</vh></v>
