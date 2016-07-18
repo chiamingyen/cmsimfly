@@ -6,8 +6,6 @@ import math
 import os
 # init.py 為自行建立的起始物件
 import init
-# from config.py 導入 CONFIG
-#from config import CONFIG
 # 利用 nocache.py 建立 @nocache decorator, 讓頁面不會留下 cache
 from nocache import nocache
 # the followings are for cmsimfly
@@ -31,7 +29,8 @@ else:
     inOpenshift = False
 #ends for cmsimfly
 
-#g1
+# 假如隨後要利用 blueprint 架構時, 可以將程式放在子目錄中
+# 然後利用 register 方式導入
 # 導入 g1 目錄下的 user1.py
 #import users.g1.user1
 
@@ -74,9 +73,10 @@ app.secret_key = 'A0Zr9@8j/3yX R~XHH!jmN]LWX/,?R@T'
 
 
 
+# 子目錄中註冊藍圖位置
 #app.register_blueprint(users.g1.user1.g1app)
-@app.route('/', methods=['GET' , 'POST'])
-def index(heading=None):
+@app.route('/')
+def index():
     head, level, page = parse_content()
     # fix first Chinese heading error
     return redirect("/get_page/"+urllib.parse.quote_plus(head[0]))
@@ -353,8 +353,9 @@ function cmsFilePicker(callback, value, meta) {
 };
 </script>
 '''
-@app.route('/edit_config')
-def edit_config():
+@app.route('/edit_config', defaults={'edit': 1})
+@app.route('/edit_config/<path:edit>')
+def edit_config(edit):
     head, level, page = parse_content()
     directory = render_menu(head, level, page)
     if not isAdmin():
@@ -423,8 +424,9 @@ def parse_config():
     site_title = config_data[0].split(":")[1]
     password = config_data[1].split(":")[1]
     return site_title, password
-@app.route('/fileuploadform')
-def fileuploadform():
+@app.route('/fileuploadform', defaults={'edit':1})
+@app.route('/fileuploadform/<path:edit>')
+def fileuploadform(edit):
     if isAdmin():
         head, level, page = parse_content()
         directory = render_menu(head, level, page)
@@ -643,8 +645,9 @@ def downloadlist_access_list(files, starti, endi):
             outstring += "<input type='checkbox' name='filename' value='"+files[index]+"'><a href='/download/?filepath="+download_dir.replace('\\', '/')+ \
             "downloads/"+files[index]+"'>"+files[index]+"</a> ("+str(fileSize)+")<br />"
     return outstring
-@app.route('/download_list')
-def download_list(item_per_page=5, page=1, keyword=None):
+@app.route('/download_list', defaults={'edit':1})
+@app.route('/download_list/<path:edit>')
+def download_list(edit, item_per_page=5, page=1, keyword=None):
     if not isAdmin():
         return redirect("/login")
     files = os.listdir(download_dir)
@@ -1059,14 +1062,19 @@ def ssavePage():
     head, level, page = parse_content()
     # for debug
     # print(original_head_title, head[int(page_order)])
+    # 嘗試避免因最後一個標題刪除儲存後產生 internal error 問題
+    if original_head_title == None:
+        return redirect("/")
     if original_head_title == head[int(page_order)]:
         #edit_url = "/get_page/"+urllib.parse.quote_plus(head[int(page_order)])+"&edit=1"
-        edit_url = "/get_page/"+urllib.parse.quote_plus(original_head_title)+"/1"
+        #edit_url = "/get_page/"+urllib.parse.quote_plus(original_head_title)+"/1"
+        edit_url = "/get_page/"+original_head_title+"/1"
         return redirect(edit_url)
     else:
         return redirect("/")
-@app.route('/imageuploadform')
-def imageuploadform():
+@app.route('/imageuploadform', defaults={'edit': 1})
+@app.route('/imageuploadform/<path:edit>')
+def imageuploadform(edit):
     if isAdmin():
         head, level, page = parse_content()
         directory = render_menu(head, level, page)
@@ -1115,8 +1123,9 @@ def imageaxupload():
 
     
     
-@app.route('/image_list')
-def image_list(item_per_page=5, page=1, keyword=None):
+@app.route('/image_list', defaults={'edit':1})
+@app.route('/image_list/<path:edit>')
+def image_list(edit, item_per_page=5, page=1, keyword=None):
     if not isAdmin():
         return redirect("/login")
     files = os.listdir(image_dir)
@@ -1408,8 +1417,9 @@ def image_doDelete():
 
     return set_css()+"<div class='container'><nav>"+ \
         directory+"</nav><section><h1>Image List</h1>"+outstring+"<br/><br /></body></html>"
-@app.route('/search_form')
-def search_form():
+@app.route('/search_form', defaults={'edit': 1})
+@app.route('/search_form/<path:edit>')
+def search_form(edit):
     if isAdmin():
         head, level, page = parse_content()
         directory = render_menu(head, level, page)

@@ -22,15 +22,16 @@
 <v t="amd.20160715211540.1"><vh>處理 url 與 edit</vh></v>
 <v t="amd.20160715213810.1"><vh>必須處理 downloads 與 images 目錄</vh></v>
 </v>
+<v t="amd.20160718002238.1"><vh>參考資料</vh></v>
 <v t="amd.20160717220157.1"><vh>Flask 開講</vh></v>
 </v>
-<v t="amd.20160714230112.1"><vh>@edit config</vh></v>
 <v t="amd.20160714225914.1"><vh>@edit setup.py</vh></v>
-<v t="amd.20160714230029.1"><vh>@edit config.py</vh></v>
 <v t="amd.20160714230021.1"><vh>@edit init.py</vh></v>
 <v t="amd.20160714230050.1"><vh>@edit nocache.py</vh></v>
 <v t="amd.20160717222221.1" a="E"><vh>@path static</vh>
 <v t="amd.20160717222242.1"><vh>@edit axuploader.js</vh></v>
+<v t="amd.20160718125932.1"><vh>@edit viewstl.html</vh></v>
+<v t="amd.20160718125943.1"><vh>@edit stlviewer.js</vh></v>
 </v>
 <v t="amd.20160714230058.1" a="E"><vh>@clean wsgi.py</vh>
 <v t="amd.20160714230122.1"><vh>wsgi declarations</vh></v>
@@ -266,8 +267,6 @@ import math
 import os
 # init.py 為自行建立的起始物件
 import init
-# from config.py 導入 CONFIG
-#from config import CONFIG
 # 利用 nocache.py 建立 @nocache decorator, 讓頁面不會留下 cache
 from nocache import nocache
 # the followings are for cmsimfly
@@ -291,7 +290,8 @@ else:
     inOpenshift = False
 #ends for cmsimfly
 
-#g1
+# 假如隨後要利用 blueprint 架構時, 可以將程式放在子目錄中
+# 然後利用 register 方式導入
 # 導入 g1 目錄下的 user1.py
 #import users.g1.user1
 
@@ -335,7 +335,8 @@ app.secret_key = 'A0Zr9@8j/3yX R~XHH!jmN]LWX/,?R@T'
 
 
 </t>
-<t tx="amd.20160714230833.4">#app.register_blueprint(users.g1.user1.g1app)</t>
+<t tx="amd.20160714230833.4"># 子目錄中註冊藍圖位置
+#app.register_blueprint(users.g1.user1.g1app)</t>
 <t tx="amd.20160714231055.1"># seperate page need heading and edit variables, if edit=1, system will enter edit mode
 # single page edit will use ssavePage to save content, it means seperate save page
 @app.route('/get_page')
@@ -1024,8 +1025,8 @@ def edit_page(edit):
 <t tx="amd.20160715000858.1">def editorfoot():
     return '''&lt;body&gt;'''
 </t>
-<t tx="amd.20160715152825.1">@app.route('/', methods=['GET' , 'POST'])
-def index(heading=None):
+<t tx="amd.20160715152825.1">@app.route('/')
+def index():
     head, level, page = parse_content()
     # fix first Chinese heading error
     return redirect("/get_page/"+urllib.parse.quote_plus(head[0]))
@@ -1118,15 +1119,20 @@ def ssavePage():
     head, level, page = parse_content()
     # for debug
     # print(original_head_title, head[int(page_order)])
+    # 嘗試避免因最後一個標題刪除儲存後產生 internal error 問題
+    if original_head_title == None:
+        return redirect("/")
     if original_head_title == head[int(page_order)]:
         #edit_url = "/get_page/"+urllib.parse.quote_plus(head[int(page_order)])+"&amp;edit=1"
-        edit_url = "/get_page/"+urllib.parse.quote_plus(original_head_title)+"/1"
+        #edit_url = "/get_page/"+urllib.parse.quote_plus(original_head_title)+"/1"
+        edit_url = "/get_page/"+original_head_title+"/1"
         return redirect(edit_url)
     else:
         return redirect("/")
 </t>
-<t tx="amd.20160715154923.1">@app.route('/fileuploadform')
-def fileuploadform():
+<t tx="amd.20160715154923.1">@app.route('/fileuploadform', defaults={'edit':1})
+@app.route('/fileuploadform/&lt;path:edit&gt;')
+def fileuploadform(edit):
     if isAdmin():
         head, level, page = parse_content()
         directory = render_menu(head, level, page)
@@ -1191,8 +1197,9 @@ def flvplayer(filepath=None):
 '''
     return outstring
 </t>
-<t tx="amd.20160715155918.1">@app.route('/imageuploadform')
-def imageuploadform():
+<t tx="amd.20160715155918.1">@app.route('/imageuploadform', defaults={'edit': 1})
+@app.route('/imageuploadform/&lt;path:edit&gt;')
+def imageuploadform(edit):
     if isAdmin():
         head, level, page = parse_content()
         directory = render_menu(head, level, page)
@@ -1263,8 +1270,9 @@ def file_selector():
             #return images_file_selector()
             return file_lister(image_dir, type, page, item_per_page)
 </t>
-<t tx="amd.20160715160505.1">@app.route('/download_list')
-def download_list(item_per_page=5, page=1, keyword=None):
+<t tx="amd.20160715160505.1">@app.route('/download_list', defaults={'edit':1})
+@app.route('/download_list/&lt;path:edit&gt;')
+def download_list(edit, item_per_page=5, page=1, keyword=None):
     if not isAdmin():
         return redirect("/login")
     files = os.listdir(download_dir)
@@ -1348,8 +1356,9 @@ def download_list(item_per_page=5, page=1, keyword=None):
 
     return set_css()+"&lt;div class='container'&gt;&lt;nav&gt;"+ \
         directory+"&lt;/nav&gt;&lt;section&gt;&lt;h1&gt;Download List&lt;/h1&gt;"+outstring+"&lt;br/&gt;&lt;br /&gt;&lt;/body&gt;&lt;/html&gt;"</t>
-<t tx="amd.20160715160642.1">@app.route('/image_list')
-def image_list(item_per_page=5, page=1, keyword=None):
+<t tx="amd.20160715160642.1">@app.route('/image_list', defaults={'edit':1})
+@app.route('/image_list/&lt;path:edit&gt;')
+def image_list(edit, item_per_page=5, page=1, keyword=None):
     if not isAdmin():
         return redirect("/login")
     files = os.listdir(image_dir)
@@ -1618,8 +1627,9 @@ def image_doDelete():
 
     return set_css()+"&lt;div class='container'&gt;&lt;nav&gt;"+ \
         directory+"&lt;/nav&gt;&lt;section&gt;&lt;h1&gt;Image List&lt;/h1&gt;"+outstring+"&lt;br/&gt;&lt;br /&gt;&lt;/body&gt;&lt;/html&gt;"</t>
-<t tx="amd.20160715161352.1">@app.route('/search_form')
-def search_form():
+<t tx="amd.20160715161352.1">@app.route('/search_form', defaults={'edit': 1})
+@app.route('/search_form/&lt;path:edit&gt;')
+def search_form(edit):
     if isAdmin():
         head, level, page = parse_content()
         directory = render_menu(head, level, page)
@@ -1650,8 +1660,9 @@ def doSearch():
         match+" \
      &lt;/section&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;"
 </t>
-<t tx="amd.20160715161642.1">@app.route('/edit_config')
-def edit_config():
+<t tx="amd.20160715161642.1">@app.route('/edit_config', defaults={'edit': 1})
+@app.route('/edit_config/&lt;path:edit&gt;')
+def edit_config(edit):
     head, level, page = parse_content()
     directory = render_menu(head, level, page)
     if not isAdmin():
@@ -1723,7 +1734,111 @@ def sitemap(edit):
 
 主要關鍵在無 edit 時, 採用內定值, 而隨後無論有幾層 url 變數, 都包含在 path 變數中</t>
 <t tx="amd.20160715213810.1"></t>
-<t tx="amd.20160717220157.1"></t>
+<t tx="amd.20160717220157.1">get 方法
+
+@app.route('/file_selector', methods=['GET'])
+def file_selector():
+    if not isAdmin():
+        return redirect("/login")
+    else:
+        type = request.args.get('type')
+        page = request.args.get('page', 1)
+        item_per_page = request.args.get('item_per_page', 10)
+        keyword = request.args.get('keyword')
+        if type == "file":
+            type = 'downloads'
+            return file_lister(download_dir, type, page, item_per_page)
+        elif type == "image":
+            return file_lister(image_dir, type, page, item_per_page)
+            
+post 方法
+
+@app.route('/saveConfig', methods=['POST'])
+def saveConfig():
+    if not isAdmin():
+        return redirect("/login")
+    site_title = request.form['site_title']
+    password = request.form['password']
+    password2 = request.form['password2']
+    if site_title == None or password == None:
+        return error_log("no content to save!")
+    old_site_title, old_password = parse_config()
+    head, level, page = parse_content()
+    directory = render_menu(head, level, page)
+    if site_title == None or password == None or password2 != old_password or password == '':
+        return set_css()+"&lt;div class='container'&gt;&lt;nav&gt;"+ \
+        directory+"&lt;/nav&gt;&lt;section&gt;&lt;h1&gt;Error!&lt;/h1&gt;&lt;a href='/'&gt;Home&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;"
+    else:
+        if password == password2 and password == old_password:
+            hashed_password = old_password
+        else:
+            hashed_password = hashlib.sha512(password.encode('utf-8')).hexdigest()
+        file = open(data_dir+"config", "w", encoding="utf-8")
+        file.write("siteTitle:"+site_title+"\npassword:"+hashed_password)
+        file.close()
+        return set_css()+"&lt;div class='container'&gt;&lt;nav&gt;"+ \
+        directory+"&lt;/nav&gt;&lt;section&gt;&lt;h1&gt;config file saved&lt;/h1&gt;&lt;a href='/'&gt;Home&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;"
+
+flask 特殊的 URL 傳值
+
+@app.route('/get_page')
+@app.route('/get_page/&lt;heading&gt;', defaults={'edit': 0})
+@app.route('/get_page/&lt;heading&gt;/&lt;int:edit&gt;')
+def get_page(heading, edit):
+    head, level, page = parse_content()
+    directory = render_menu(head, level, page)
+    if heading == None:
+        heading = head[0]
+    # 因為同一 heading 可能有多頁, 因此不可使用 head.index(heading) 搜尋 page_order
+    page_order_list, page_content_list = search_content(head, page, heading)
+    return_content = ""
+    pagedata = ""
+    outstring = ""
+    outstring_duplicate = ""
+    pagedata_duplicate = ""
+    outstring_list = []
+    for i in range(len(page_order_list)):
+        #page_order = head.index(heading)
+        page_order = page_order_list[i]
+        if page_order == 0:
+            last_page = ""
+        else:
+            last_page = head[page_order-1]+" &lt;&lt; &lt;a href='/get_page/"+head[page_order-1]+"'&gt;Previous&lt;/a&gt;"
+        if page_order == len(head) - 1:
+            # no next page
+            next_page = ""
+        else:
+            next_page = "&lt;a href='/get_page/"+head[page_order+1]+"'&gt;Next&lt;/a&gt; &gt;&gt; "+ head[page_order+1]
+        if len(page_order_list) &gt; 1:
+            return_content += last_page+" "+next_page+"&lt;br /&gt;&lt;h1&gt;"+heading+"&lt;/h1&gt;"+page_content_list[i]+"&lt;br /&gt;"+last_page+" "+next_page+"&lt;br /&gt;&lt;hr&gt;"
+            pagedata_duplicate = "&lt;h"+level[page_order]+"&gt;"+heading+"&lt;/h"+level[page_order]+"&gt;"+page_content_list[i]
+            outstring_list.append(last_page+" "+next_page+"&lt;br /&gt;"+ tinymce_editor(directory, cgi.escape(pagedata_duplicate), page_order))
+        else:
+            return_content += last_page+" "+next_page+"&lt;br /&gt;&lt;h1&gt;"+heading+"&lt;/h1&gt;"+page_content_list[i]+"&lt;br /&gt;"+last_page+" "+next_page
+            
+        pagedata += "&lt;h"+level[page_order]+"&gt;"+heading+"&lt;/h"+level[page_order]+"&gt;"+page_content_list[i]
+        outstring += last_page+" "+next_page+"&lt;br /&gt;"+ tinymce_editor(directory, cgi.escape(pagedata), page_order)
+    
+    # edit=0 for viewpage
+    if edit == 0:
+        return set_css()+"&lt;div class='container'&gt;&lt;nav&gt;"+ \
+        directory+"&lt;/nav&gt;&lt;section&gt;"+return_content+"&lt;/section&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;"
+    # enter edit mode
+    else:
+        # check if administrator
+        if not isAdmin():
+            redirect(url_for('login'))
+        else:
+            if len(page_order_list) &gt; 1:
+                # 若碰到重複頁面頁印, 且要求編輯, 則導向 edit_page
+                #return redirect("/edit_page")
+                for i in range(len(page_order_list)):
+                    outstring_duplicate += outstring_list[i]+"&lt;br /&gt;&lt;hr&gt;"
+                return outstring_duplicate
+            else:
+            #pagedata = "&lt;h"+level[page_order]+"&gt;"+heading+"&lt;/h"+level[page_order]+"&gt;"+search_content(head, page, heading)
+            #outstring = last_page+" "+next_page+"&lt;br /&gt;"+ tinymce_editor(directory, cgi.escape(pagedata), page_order)
+                return outstring</t>
 <t tx="amd.20160717222221.1"></t>
 <t tx="amd.20160717235504.1">@app.route('/delete_file', methods=['POST'])
 def delete_file():
@@ -1750,5 +1865,10 @@ def delete_file():
     return set_css()+"&lt;div class='container'&gt;&lt;nav&gt;"+ \
         directory+"&lt;/nav&gt;&lt;section&gt;&lt;h1&gt;Download List&lt;/h1&gt;"+outstring+"&lt;br/&gt;&lt;br /&gt;&lt;/body&gt;&lt;/html&gt;"
 </t>
+<t tx="amd.20160718002238.1">有關內容解碼
+
+http://stackoverflow.com/questions/12247681/tinymce-is-adding-nbsp-instead-of-the-space-when-using-the-word-paste
+
+現在標題中有空白時會使用 + 但是正確的編碼應該是 %20</t>
 </tnodes>
 </leo_file>
