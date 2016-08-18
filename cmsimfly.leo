@@ -378,6 +378,7 @@ def get_page(heading, edit):
             return_content += last_page+" "+next_page+"&lt;br /&gt;&lt;h1&gt;"+heading+"&lt;/h1&gt;"+page_content_list[i]+"&lt;br /&gt;"+last_page+" "+next_page
             
         pagedata += "&lt;h"+level[page_order]+"&gt;"+heading+"&lt;/h"+level[page_order]+"&gt;"+page_content_list[i]
+        # 利用 cgi.escape() 將 specialchar 轉成只能顯示的格式
         outstring += last_page+" "+next_page+"&lt;br /&gt;"+ tinymce_editor(directory, cgi.escape(pagedata), page_order)
     
     # edit=0 for viewpage
@@ -643,7 +644,6 @@ def file_lister(directory, type=None, page=1, item_per_page=10):
             outstring += "'&gt;Previous&lt;/a&gt; "
         span = 10
         for index in range(int(page)-span, int(page)+span):
-        #for ($j=$page-$range;$j&lt;$page+$range;$j++)
             if index&gt;= 0 and index&lt; totalpage:
                 page_now = index + 1 
                 if page_now == int(page):
@@ -663,13 +663,13 @@ def file_lister(directory, type=None, page=1, item_per_page=10):
             outstring += "'&gt;&gt;&gt;&lt;/a&gt;&lt;br /&gt;&lt;br /&gt;"
         if (int(page) * int(item_per_page)) &lt; total_rows:
             notlast = True
-            if type == "downloads":
+            if type == "file":
                 outstring += downloadselect_access_list(files, starti, endi)+"&lt;br /&gt;"
             else:
                 outstring += imageselect_access_list(files, starti, endi)+"&lt;br /&gt;"
         else:
             outstring += "&lt;br /&gt;&lt;br /&gt;"
-            if type == "downloads":
+            if type == "file":
                 outstring += downloadselect_access_list(files, starti, total_rows)+"&lt;br /&gt;"
             else:
                 outstring += imageselect_access_list(files, starti, total_rows)+"&lt;br /&gt;"
@@ -683,7 +683,6 @@ def file_lister(directory, type=None, page=1, item_per_page=10):
             outstring += "'&gt;Previous&lt;/a&gt; "
         span = 10
         for index in range(int(page)-span, int(page)+span):
-        #for ($j=$page-$range;$j&lt;$page+$range;$j++)
             if index &gt;=0 and index &lt; totalpage:
                 page_now = index + 1
                 if page_now == int(page):
@@ -703,7 +702,7 @@ def file_lister(directory, type=None, page=1, item_per_page=10):
     else:
         outstring += "no data!"
 
-    if type == "downloads":
+    if type == "file":
         return outstring+"&lt;br /&gt;&lt;br /&gt;&lt;a href='fileuploadform'&gt;file upload&lt;/a&gt;"
     else:
         return outstring+"&lt;br /&gt;&lt;br /&gt;&lt;a href='imageuploadform'&gt;image upload&lt;/a&gt;"</t>
@@ -1257,30 +1256,58 @@ def imageaxupload():
 </t>
 <t tx="amd.20160715160325.1"># 配合 Tinymce4 讓使用者透過 html editor 引用所上傳的 files 與 images
 @app.route('/file_selector', methods=['GET'])
-#def file_selector(type=None, page=1, item_per_page=10, keyword=None):
 def file_selector():
     if not isAdmin():
         return redirect("/login")
     else:
-        type = request.args.get('type')
-        page = request.args.get('page', 1)
-        item_per_page = request.args.get('item_per_page', 10)
-        keyword = request.args.get('keyword')
-        #if type == "downloads":
+        if not request.args.get('type'):
+            type= "file"
+        else:
+            type = request.args.get('type')
+        if not request.args.get('page'):
+            page = 1
+        else:
+            page = request.args.get('page')
+        if not request.args.get('item_per_page'):
+            item_per_page = 10
+        else:
+            item_per_page = request.args.get('item_per_page')
+        if not request.args.get('keyword'):
+            keyword = None
+        else:
+            keyword = request.args.get('keyword')
+
         if type == "file":
-            #return downloads_file_selector()
-            # 請注意因為在 editorhead 以 meta 判斷 filetyp, 所以前段 type 為 file, 但是後段必須與 file_lister 中的 type = downloads 配合, 所以目前前後的 type 字串不同, 之後整合修改時將修正, 設法讓  type 前後一致
-            type = 'downloads'
+
             return file_lister(download_dir, type, page, item_per_page)
         elif type == "image":
-            #return images_file_selector()
             return file_lister(image_dir, type, page, item_per_page)
 </t>
-<t tx="amd.20160715160505.1">@app.route('/download_list', defaults={'edit':1})
-@app.route('/download_list/&lt;path:edit&gt;')
-def download_list(edit, item_per_page=5, page=1, keyword=None):
+<t tx="amd.20160715160505.1">#@app.route('/download_list', defaults={'edit':1})
+#@app.route('/download_list/&lt;path:edit&gt;')
+@app.route('/download_list', methods=['GET'])
+#def download_list(edit, item_per_page=5, page=1, keyword=None):
+def download_list():
     if not isAdmin():
         return redirect("/login")
+    else:
+        if not request.args.get('edit'):
+            edit= 1
+        else:
+            edit = request.args.get('edit')
+        if not request.args.get('page'):
+            page = 1
+        else:
+            page = request.args.get('page')
+        if not request.args.get('item_per_page'):
+            item_per_page = 10
+        else:
+            item_per_page = request.args.get('item_per_page')
+        if not request.args.get('keyword'):
+            keyword = None
+        else:
+            keyword = request.args.get('keyword')
+        
     files = os.listdir(download_dir)
     total_rows = len(files)
     totalpage = math.ceil(total_rows/int(item_per_page))
