@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Created by Leo: http://leoeditor.com/leo_toc.html -->
-<?xml-stylesheet ekr_test ?>
 <leo_file xmlns:leo="http://leoeditor.com/namespaces/leo-python-editor/1.1" >
 <leo_header file_format="2" tnodes="0" max_tnode_index="0" clone_windows="0"/>
 <globals body_outline_ratio="0.5" body_secondary_ratio="0.5">
@@ -207,14 +206,18 @@ vertical: body pane on the botton</t>
 import os
 # 導入同目錄下的 myflaskapp.py
 import flaskapp
-    
+import ssl
+
+context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+context.load_cert_chain('localhost.crt', 'localhost.key')
+
 # 以下開始判斷在 OpenShift 或近端執行
 if 'OPENSHIFT_REPO_DIR' in os.environ.keys():
     # 表示程式在雲端執行
     application = flaskapp.app
 else:
     # 表示在近端執行, 以 python3 wsgi.py 執行,  若採 uwsgi 則與 Openshift 運作模式相同
-    flaskapp.app.run(debug=True)
+    flaskapp.app.run(host='127.0.0.1', port=9443, debug=True, ssl_context=context)
 
 </t>
 <t tx="amd.20160714230833.1"></t>
