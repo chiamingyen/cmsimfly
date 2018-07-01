@@ -1698,6 +1698,9 @@ init_mathjax = function() {
 init_mathjax();
 </script>
 <script src="/static/fengari-web.js"></script>
+<script type="text/javascript" src="/static/Cango-13v08-min.js"></script>
+<script type="text/javascript" src="/static/CangoAxes-4v01-min.js"></script>
+<script type="text/javascript" src="/static/gearUtils-05.js"></script>
 '''
 def syntaxhighlight2():
     return '''
@@ -1736,6 +1739,9 @@ init_mathjax = function() {
 init_mathjax();
 </script>
 <script src="./../static/fengari-web.js"></script>
+<script type="text/javascript" src="./../static/Cango-13v08-min.js"></script>
+<script type="text/javascript" src="./../static/CangoAxes-4v01-min.js"></script>
+<script type="text/javascript" src="./../static/gearUtils-05.js"></script>
 '''
 def tinymce_editor(menu_input=None, editor_content=None, page_order=None):
     sitecontent =file_get_contents(config_dir+"content.htm")

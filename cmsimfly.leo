@@ -29,6 +29,7 @@
 </v>
 <v t="leo.20180701102916.1" a="E"><vh>2018Summer 改版</vh>
 <v t="leo.20180701205822.1"><vh>editorhead 修改</vh></v>
+<v t="leo.20180701212101.1"><vh>有關 Cango library</vh></v>
 </v>
 <v t="amd.20160718002238.1"><vh>參考資料</vh></v>
 <v t="amd.20160717220157.1"><vh>Flask 開講</vh></v>
@@ -896,6 +897,9 @@ init_mathjax = function() {
 init_mathjax();
 &lt;/script&gt;
 &lt;script src="/static/fengari-web.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="/static/Cango-13v08-min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="/static/CangoAxes-4v01-min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="/static/gearUtils-05.js"&gt;&lt;/script&gt;
 '''
 </t>
 <t tx="amd.20160714232140.1"># 與 file_selector 搭配的取檔程式
@@ -2242,6 +2246,9 @@ init_mathjax = function() {
 init_mathjax();
 &lt;/script&gt;
 &lt;script src="./../static/fengari-web.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./../static/Cango-13v08-min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./../static/CangoAxes-4v01-min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./../static/gearUtils-05.js"&gt;&lt;/script&gt;
 '''
 </t>
 <t tx="leo.20180701102916.1">去除 OpenShift 相關程式碼
@@ -2374,6 +2381,13 @@ function cmsFilePicker(callback, value, meta) {
 &lt;/script&gt;
 '''
 
+
+</t>
+<t tx="leo.20180701212101.1">&lt;script type="text/javascript" src="/static/Cango-13v08-min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="/static/CangoAxes-4v01-min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="/static/gearUtils-05.js"&gt;&lt;/script&gt;
+
+必須直接放在 syntaxhighlight 與 syntaxhighlight2 中, 因為若直接放入各頁面, 會導致只有動態系統可以正常運作, 而靜態頁面無法擷取, 因為動態採絕對目錄取 static 內容, 而靜態頁面則必須採相對目錄擷取.
 
 </t>
 </tnodes>
