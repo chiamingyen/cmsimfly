@@ -27,7 +27,9 @@
 <v t="leo.20180630211407.1"><vh>必須修改頁面內容</vh></v>
 </v>
 </v>
-<v t="leo.20180701102916.1"><vh>2018Summer 改版</vh></v>
+<v t="leo.20180701102916.1" a="E"><vh>2018Summer 改版</vh>
+<v t="leo.20180701205822.1"><vh>editorhead 修改</vh></v>
+</v>
 <v t="amd.20160718002238.1"><vh>參考資料</vh></v>
 <v t="amd.20160717220157.1"><vh>Flask 開講</vh></v>
 </v>
@@ -101,7 +103,6 @@
 <v t="amd.20160714230833.17"><vh>send_images</vh></v>
 <v t="amd.20160714230833.18"><vh>send_static</vh></v>
 <v t="amd.20160714231934.1"><vh>set_admin_css</vh></v>
-<v t="leo.20180630203707.1"><vh>set_admin_css2</vh></v>
 <v t="amd.20160714232359.1"><vh>set_css</vh></v>
 <v t="leo.20180630203825.1"><vh>set_css2</vh></v>
 <v t="amd.20160714231944.1"><vh>set_footer</vh></v>
@@ -557,8 +558,10 @@ def search_content(head, page, search):
 tinymce.init({
   selector: "textarea",
   height: 500,
-  element_format : "xhtml",
+  element_format : "html",
   language : "en",
+  valid_elements : '*[*]',
+  extended_valid_elements: "script[language|type|src]",
   plugins: [
     'advlist autolink lists link image charmap print preview hr anchor pagebreak',
     'searchreplace wordcount visualblocks visualchars code fullscreen',
@@ -832,6 +835,7 @@ window.location= 'https://' + location.host + location.pathname + location.searc
 &lt;li&gt;&lt;a href="/fileuploadform"&gt;File Upload&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="/download_list"&gt;File List&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="/logout"&gt;Logout&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="/generate_pages"&gt;generate_pages&lt;/a&gt;&lt;/li&gt;
 '''
     outstring += '''
 &lt;/ul&gt;
@@ -869,6 +873,29 @@ window.location= 'https://' + location.host + location.pathname + location.searc
 &lt;script type="text/javascript" src="/static/syntaxhighlighter/shBrushCSharp.js"&gt;&lt;/script&gt;
 &lt;link type="text/css" rel="stylesheet" href="/static/syntaxhighlighter/css/shCoreDefault.css"/&gt;
 &lt;script type="text/javascript"&gt;SyntaxHighlighter.all();&lt;/script&gt;
+
+&lt;!-- for LaTeX equations --&gt;
+&lt;script src="https://scrum-3.github.io/web/math/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+init_mathjax = function() {
+    if (window.MathJax) {
+        // MathJax loaded
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [ ['$','$'], ["\\\\(","\\\\)"] ],
+                displayMath: [ ['$$','$$'], ["\\\\[","\\\\]"] ]
+            },
+            displayAlign: 'left', // Change this to 'center' to center equations.
+            "HTML-CSS": {
+                styles: {'.MathJax_Display': {"margin": 0}}
+            }
+        });
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    }
+}
+init_mathjax();
+&lt;/script&gt;
+&lt;script src="/static/fengari-web.js"&gt;&lt;/script&gt;
 '''
 </t>
 <t tx="amd.20160714232140.1"># 與 file_selector 搭配的取檔程式
@@ -1004,6 +1031,7 @@ window.location= 'https://' + location.host + location.pathname + location.searc
 &lt;li&gt;&lt;a href="/fileuploadform"&gt;file upload&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="/download_list"&gt;file list&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="/logout"&gt;logout&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="/generate_pages"&gt;generate_pages&lt;/a&gt;&lt;/li&gt;
 '''
     else:
         outstring += '''
@@ -2010,7 +2038,7 @@ def generate_pages():
         file.close()
     # generate each page html under content directory
 
-    return "generate_pages"
+    return "已經將網站轉為靜態網頁. &lt;a href='/'&gt;Home&lt;/a&gt;"
 
 </t>
 <t tx="leo.20180630144325.1"># seperate page need heading and edit variables, if edit=1, system will enter edit mode
@@ -2134,55 +2162,6 @@ def get_page2(heading, edit):
     directory += "&lt;/li&gt;&lt;/ul&gt;"
     return directory
 </t>
-<t tx="leo.20180630203707.1"># set_admin_css for administrator
-def set_admin_css2():
-    outstring = '''&lt;!doctype html&gt;
-&lt;html&gt;&lt;head&gt;
-&lt;meta http-equiv="content-type" content="text/html;charset=utf-8"&gt;
-&lt;title&gt;CMSimply - Simple Cloud CMS in Python 3&lt;/title&gt; \
-&lt;link rel="stylesheet" type="text/css" href="./../static/cmsimply.css"&gt;
-'''+syntaxhighlight2()
-
-    outstring += '''
-&lt;script src="./../static/jquery.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript"&gt;
-$(function(){
-    $("ul.topmenu&gt; li:has(ul) &gt; a").append('&lt;div class="arrow-right"&gt;&lt;/div&gt;');
-    $("ul.topmenu &gt; li ul li:has(ul) &gt; a").append('&lt;div class="arrow-right"&gt;&lt;/div&gt;');
-});
-&lt;/script&gt;
-'''
-    # SSL for uwsgi operation
-    if uwsgi:
-        outstring += '''
-&lt;script type="text/javascript"&gt;
-if ((location.href.search(/http:/) != -1) &amp;&amp; (location.href.search(/login/) != -1)) \
-window.location= 'https://' + location.host + location.pathname + location.search;
-&lt;/script&gt;
-'''
-    site_title, password = parse_config()
-    outstring += '''
-&lt;/head&gt;&lt;header&gt;&lt;h1&gt;'''+site_title+'''&lt;/h1&gt; \
-&lt;confmenu&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="index.html"&gt;Home&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="sitemap.html"&gt;SiteMap&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="/edit_page"&gt;Edit All&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="'''+str(request.url)+'''/1"&gt;Edit&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="/edit_config"&gt;Config&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="/search_form"&gt;Search&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="/imageuploadform"&gt;Image Upload&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="/image_list"&gt;Image List&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="/fileuploadform"&gt;File Upload&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="/download_list"&gt;File List&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="/logout"&gt;Logout&lt;/a&gt;&lt;/li&gt;
-'''
-    outstring += '''
-&lt;/ul&gt;
-&lt;/confmenu&gt;&lt;/header&gt;
-'''
-    return outstring
-</t>
 <t tx="leo.20180630203825.1">def set_css2():
     outstring = '''&lt;!doctype html&gt;
 &lt;html&gt;&lt;head&gt;
@@ -2240,6 +2219,29 @@ window.location= 'https://' + location.host + location.pathname + location.searc
 &lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushCSharp.js"&gt;&lt;/script&gt;
 &lt;link type="text/css" rel="stylesheet" href="./../static/syntaxhighlighter/css/shCoreDefault.css"/&gt;
 &lt;script type="text/javascript"&gt;SyntaxHighlighter.all();&lt;/script&gt;
+
+&lt;!-- for LaTeX equations --&gt;
+&lt;script src="https://scrum-3.github.io/web/math/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+init_mathjax = function() {
+    if (window.MathJax) {
+        // MathJax loaded
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [ ['$','$'], ["\\\\(","\\\\)"] ],
+                displayMath: [ ['$$','$$'], ["\\\\[","\\\\]"] ]
+            },
+            displayAlign: 'left', // Change this to 'center' to center equations.
+            "HTML-CSS": {
+                styles: {'.MathJax_Display': {"margin": 0}}
+            }
+        });
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    }
+}
+init_mathjax();
+&lt;/script&gt;
+&lt;script src="./../static/fengari-web.js"&gt;&lt;/script&gt;
 '''
 </t>
 <t tx="leo.20180701102916.1">去除 OpenShift 相關程式碼
@@ -2265,5 +2267,114 @@ index.html 在純 WWW 模式下 redirect 到 content/index.html
 靜態網頁引用 static, downloads, images 目錄內容時, 以相對目錄指定 (./../)
 
 CMSimfly 之後將可以在動態或靜態模式下執行運作</t>
+<t tx="leo.20180701205822.1">原來設定
+
+def editorhead():
+    return '''
+    &lt;br /&gt;
+&lt;script src="//cdn.tinymce.com/4/tinymce.min.js"&gt;&lt;/script&gt;
+&lt;script src="/static/tinymce4/tinymce/plugins/sh4tinymce/plugin.min.js"&gt;&lt;/script&gt;
+&lt;link rel = "stylesheet" href = "/static/tinymce4/tinymce/plugins/sh4tinymce/style/style.css"&gt;
+&lt;script&gt;
+tinymce.init({
+  selector: "textarea",
+  height: 500,
+  element_format : "xhtml",
+  language : "en",
+  plugins: [
+    'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+    'searchreplace wordcount visualblocks visualchars code fullscreen',
+    'insertdatetime media nonbreaking save table contextmenu directionality',
+    'emoticons template paste textcolor colorpicker textpattern imagetools sh4tinymce'
+  ],
+  toolbar1: 'insertfile save undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
+  toolbar2: 'link image | print preview media | forecolor backcolor emoticons | code sh4tinymce',
+  relative_urls: false,
+  toolbar_items_size: 'small',
+  file_picker_callback: function(callback, value, meta) {
+        cmsFilePicker(callback, value, meta);
+    },
+  templates: [
+    { title: 'Test template 1', content: 'Test 1' },
+    { title: 'Test template 2', content: 'Test 2' }
+  ],
+  content_css: [
+    '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+    '//www.tinymce.com/css/codepen.min.css'
+  ]
+});
+
+function cmsFilePicker(callback, value, meta) {
+    tinymce.activeEditor.windowManager.open({
+        title: 'Uploaded File Browser',
+        url: '/file_selector?type=' + meta.filetype,
+        width: 800,
+        height: 550,
+    }, {
+        oninsert: function (url, objVals) {
+            callback(url, objVals);
+        }
+    });
+};
+&lt;/script&gt;
+'''
+
+
+修改後
+
+def editorhead():
+    return '''
+    &lt;br /&gt;
+&lt;script src="//cdn.tinymce.com/4/tinymce.min.js"&gt;&lt;/script&gt;
+&lt;script src="/static/tinymce4/tinymce/plugins/sh4tinymce/plugin.min.js"&gt;&lt;/script&gt;
+&lt;link rel = "stylesheet" href = "/static/tinymce4/tinymce/plugins/sh4tinymce/style/style.css"&gt;
+&lt;script&gt;
+tinymce.init({
+  selector: "textarea",
+  height: 500,
+  element_format : "html",
+  language : "en",
+  valid_elements : '*[*]',
+  extended_valid_elements: "script[language|type|src]",
+  plugins: [
+    'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+    'searchreplace wordcount visualblocks visualchars code fullscreen',
+    'insertdatetime media nonbreaking save table contextmenu directionality',
+    'emoticons template paste textcolor colorpicker textpattern imagetools sh4tinymce'
+  ],
+  toolbar1: 'insertfile save undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
+  toolbar2: 'link image | print preview media | forecolor backcolor emoticons | code sh4tinymce',
+  relative_urls: false,
+  toolbar_items_size: 'small',
+  file_picker_callback: function(callback, value, meta) {
+        cmsFilePicker(callback, value, meta);
+    },
+  templates: [
+    { title: 'Test template 1', content: 'Test 1' },
+    { title: 'Test template 2', content: 'Test 2' }
+  ],
+  content_css: [
+    '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+    '//www.tinymce.com/css/codepen.min.css'
+  ]
+});
+
+function cmsFilePicker(callback, value, meta) {
+    tinymce.activeEditor.windowManager.open({
+        title: 'Uploaded File Browser',
+        url: '/file_selector?type=' + meta.filetype,
+        width: 800,
+        height: 550,
+    }, {
+        oninsert: function (url, objVals) {
+            callback(url, objVals);
+        }
+    });
+};
+&lt;/script&gt;
+'''
+
+
+</t>
 </tnodes>
 </leo_file>

@@ -358,8 +358,10 @@ def editorhead():
 tinymce.init({
   selector: "textarea",
   height: 500,
-  element_format : "xhtml",
+  element_format : "html",
   language : "en",
+  valid_elements : '*[*]',
+  extended_valid_elements: "script[language|type|src]",
   plugins: [
     'advlist autolink lists link image charmap print preview hr anchor pagebreak',
     'searchreplace wordcount visualblocks visualchars code fullscreen',
@@ -632,7 +634,7 @@ def generate_pages():
         file.close()
     # generate each page html under content directory
 
-    return "generate_pages"
+    return "已經將網站轉為靜態網頁. <a href='/'>Home</a>"
 
 # seperate page need heading and edit variables, if edit=1, system will enter edit mode
 # single page edit will use ssavePage to save content, it means seperate save page
@@ -1494,54 +1496,7 @@ window.location= 'https://' + location.host + location.pathname + location.searc
 <li><a href="/fileuploadform">File Upload</a></li>
 <li><a href="/download_list">File List</a></li>
 <li><a href="/logout">Logout</a></li>
-'''
-    outstring += '''
-</ul>
-</confmenu></header>
-'''
-    return outstring
-# set_admin_css for administrator
-def set_admin_css2():
-    outstring = '''<!doctype html>
-<html><head>
-<meta http-equiv="content-type" content="text/html;charset=utf-8">
-<title>CMSimply - Simple Cloud CMS in Python 3</title> \
-<link rel="stylesheet" type="text/css" href="./../static/cmsimply.css">
-'''+syntaxhighlight2()
-
-    outstring += '''
-<script src="./../static/jquery.js"></script>
-<script type="text/javascript">
-$(function(){
-    $("ul.topmenu> li:has(ul) > a").append('<div class="arrow-right"></div>');
-    $("ul.topmenu > li ul li:has(ul) > a").append('<div class="arrow-right"></div>');
-});
-</script>
-'''
-    # SSL for uwsgi operation
-    if uwsgi:
-        outstring += '''
-<script type="text/javascript">
-if ((location.href.search(/http:/) != -1) && (location.href.search(/login/) != -1)) \
-window.location= 'https://' + location.host + location.pathname + location.search;
-</script>
-'''
-    site_title, password = parse_config()
-    outstring += '''
-</head><header><h1>'''+site_title+'''</h1> \
-<confmenu>
-<ul>
-<li><a href="index.html">Home</a></li>
-<li><a href="sitemap.html">SiteMap</a></li>
-<li><a href="/edit_page">Edit All</a></li>
-<li><a href="'''+str(request.url)+'''/1">Edit</a></li>
-<li><a href="/edit_config">Config</a></li>
-<li><a href="/search_form">Search</a></li>
-<li><a href="/imageuploadform">Image Upload</a></li>
-<li><a href="/image_list">Image List</a></li>
-<li><a href="/fileuploadform">File Upload</a></li>
-<li><a href="/download_list">File List</a></li>
-<li><a href="/logout">Logout</a></li>
+<li><a href="/generate_pages">generate_pages</a></li>
 '''
     outstring += '''
 </ul>
@@ -1591,6 +1546,7 @@ window.location= 'https://' + location.host + location.pathname + location.searc
 <li><a href="/fileuploadform">file upload</a></li>
 <li><a href="/download_list">file list</a></li>
 <li><a href="/logout">logout</a></li>
+<li><a href="/generate_pages">generate_pages</a></li>
 '''
     else:
         outstring += '''
@@ -1719,6 +1675,29 @@ def syntaxhighlight():
 <script type="text/javascript" src="/static/syntaxhighlighter/shBrushCSharp.js"></script>
 <link type="text/css" rel="stylesheet" href="/static/syntaxhighlighter/css/shCoreDefault.css"/>
 <script type="text/javascript">SyntaxHighlighter.all();</script>
+
+<!-- for LaTeX equations -->
+<script src="https://scrum-3.github.io/web/math/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
+<script type="text/javascript">
+init_mathjax = function() {
+    if (window.MathJax) {
+        // MathJax loaded
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [ ['$','$'], ["\\\\(","\\\\)"] ],
+                displayMath: [ ['$$','$$'], ["\\\\[","\\\\]"] ]
+            },
+            displayAlign: 'left', // Change this to 'center' to center equations.
+            "HTML-CSS": {
+                styles: {'.MathJax_Display': {"margin": 0}}
+            }
+        });
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    }
+}
+init_mathjax();
+</script>
+<script src="/static/fengari-web.js"></script>
 '''
 def syntaxhighlight2():
     return '''
@@ -1734,6 +1713,29 @@ def syntaxhighlight2():
 <script type="text/javascript" src="./../static/syntaxhighlighter/shBrushCSharp.js"></script>
 <link type="text/css" rel="stylesheet" href="./../static/syntaxhighlighter/css/shCoreDefault.css"/>
 <script type="text/javascript">SyntaxHighlighter.all();</script>
+
+<!-- for LaTeX equations -->
+<script src="https://scrum-3.github.io/web/math/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
+<script type="text/javascript">
+init_mathjax = function() {
+    if (window.MathJax) {
+        // MathJax loaded
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [ ['$','$'], ["\\\\(","\\\\)"] ],
+                displayMath: [ ['$$','$$'], ["\\\\[","\\\\]"] ]
+            },
+            displayAlign: 'left', // Change this to 'center' to center equations.
+            "HTML-CSS": {
+                styles: {'.MathJax_Display': {"margin": 0}}
+            }
+        });
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    }
+}
+init_mathjax();
+</script>
+<script src="./../static/fengari-web.js"></script>
 '''
 def tinymce_editor(menu_input=None, editor_content=None, page_order=None):
     sitecontent =file_get_contents(config_dir+"content.htm")
