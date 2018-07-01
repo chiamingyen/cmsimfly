@@ -57,6 +57,7 @@ tinymce.PluginManager.add('sh4tinymce', function(editor,url) {
 				{text: 'Java',			value: 'java'},
 				{text: 'JavaFX',		value: 'jfx'},
 				{text: 'JavaScript',	value: 'js'},
+				{text: 'Lua',	value: 'lua'},
 				{text: 'Perl',			value: 'perl'},
 				{text: 'PHP',			value: 'php'},
 				{text: 'PowerShell',	value: 'ps'},
