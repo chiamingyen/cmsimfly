@@ -606,6 +606,11 @@ def generate_pages():
     import os
     # 確定程式檔案所在目錄, 在 Windows 有最後的反斜線
     _curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
+    # 刪除 content 目錄中所有 html 檔案
+    filelist = [ f for f in os.listdir(_curdir+"\\content\\") if f.endswith(".html") ]
+    for f in filelist:
+        os.remove(os.path.join(_curdir+"\\content\\", f))
+
     # 這裡需要建立專門寫出 html 的 write_page
     # index.html
     file = open(_curdir+"\\content\\index.html", "w", encoding="utf-8")
@@ -626,6 +631,7 @@ def generate_pages():
         file.write(get_page2(head[i], 0))
         file.close()
     # generate each page html under content directory
+
     return "generate_pages"
 
 # seperate page need heading and edit variables, if edit=1, system will enter edit mode
