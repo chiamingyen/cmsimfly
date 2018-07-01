@@ -1,0 +1,66 @@
+<!doctype html>
+<html><head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8">
+<title>CMSimply - Simple Cloud CMS in Python 3</title> <link rel="stylesheet" type="text/css" href="./../static/cmsimply.css">
+
+<script type="text/javascript" src="./../static/syntaxhighlighter/shCore.js"></script>
+<script type="text/javascript" src="./../static/syntaxhighlighter/shBrushJScript.js"></script>
+<script type="text/javascript" src="./../static/syntaxhighlighter/shBrushJava.js"></script>
+<script type="text/javascript" src="./../static/syntaxhighlighter/shBrushPython.js"></script>
+<script type="text/javascript" src="./../static/syntaxhighlighter/shBrushSql.js"></script>
+<script type="text/javascript" src="./../static/syntaxhighlighter/shBrushXml.js"></script>
+<script type="text/javascript" src="./../static/syntaxhighlighter/shBrushPhp.js"></script>
+<script type="text/javascript" src="./../static/syntaxhighlighter/shBrushCpp.js"></script>
+<script type="text/javascript" src="./../static/syntaxhighlighter/shBrushCss.js"></script>
+<script type="text/javascript" src="./../static/syntaxhighlighter/shBrushCSharp.js"></script>
+<link type="text/css" rel="stylesheet" href="./../static/syntaxhighlighter/css/shCoreDefault.css"/>
+<script type="text/javascript">SyntaxHighlighter.all();</script>
+
+<script src="./../static/jquery.js"></script>
+<script type="text/javascript">
+$(function(){
+    $("ul.topmenu> li:has(ul) > a").append('<div class="arrow-right"></div>');
+    $("ul.topmenu > li ul li:has(ul) > a").append('<div class="arrow-right"></div>');
+});
+</script>
+
+</head><header><h1>CMSimfly - 動靜皆宜的簡潔網際內容管理</h1> <confmenu>
+<ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="sitemap.html">Site Map</a></li>
+
+</ul>
+</confmenu></header>
+<div class='container'><nav><ul id='css3menu1' class='topmenu'><li><a href='CMSimfly.html'>CMSimfly</a><ul><li><a href='基本功能.html'>基本功能</a></li></ul><li><a href='學習 Python3.html'>學習 Python3</a><ul><li><a href='機械設計.html'>機械設計</a><li><a href='程式方法解題.html'>程式方法解題</a></li></ul><li><a href='Flask 使用手冊.html'>Flask 使用手冊</a><li><a href='納入圖檔.html'>納入圖檔</a><ul><li><a href='程式開發者.html'>程式開發者</a></li></ul></nav><section>程式方法解題 << <a href='程式方法解題.html'>Previous</a> <a href='納入圖檔.html'>Next</a> >> 納入圖檔<br /><h1>Flask 使用手冊</h1>
+<p>Flask 手冊:</p>
+<p><a href="https://media.readthedocs.org/pdf/flask/latest/flask.pdf">https://media.readthedocs.org/pdf/flask/latest/flask.pdf</a>&nbsp;</p>
+<p>local <a href="./../downloads/flask.pdf">flask.pdf</a> (表示 CMSimfly 的 downlosd 功能是正常的, 但是 downloads 則有問題!!</p>
+<p>Micro 等級的 Python 網際程式框架指的是指保留核心基礎功能, 其他功能則以 plugin 附加</p>
+<p>特性是模組化強, 功能較具彈性</p>
+<p>Flask depends on two external libraries, Werkzeug and Jinja2.</p>
+<p>Werkzeug is a toolkit for WSGI, the standard Python interface between web applications and a variety of servers for both development and deployment.</p>
+<p>Jinja2 renders templates.</p>
+<p>利用 pip 安裝 Flask</p>
+<p>sudo pip install Flask</p>
+<p>假如是在 Windows, 則要將 Python 安裝目錄下的 Scripts 設為指令搜尋路徑</p>
+<p>最小執行程式設定</p>
+<pre class="brush:py;auto-links:false;toolbar:false" contenteditable="false">from flask import Flask
+# 將檔案存成 simpleflask.py
+app = Flask(__name__)
+@app.route('/')
+def hello_world():
+    return 'Hello World!'
+if __name__ == '__main__':
+    app.run()</pre>
+<p>Flask 程式執行:</p>
+<p>python simpleflask.py</p>
+<p>然後以瀏覽器 <a>http://localhost:5000</a>&nbsp;擷取 Flask 程式回應內容</p>
+<p>So what did that code do?</p>
+<ol>
+<li>First we imported the Flask class. An instance of this class will be our WSGI application.</li>
+<li>&nbsp;Next we create an instance of this class. The first argument is the name of the application&rsquo;s module or package. If you are using a single module (as in this example), you should use __name__ because depending on if it&rsquo;s started as application or imported as module the name will be different ('__main__' versus the actual import name). This is needed so that Flask knows where to look for templates, static files, and so on.&nbsp;</li>
+<li>We then use the route() decorator to tell Flask what URL should trigger our function.</li>
+<li>The function is given a name which is also used to generate URLs for that particular function, and returns the message we want to display in the user&rsquo;s browser.</li>
+<li>Finally we use the run() function to run the local server with our application. The if __name__ == '__main__': makes sure the server only runs if the script is executed directly from the Python interpreter and not used as an imported module.</li>
+<li>To stop the server, hit control-C.</li>
+</ol><br />程式方法解題 << <a href='程式方法解題.html'>Previous</a> <a href='納入圖檔.html'>Next</a> >> 納入圖檔</section></div></body></html>

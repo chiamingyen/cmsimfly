@@ -1,26 +1,22 @@
 import os
 # 確定程式檔案所在目錄, 在 Windows 有最後的反斜線
 _curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
-# 設定在雲端與近端的資料儲存目錄
-if 'OPENSHIFT_REPO_DIR' in os.environ.keys():
-    # 表示程式在雲端執行
-    data_dir = os.environ['OPENSHIFT_DATA_DIR']
-    static_dir = os.environ['OPENSHIFT_REPO_DIR']+"/static"
-else:
-    # 表示程式在近端執行
-    data_dir = _curdir + "/local_data/"
-    static_dir = _curdir + "/static"
+# 若在 uwsgi 模式執行, 則 uwsgi 必須改為 True
+uwsgi = False
+# 設定在 uwsgi 與近端的資料儲存目錄
+config_dir = _curdir + "/config/"
+static_dir = _curdir + "/static"
 class Init(object):
     def __init__(self):
         # hope to create downloads and images directories　
-        if not os.path.isdir(data_dir+"downloads"):
+        if not os.path.isdir(_curdir+"/downloads"):
             try:
-                os.makedirs(data_dir+"downloads")
+                os.makedirs(_curdir+"/downloads")
             except:
                 print("mkdir error")
-        if not os.path.isdir(data_dir+"images"):
+        if not os.path.isdir(_curdir+"/images"):
             try:
-                os.makedirs(data_dir+"images")
+                os.makedirs(_curdir+"/images")
             except:
                 print("mkdir error")
 
