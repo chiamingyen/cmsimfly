@@ -34,8 +34,6 @@ sys.path.append(_curdir)
 
 # 確定程式檔案所在目錄, 在 Windows 有最後的反斜線
 _curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
-# 設定在 uwsgi 與近端的資料儲存目錄
-uwsgi = False
 # 表示程式在近端執行, 最後必須決定是由 init.py 或此地決定目錄設定
 config_dir = _curdir + "/config/"
 static_dir = _curdir + "/static"
@@ -44,6 +42,8 @@ image_dir = _curdir + "/images/"
 
 # 利用 init.py 啟動, 建立所需的相關檔案
 initobj = init.Init()
+# 取 init.py 中 Init 類別中的 class uwsgi 變數 (static variable) 設定
+uwsgi = init.Init.uwsgi
 
 # 必須先將 download_dir 設為 static_folder, 然後才可以用於 download 方法中的 app.static_folder 的呼叫
 app = Flask(__name__)
@@ -633,6 +633,8 @@ def generate_pages():
         file.write(get_page2(head[i], 0))
         file.close()
     # generate each page html under content directory
+    # 因為將靜態轉換功能, 改為存檔時直接附加, 因此不再傳回訊息.
+    print("generate_pages 已經完成")
 
     return "已經將網站轉為靜態網頁. <a href='/'>Home</a>"
 
@@ -1380,6 +1382,8 @@ def savePage():
     page_content = page_content.replace("\n","")
     file.write(page_content)
     file.close()
+    # 準備在此呼叫 generate_pags()
+    generate_pages()
     '''
     # need to parse_content() to eliminate duplicate heading
     head, level, page = parse_content()
@@ -1464,7 +1468,7 @@ def set_admin_css():
 '''+syntaxhighlight()
 
     outstring += '''
-<script src="static/jquery.js"></script>
+<script src="/static/jquery.js"></script>
 <script type="text/javascript">
 $(function(){
     $("ul.topmenu> li:has(ul) > a").append('<div class="arrow-right"></div>');
@@ -1645,6 +1649,8 @@ def ssavePage():
         else:
             file.write("<h"+str(level[index])+">"+str(head[index])+"</h"+str(level[index])+">"+str(page[index]))
     file.close()
+    # 準備在此呼叫 generate_pags()
+    generate_pages()
 
     # if head[int(page_order)] still existed and equal original_head_title, go back to origin edit status, otherwise go to "/"
     # here the content is modified, we need to parse the new page_content again

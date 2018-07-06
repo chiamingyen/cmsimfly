@@ -9,9 +9,8 @@ import ssl
 context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
 context.load_cert_chain('localhost.crt', 'localhost.key')
 
-# 以下開始判斷在 uwsgi 模式或近端執行, 相關設定在 init.py 中
-# 目前有多重位置設定 uwsgi, 必須整合一下
-uwsgi = False
+# 取 flaskapp.py 中的 uwsgi 變數設定
+uwsgi = flaskapp.uwsgi
 if uwsgi:
     # 表示程式在雲端執行
     application = flaskapp.app

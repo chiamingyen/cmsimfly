@@ -13,11 +13,19 @@
 <v t="amd.20160714225308.2"><vh>@data qt-gui-plugin-style-sheet</vh></v>
 <v t="amd.20160714225308.3"><vh>@string initial_split_orientation = horizontal</vh></v>
 </v>
+<v t="leo.20180702145534.1" a="E"><vh>wsgi start/stop</vh>
+<v t="leo.20180702142719.1"><vh>@button start wsgi</vh></v>
+<v t="leo.20180702142849.1"><vh>@button stop wsgi</vh></v>
+</v>
+<v t="leo.20180702145555.1" a="E"><vh>http start/stop</vh>
+<v t="leo.20180702145442.1"><vh>@button start http.server</vh></v>
+<v t="leo.20180702145458.1"><vh>@button stop http.server</vh></v>
+</v>
 <v t="amd.20160714225245.2" a="E"><vh>about cmsimfly</vh>
 <v t="amd.20160714225847.1"><vh>@edit README.md</vh></v>
 <v t="amd.20160714230137.1"><vh>@edit .gitignore</vh></v>
 <v t="amd.20160714230155.1"><vh>@edit LICENSE</vh></v>
-<v t="amd.20160715000709.1" a="E"><vh>註解</vh>
+<v t="amd.20160715000709.1"><vh>註解</vh>
 <v t="amd.20160715211540.1"><vh>處理 url 與 edit</vh></v>
 <v t="amd.20160715213810.1"><vh>必須處理 downloads 與 images 目錄</vh></v>
 <v t="leo.20180625155103.1"><vh>改為 pybean based</vh>
@@ -28,8 +36,10 @@
 </v>
 </v>
 <v t="leo.20180701102916.1" a="E"><vh>2018Summer 改版</vh>
+<v t="leo.20180702104314.1"><vh>整合設定檔案</vh></v>
 <v t="leo.20180701205822.1"><vh>editorhead 修改</vh></v>
 <v t="leo.20180701212101.1"><vh>有關 Cango library</vh></v>
+<v t="leo.20180706161812.1"><vh>動態與靜態同時存檔</vh></v>
 </v>
 <v t="amd.20160718002238.1"><vh>參考資料</vh></v>
 <v t="amd.20160717220157.1"><vh>Flask 開講</vh></v>
@@ -231,9 +241,8 @@ import ssl
 context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
 context.load_cert_chain('localhost.crt', 'localhost.key')
 
-# 以下開始判斷在 uwsgi 模式或近端執行, 相關設定在 init.py 中
-# 目前有多重位置設定 uwsgi, 必須整合一下
-uwsgi = False
+# 取 flaskapp.py 中的 uwsgi 變數設定
+uwsgi = flaskapp.uwsgi
 if uwsgi:
     # 表示程式在雲端執行
     application = flaskapp.app
@@ -324,8 +333,6 @@ sys.path.append(_curdir)
 
 # 確定程式檔案所在目錄, 在 Windows 有最後的反斜線
 _curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
-# 設定在 uwsgi 與近端的資料儲存目錄
-uwsgi = False
 # 表示程式在近端執行, 最後必須決定是由 init.py 或此地決定目錄設定
 config_dir = _curdir + "/config/"
 static_dir = _curdir + "/static"
@@ -334,6 +341,8 @@ image_dir = _curdir + "/images/"
 
 # 利用 init.py 啟動, 建立所需的相關檔案
 initobj = init.Init()
+# 取 init.py 中 Init 類別中的 class uwsgi 變數 (static variable) 設定
+uwsgi = init.Init.uwsgi
 
 # 必須先將 download_dir 設為 static_folder, 然後才可以用於 download 方法中的 app.static_folder 的呼叫
 app = Flask(__name__)
@@ -804,7 +813,7 @@ def set_admin_css():
 '''+syntaxhighlight()
 
     outstring += '''
-&lt;script src="static/jquery.js"&gt;&lt;/script&gt;
+&lt;script src="/static/jquery.js"&gt;&lt;/script&gt;
 &lt;script type="text/javascript"&gt;
 $(function(){
     $("ul.topmenu&gt; li:has(ul) &gt; a").append('&lt;div class="arrow-right"&gt;&lt;/div&gt;');
@@ -1159,6 +1168,8 @@ def savePage():
     page_content = page_content.replace("\n","")
     file.write(page_content)
     file.close()
+    # 準備在此呼叫 generate_pags()
+    generate_pages()
     '''
     # need to parse_content() to eliminate duplicate heading
     head, level, page = parse_content()
@@ -1189,6 +1200,8 @@ def ssavePage():
         else:
             file.write("&lt;h"+str(level[index])+"&gt;"+str(head[index])+"&lt;/h"+str(level[index])+"&gt;"+str(page[index]))
     file.close()
+    # 準備在此呼叫 generate_pags()
+    generate_pages()
 
     # if head[int(page_order)] still existed and equal original_head_title, go back to origin edit status, otherwise go to "/"
     # here the content is modified, we need to parse the new page_content again
@@ -2042,6 +2055,8 @@ def generate_pages():
         file.write(get_page2(head[i], 0))
         file.close()
     # generate each page html under content directory
+    # 因為將靜態轉換功能, 改為存檔時直接附加, 因此不再傳回訊息.
+    print("generate_pages 已經完成")
 
     return "已經將網站轉為靜態網頁. &lt;a href='/'&gt;Home&lt;/a&gt;"
 
@@ -2392,5 +2407,45 @@ function cmsFilePicker(callback, value, meta) {
 必須直接放在 syntaxhighlight 與 syntaxhighlight2 中, 因為若直接放入各頁面, 會導致只有動態系統可以正常運作, 而靜態頁面無法擷取, 因為動態採絕對目錄取 static 內容, 而靜態頁面則必須採相對目錄擷取.
 
 </t>
+<t tx="leo.20180702104314.1">目前以 uwsgi 設定判斷是在一般模式執行 (python wsgi.py) 或 uwsgi 模式執行 (http://lab.kmol.info/blog/cmsimfly-and-fossil-on-same-machine.html)
+
+uwsgi = False
+
+則在一般模式下執行
+
+uwsgi = True
+
+則在 uwsgi 模式下執行
+
+原始的 uwsgi 設定在 init.py 中的 Init 類別中, 設為 class variable, 也就是所謂的 static variable
+
+然後 flaskapp.py 導入 init.py 後, 將 uwsgi 變數設為 init.Init.uwsgi
+
+最後 wsgi.py 又導入 flaskapp.py, 再將其內的 uwsgi 設為 flaskapp.uwsgi, 就可以輾轉取出  init.py 中的設定</t>
+<t tx="leo.20180702142719.1">@language python
+bpm = g.app.backgroundProcessManager
+bpm.start_process(c, command='python wsgi.py', kind='wsgi', shell=True)
+
+
+</t>
+<t tx="leo.20180702142849.1">@language python
+bpm = g.app.backgroundProcessManager
+bpm.kill(kind="wsgi") 
+
+</t>
+<t tx="leo.20180702145442.1">@language python
+bpm = g.app.backgroundProcessManager
+bpm.start_process(c, command='python -m http.server', kind='http', shell=True)
+
+
+</t>
+<t tx="leo.20180702145458.1">@language python
+bpm = g.app.backgroundProcessManager
+bpm.kill(kind="http") 
+
+</t>
+<t tx="leo.20180702145534.1"></t>
+<t tx="leo.20180702145555.1"></t>
+<t tx="leo.20180706161812.1">準備要在動態模式儲存各頁面時, 同時完成靜態頁面存檔</t>
 </tnodes>
 </leo_file>
