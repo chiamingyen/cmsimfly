@@ -2056,9 +2056,9 @@ def generate_pages():
         file.close()
     # generate each page html under content directory
     # 因為將靜態轉換功能, 改為存檔時直接附加, 因此不再傳回訊息.
-    print("generate_pages 已經完成")
+    #print("generate_pages 已經完成")
 
-    return "已經將網站轉為靜態網頁. &lt;a href='/'&gt;Home&lt;/a&gt;"
+    #return "已經將網站轉為靜態網頁. &lt;a href='/'&gt;Home&lt;/a&gt;"
 
 </t>
 <t tx="leo.20180630144325.1"># seperate page need heading and edit variables, if edit=1, system will enter edit mode
