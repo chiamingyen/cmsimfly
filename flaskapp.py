@@ -70,6 +70,7 @@ app.secret_key = 'A0Zr9@8j/3yX R~XHH!jmN]LWX/,?R@T'
 
 @app.route('/checkLogin', methods=['POST'])
 def checkLogin():
+    """Check user login process."""
     password = request.form["password"]
     site_title, saved_password = parse_config()
     hashed_password = hashlib.sha512(password.encode('utf-8')).hexdigest()
@@ -80,6 +81,7 @@ def checkLogin():
     
 @app.route('/delete_file', methods=['POST'])
 def delete_file():
+    """Delete user uploaded files."""
     if not isAdmin():
         return redirect("/login")
     head, level, page = parse_content()
@@ -104,6 +106,7 @@ def delete_file():
         directory+"</nav><section><h1>Download List</h1>"+outstring+"<br/><br /></body></html>"
 @app.route('/doDelete', methods=['POST'])
 def doDelete():
+    """Action to delete user uploaded files."""
     if not isAdmin():
         return redirect("/login")
     # delete files
@@ -133,6 +136,7 @@ def doDelete():
 
 @app.route('/doSearch', methods=['POST'])
 def doSearch():
+    """Action to search content.htm using keyword"""
     if not isAdmin():
         return redirect("/login")
     else:
@@ -151,6 +155,7 @@ def doSearch():
      </section></div></body></html>"
 @app.route('/download/', methods=['GET'])
 def download():
+    """Download file using URL."""
     filename = request.args.get('filename')
     type = request.args.get('type')
     if type == "files":
@@ -166,6 +171,7 @@ def download():
 @app.route('/download_list', methods=['GET'])
 #def download_list(edit, item_per_page=5, page=1, keyword=None):
 def download_list():
+    """List files in downloads directory."""
     if not isAdmin():
         return redirect("/login")
     else:
@@ -269,6 +275,7 @@ def download_list():
         directory+"</nav><section><h1>Download List</h1>"+outstring+"<br/><br /></body></html>"
 
 def downloadlist_access_list(files, starti, endi):
+    """List files function for download_list."""
     # different extension files, associated links were provided
     # popup window to view images, video or STL files, other files can be downloaded directly
     # files are all the data to list, from starti to endi
@@ -298,10 +305,12 @@ def downloadlist_access_list(files, starti, endi):
 # downloads 方法主要將位於 downloads 目錄下的檔案送回瀏覽器
 @app.route('/downloads/<path:path>')
 def downloads(path):
-  return send_from_directory(_curdir+"/downloads/", path)
+    """Send files in downloads directory."""
+    return send_from_directory(_curdir+"/downloads/", path)
 
 # 與 file_selector 搭配的取檔程式
 def downloadselect_access_list(files, starti, endi):
+    """Accompanied with file_selector."""
     outstring = ""
     for index in range(int(starti)-1, int(endi)):
         fileName, fileExtension = os.path.splitext(files[index])
@@ -314,6 +323,7 @@ def downloadselect_access_list(files, starti, endi):
 @app.route('/edit_config', defaults={'edit': 1})
 @app.route('/edit_config/<path:edit>')
 def edit_config(edit):
+    """Config edit html form."""
     head, level, page = parse_content()
     directory = render_menu(head, level, page)
     if not isAdmin():
@@ -336,6 +346,7 @@ def edit_config(edit):
 @app.route('/edit_page', defaults={'edit': 1})
 @app.route('/edit_page/<path:edit>')
 def edit_page(edit):
+    """Page edit html form."""
     # check if administrator
     if not isAdmin():
         return redirect('/login')
@@ -351,7 +362,8 @@ def editorfoot():
 def editorhead():
     return '''
     <br />
-<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+<!--<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>-->
+<script src="/static/tinymce4/tinymce/tinymce.min.js"></script>
 <script src="/static/tinymce4/tinymce/plugins/sh4tinymce/plugin.min.js"></script>
 <link rel = "stylesheet" href = "/static/tinymce4/tinymce/plugins/sh4tinymce/style/style.css">
 <script>
@@ -633,10 +645,7 @@ def generate_pages():
         file.write(get_page2(head[i], 0))
         file.close()
     # generate each page html under content directory
-    # 因為將靜態轉換功能, 改為存檔時直接附加, 因此不再傳回訊息.
-    #print("generate_pages 已經完成")
-
-    #return "已經將網站轉為靜態網頁. <a href='/'>Home</a>"
+    return "已經將網站轉為靜態網頁. <a href='/'>Home</a>"
 
 # seperate page need heading and edit variables, if edit=1, system will enter edit mode
 # single page edit will use ssavePage to save content, it means seperate save page
@@ -1208,7 +1217,7 @@ def parse_config():
         # default password is admin
         password="admin"
         hashed_password = hashlib.sha512(password.encode('utf-8')).hexdigest()
-        file.write("siteTitle:CMSimply - Simple Cloud CMS in Python 3\npassword:"+hashed_password)
+        file.write("siteTitle:2018 計算機程式\npassword:"+hashed_password)
         file.close()
     config = file_get_contents(config_dir+"config")
     config_data = config.split("\n")
@@ -1216,8 +1225,9 @@ def parse_config():
     password = config_data[1].split(":")[1]
     return site_title, password
 def parse_content():
-    from pybean import Store, SQLiteWriter
+    #from pybean import Store, SQLiteWriter
     # if no content.db, create database file with cms table
+    '''
     if not os.path.isfile(config_dir+"content.db"):
         library = Store(SQLiteWriter(config_dir+"content.db", frozen=False))
         cms = library.new("cms")
@@ -1227,6 +1237,7 @@ def parse_content():
         cms.memo = "first memo"
         library.save(cms)
         library.commit()
+    '''
     # if no content.htm, generate a head 1 and content 1 file
     if not os.path.isfile(config_dir+"content.htm"):
         # create content.htm if there is no content.htm
@@ -1259,6 +1270,8 @@ def parse_content():
         #page_data = re.sub('</h[1-'+str(head_level)+']>', content_sep, data[index])
         page_data = re.sub('</h', content_sep, data[index])
         head = page_data.split(content_sep)[0]
+        # remove all tags from head - bug 180726
+        head = re.sub("<.*?>", "", head)
         order += 1
         head_list.append(head)
         # put level data into level variable
@@ -1343,6 +1356,23 @@ def render_menu2(head, level, page, sitemap=0):
         current_level = level[index]
     directory += "</li></ul>"
     return directory
+# reveal 方法主要將位於 reveal 目錄下的檔案送回瀏覽器
+'''
+目前在 CMSimfly 管理模式下已經無需透過 Flask送回 reveal 與 Pelican blog 資料
+因為設計成使用者啟動隨身系統時, 除了 Flask 外還加上 http server 來檢視 reveal 與 Pelican blog 的資料
+'''
+@app.route('/reveal/<path:path>')
+def reveal(path):
+  return send_from_directory(_curdir+"/reveal/", path)
+# blog 方法主要將位於 blog目錄下的檔案送回瀏覽器
+'''
+目前在 CMSimfly 管理模式下已經無需透過 Flask 送回 reveal 與 Pelican blog 資料
+因為設計成使用者啟動隨身系統時, 除了 Flask 外還加上 http server 來檢視 reveal 與 Pelican blog 的資料
+'''
+@app.route('/blog/<path:path>')
+def blog(path):
+  return send_from_directory(_curdir+"/blog/", path)
+
 @app.route('/saveConfig', methods=['POST'])
 def saveConfig():
     if not isAdmin():
@@ -1382,8 +1412,9 @@ def savePage():
     page_content = page_content.replace("\n","")
     file.write(page_content)
     file.close()
-    # 準備在此呼叫 generate_pags()
-    generate_pages()
+
+    # if every savePage generate_pages needed
+    #generate_pages()
     '''
     # need to parse_content() to eliminate duplicate heading
     head, level, page = parse_content()
@@ -1463,7 +1494,7 @@ def set_admin_css():
     outstring = '''<!doctype html>
 <html><head>
 <meta http-equiv="content-type" content="text/html;charset=utf-8">
-<title>CMSimply - Simple Cloud CMS in Python 3</title> \
+<title>2018 計算機程式</title> \
 <link rel="stylesheet" type="text/css" href="/static/cmsimply.css">
 '''+syntaxhighlight()
 
@@ -1511,7 +1542,7 @@ def set_css():
     outstring = '''<!doctype html>
 <html><head>
 <meta http-equiv="content-type" content="text/html;charset=utf-8">
-<title>CMSimply - Simple Cloud CMS in Python 3</title> \
+<title>2018 計算機程式教學手冊</title> \
 <link rel="stylesheet" type="text/css" href="/static/cmsimply.css">
 '''+syntaxhighlight()
 
@@ -1565,7 +1596,7 @@ def set_css2():
     outstring = '''<!doctype html>
 <html><head>
 <meta http-equiv="content-type" content="text/html;charset=utf-8">
-<title>CMSimply - Simple Cloud CMS in Python 3</title> \
+<title>2018 計算機程式教學手冊</title> \
 <link rel="stylesheet" type="text/css" href="./../static/cmsimply.css">
 '''+syntaxhighlight2()
 
@@ -1592,6 +1623,8 @@ window.location= 'https://' + location.host + location.pathname + location.searc
 <ul>
 <li><a href="index.html">Home</a></li>
 <li><a href="sitemap.html">Site Map</a></li>
+<li><a href="./../reveal/index.html">reveal</a></li>
+<li><a href="./../blog/index.html">blog</a></li>
 '''
     outstring += '''
 </ul>
@@ -1649,8 +1682,8 @@ def ssavePage():
         else:
             file.write("<h"+str(level[index])+">"+str(head[index])+"</h"+str(level[index])+">"+str(page[index]))
     file.close()
-    # 準備在此呼叫 generate_pags()
-    generate_pages()
+    # if every ssavePage generate_pages needed
+    #generate_pages()
 
     # if head[int(page_order)] still existed and equal original_head_title, go back to origin edit status, otherwise go to "/"
     # here the content is modified, we need to parse the new page_content again
@@ -1683,31 +1716,38 @@ def syntaxhighlight():
 <link type="text/css" rel="stylesheet" href="/static/syntaxhighlighter/css/shCoreDefault.css"/>
 <script type="text/javascript">SyntaxHighlighter.all();</script>
 
-<!-- for LaTeX equations -->
-<script src="https://scrum-3.github.io/web/math/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
-<script type="text/javascript">
-init_mathjax = function() {
-    if (window.MathJax) {
-        // MathJax loaded
-        MathJax.Hub.Config({
-            tex2jax: {
-                inlineMath: [ ['$','$'], ["\\\\(","\\\\)"] ],
-                displayMath: [ ['$$','$$'], ["\\\\[","\\\\]"] ]
-            },
-            displayAlign: 'left', // Change this to 'center' to center equations.
-            "HTML-CSS": {
-                styles: {'.MathJax_Display': {"margin": 0}}
-            }
-        });
-        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+<!-- for LaTeX equations 暫時不用
+    <script src="https://scrum-3.github.io/web/math/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
+    <script type="text/javascript">
+    init_mathjax = function() {
+        if (window.MathJax) {
+            // MathJax loaded
+            MathJax.Hub.Config({
+                tex2jax: {
+                    inlineMath: [ ['$','$'], ["\\\\(","\\\\)"] ],
+                    displayMath: [ ['$$','$$'], ["\\\\[","\\\\]"] ]
+                },
+                displayAlign: 'left', // Change this to 'center' to center equations.
+                "HTML-CSS": {
+                    styles: {'.MathJax_Display': {"margin": 0}}
+                }
+            });
+            MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+        }
     }
-}
-init_mathjax();
-</script>
+    init_mathjax();
+    </script>
+ -->
+ <!-- 暫時不用
 <script src="/static/fengari-web.js"></script>
 <script type="text/javascript" src="/static/Cango-13v08-min.js"></script>
 <script type="text/javascript" src="/static/CangoAxes-4v01-min.js"></script>
 <script type="text/javascript" src="/static/gearUtils-05.js"></script>
+-->
+<!-- for Brython 暫時不用
+<script src="https://scrum-3.github.io/web/brython/brython.js"></script>
+<script src="https://scrum-3.github.io/web/brython/brython_stdlib.js"></script>
+-->
 '''
 def syntaxhighlight2():
     return '''
@@ -1725,7 +1765,7 @@ def syntaxhighlight2():
 <link type="text/css" rel="stylesheet" href="./../static/syntaxhighlighter/css/shCoreDefault.css"/>
 <script type="text/javascript">SyntaxHighlighter.all();</script>
 
-<!-- for LaTeX equations -->
+<!-- for LaTeX equations 暫時不用
 <script src="https://scrum-3.github.io/web/math/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
 <script type="text/javascript">
 init_mathjax = function() {
@@ -1746,10 +1786,17 @@ init_mathjax = function() {
 }
 init_mathjax();
 </script>
+-->
+<!-- 暫時不用
 <script src="./../static/fengari-web.js"></script>
 <script type="text/javascript" src="./../static/Cango-13v08-min.js"></script>
 <script type="text/javascript" src="./../static/CangoAxes-4v01-min.js"></script>
 <script type="text/javascript" src="./../static/gearUtils-05.js"></script>
+-->
+<!-- for Brython 暫時不用
+<script src="https://scrum-3.github.io/web/brython/brython.js"></script>
+<script src="https://scrum-3.github.io/web/brython/brython_stdlib.js"></script>
+-->
 '''
 def tinymce_editor(menu_input=None, editor_content=None, page_order=None):
     sitecontent =file_get_contents(config_dir+"content.htm")
