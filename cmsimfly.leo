@@ -40,6 +40,7 @@
 <v t="leo.20180701205822.1"><vh>editorhead 修改</vh></v>
 <v t="leo.20180701212101.1"><vh>有關 Cango library</vh></v>
 <v t="leo.20180726214539.1"><vh>存檔時移除所有 tag of title</vh></v>
+<v t="leo.20180731143510.1"><vh>重大 bug</vh></v>
 </v>
 <v t="amd.20160718002238.1"><vh>參考資料</vh></v>
 <v t="amd.20160717220157.1"><vh>Flask 開講</vh></v>
@@ -254,6 +255,7 @@ else:
 <t tx="amd.20160714230833.1"></t>
 <t tx="amd.20160714230833.16">@app.route('/download/', methods=['GET'])
 def download():
+    """Download file using URL."""
     filename = request.args.get('filename')
     type = request.args.get('type')
     if type == "files":
@@ -432,8 +434,9 @@ def get_page(heading, edit):
                 return outstring
 </t>
 <t tx="amd.20160714231319.1">def parse_content():
-    from pybean import Store, SQLiteWriter
+    #from pybean import Store, SQLiteWriter
     # if no content.db, create database file with cms table
+    '''
     if not os.path.isfile(config_dir+"content.db"):
         library = Store(SQLiteWriter(config_dir+"content.db", frozen=False))
         cms = library.new("cms")
@@ -443,6 +446,7 @@ def get_page(heading, edit):
         cms.memo = "first memo"
         library.save(cms)
         library.commit()
+    '''
     # if no content.htm, generate a head 1 and content 1 file
     if not os.path.isfile(config_dir+"content.htm"):
         # create content.htm if there is no content.htm
@@ -475,6 +479,8 @@ def get_page(heading, edit):
         #page_data = re.sub('&lt;/h[1-'+str(head_level)+']&gt;', content_sep, data[index])
         page_data = re.sub('&lt;/h', content_sep, data[index])
         head = page_data.split(content_sep)[0]
+        # remove all tags from head - bug 180726
+        head = re.sub("&lt;.*?&gt;", "", head)
         order += 1
         head_list.append(head)
         # put level data into level variable
@@ -561,7 +567,8 @@ def search_content(head, page, search):
 <t tx="amd.20160714231555.1">def editorhead():
     return '''
     &lt;br /&gt;
-&lt;script src="//cdn.tinymce.com/4/tinymce.min.js"&gt;&lt;/script&gt;
+&lt;!--&lt;script src="//cdn.tinymce.com/4/tinymce.min.js"&gt;&lt;/script&gt;--&gt;
+&lt;script src="/static/tinymce4/tinymce/tinymce.min.js"&gt;&lt;/script&gt;
 &lt;script src="/static/tinymce4/tinymce/plugins/sh4tinymce/plugin.min.js"&gt;&lt;/script&gt;
 &lt;link rel = "stylesheet" href = "/static/tinymce4/tinymce/plugins/sh4tinymce/style/style.css"&gt;
 &lt;script&gt;
@@ -638,7 +645,7 @@ function cmsFilePicker(callback, value, meta) {
         # default password is admin
         password="admin"
         hashed_password = hashlib.sha512(password.encode('utf-8')).hexdigest()
-        file.write("siteTitle:CMSimply - Simple Cloud CMS in Python 3\npassword:"+hashed_password)
+        file.write("siteTitle:CMSimfly \npassword:"+hashed_password)
         file.close()
     config = file_get_contents(config_dir+"config")
     config_data = config.split("\n")
@@ -751,6 +758,7 @@ def file_lister(directory, type=None, page=1, item_per_page=10):
 
 </t>
 <t tx="amd.20160714231903.1">def downloadlist_access_list(files, starti, endi):
+    """List files function for download_list."""
     # different extension files, associated links were provided
     # popup window to view images, video or STL files, other files can be downloaded directly
     # files are all the data to list, from starti to endi
@@ -808,7 +816,7 @@ def set_admin_css():
     outstring = '''&lt;!doctype html&gt;
 &lt;html&gt;&lt;head&gt;
 &lt;meta http-equiv="content-type" content="text/html;charset=utf-8"&gt;
-&lt;title&gt;CMSimply - Simple Cloud CMS in Python 3&lt;/title&gt; \
+&lt;title&gt;CMSimfly&lt;/title&gt; \
 &lt;link rel="stylesheet" type="text/css" href="/static/cmsimply.css"&gt;
 '''+syntaxhighlight()
 
@@ -885,7 +893,56 @@ window.location= 'https://' + location.host + location.pathname + location.searc
 &lt;link type="text/css" rel="stylesheet" href="/static/syntaxhighlighter/css/shCoreDefault.css"/&gt;
 &lt;script type="text/javascript"&gt;SyntaxHighlighter.all();&lt;/script&gt;
 
-&lt;!-- for LaTeX equations --&gt;
+&lt;!-- for LaTeX equations 暫時不用
+    &lt;script src="https://scrum-3.github.io/web/math/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript"&gt;
+    init_mathjax = function() {
+        if (window.MathJax) {
+            // MathJax loaded
+            MathJax.Hub.Config({
+                tex2jax: {
+                    inlineMath: [ ['$','$'], ["\\\\(","\\\\)"] ],
+                    displayMath: [ ['$$','$$'], ["\\\\[","\\\\]"] ]
+                },
+                displayAlign: 'left', // Change this to 'center' to center equations.
+                "HTML-CSS": {
+                    styles: {'.MathJax_Display': {"margin": 0}}
+                }
+            });
+            MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+        }
+    }
+    init_mathjax();
+    &lt;/script&gt;
+ --&gt;
+ &lt;!-- 暫時不用
+&lt;script src="/static/fengari-web.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="/static/Cango-13v08-min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="/static/CangoAxes-4v01-min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="/static/gearUtils-05.js"&gt;&lt;/script&gt;
+--&gt;
+&lt;!-- for Brython 暫時不用
+&lt;script src="https://scrum-3.github.io/web/brython/brython.js"&gt;&lt;/script&gt;
+&lt;script src="https://scrum-3.github.io/web/brython/brython_stdlib.js"&gt;&lt;/script&gt;
+--&gt;
+'''
+def syntaxhighlight2():
+    return '''
+&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shCore.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushJScript.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushJava.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushPython.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushSql.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushXml.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushPhp.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushLua.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushCpp.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushCss.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushCSharp.js"&gt;&lt;/script&gt;
+&lt;link type="text/css" rel="stylesheet" href="./../static/syntaxhighlighter/css/shCoreDefault.css"/&gt;
+&lt;script type="text/javascript"&gt;SyntaxHighlighter.all();&lt;/script&gt;
+
+&lt;!-- for LaTeX equations 暫時不用
 &lt;script src="https://scrum-3.github.io/web/math/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"&gt;&lt;/script&gt;
 &lt;script type="text/javascript"&gt;
 init_mathjax = function() {
@@ -906,14 +963,12 @@ init_mathjax = function() {
 }
 init_mathjax();
 &lt;/script&gt;
-&lt;script src="/static/fengari-web.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="/static/Cango-13v08-min.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="/static/CangoAxes-4v01-min.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="/static/gearUtils-05.js"&gt;&lt;/script&gt;
-'''
+--&gt;
+&lt;!-- 暫時不用
 </t>
 <t tx="amd.20160714232140.1"># 與 file_selector 搭配的取檔程式
 def downloadselect_access_list(files, starti, endi):
+    """Accompanied with file_selector."""
     outstring = ""
     for index in range(int(starti)-1, int(endi)):
         fileName, fileExtension = os.path.splitext(files[index])
@@ -1006,7 +1061,7 @@ a.xhfbfile:hover{
     outstring = '''&lt;!doctype html&gt;
 &lt;html&gt;&lt;head&gt;
 &lt;meta http-equiv="content-type" content="text/html;charset=utf-8"&gt;
-&lt;title&gt;CMSimply - Simple Cloud CMS in Python 3&lt;/title&gt; \
+&lt;title&gt;CMSimfly&lt;/title&gt; \
 &lt;link rel="stylesheet" type="text/css" href="/static/cmsimply.css"&gt;
 '''+syntaxhighlight()
 
@@ -1078,6 +1133,7 @@ def login():
 </t>
 <t tx="amd.20160714233131.1">@app.route('/checkLogin', methods=['POST'])
 def checkLogin():
+    """Check user login process."""
     password = request.form["password"]
     site_title, saved_password = parse_config()
     hashed_password = hashlib.sha512(password.encode('utf-8')).hexdigest()
@@ -1091,6 +1147,7 @@ def checkLogin():
 @app.route('/edit_page', defaults={'edit': 1})
 @app.route('/edit_page/&lt;path:edit&gt;')
 def edit_page(edit):
+    """Page edit html form."""
     # check if administrator
     if not isAdmin():
         return redirect('/login')
@@ -1168,8 +1225,9 @@ def savePage():
     page_content = page_content.replace("\n","")
     file.write(page_content)
     file.close()
-    # 準備在此呼叫 generate_pags()
-    generate_pages()
+
+    # if every savePage generate_pages needed
+    #generate_pages()
     '''
     # need to parse_content() to eliminate duplicate heading
     head, level, page = parse_content()
@@ -1200,8 +1258,8 @@ def ssavePage():
         else:
             file.write("&lt;h"+str(level[index])+"&gt;"+str(head[index])+"&lt;/h"+str(level[index])+"&gt;"+str(page[index]))
     file.close()
-    # 準備在此呼叫 generate_pags()
-    generate_pages()
+    # if every ssavePage generate_pages needed
+    #generate_pages()
 
     # if head[int(page_order)] still existed and equal original_head_title, go back to origin edit status, otherwise go to "/"
     # here the content is modified, we need to parse the new page_content again
@@ -1373,6 +1431,7 @@ def file_selector():
 @app.route('/download_list', methods=['GET'])
 #def download_list(edit, item_per_page=5, page=1, keyword=None):
 def download_list():
+    """List files in downloads directory."""
     if not isAdmin():
         return redirect("/login")
     else:
@@ -1697,6 +1756,7 @@ def image_delete_file():
 </t>
 <t tx="amd.20160715161158.1">@app.route('/doDelete', methods=['POST'])
 def doDelete():
+    """Action to delete user uploaded files."""
     if not isAdmin():
         return redirect("/login")
     # delete files
@@ -1771,6 +1831,7 @@ def search_form(edit):
 </t>
 <t tx="amd.20160715161508.1">@app.route('/doSearch', methods=['POST'])
 def doSearch():
+    """Action to search content.htm using keyword"""
     if not isAdmin():
         return redirect("/login")
     else:
@@ -1791,6 +1852,7 @@ def doSearch():
 <t tx="amd.20160715161642.1">@app.route('/edit_config', defaults={'edit': 1})
 @app.route('/edit_config/&lt;path:edit&gt;')
 def edit_config(edit):
+    """Config edit html form."""
     head, level, page = parse_content()
     directory = render_menu(head, level, page)
     if not isAdmin():
@@ -1972,6 +2034,7 @@ def get_page(heading, edit):
 <t tx="amd.20160717222221.1"></t>
 <t tx="amd.20160717235504.1">@app.route('/delete_file', methods=['POST'])
 def delete_file():
+    """Delete user uploaded files."""
     if not isAdmin():
         return redirect("/login")
     head, level, page = parse_content()
@@ -2003,7 +2066,8 @@ http://stackoverflow.com/questions/12247681/tinymce-is-adding-nbsp-instead-of-th
 <t tx="amd.20160718212924.1"># downloads 方法主要將位於 downloads 目錄下的檔案送回瀏覽器
 @app.route('/downloads/&lt;path:path&gt;')
 def downloads(path):
-  return send_from_directory(_curdir+"/downloads/", path)
+    """Send files in downloads directory."""
+    return send_from_directory(_curdir+"/downloads/", path)
 
 </t>
 <t tx="leo.20180625155103.1">2018.06.25 啟動
@@ -2055,10 +2119,7 @@ def generate_pages():
         file.write(get_page2(head[i], 0))
         file.close()
     # generate each page html under content directory
-    # 因為將靜態轉換功能, 改為存檔時直接附加, 因此不再傳回訊息.
-    #print("generate_pages 已經完成")
-
-    #return "已經將網站轉為靜態網頁. &lt;a href='/'&gt;Home&lt;/a&gt;"
+    return "已經將網站轉為靜態網頁. &lt;a href='/'&gt;Home&lt;/a&gt;"
 
 </t>
 <t tx="leo.20180630144325.1"># seperate page need heading and edit variables, if edit=1, system will enter edit mode
@@ -2181,12 +2242,29 @@ def get_page2(heading, edit):
         current_level = level[index]
     directory += "&lt;/li&gt;&lt;/ul&gt;"
     return directory
+# reveal 方法主要將位於 reveal 目錄下的檔案送回瀏覽器
+'''
+目前在 CMSimfly 管理模式下已經無需透過 Flask送回 reveal 與 Pelican blog 資料
+因為設計成使用者啟動隨身系統時, 除了 Flask 外還加上 http server 來檢視 reveal 與 Pelican blog 的資料
+'''
+@app.route('/reveal/&lt;path:path&gt;')
+def reveal(path):
+  return send_from_directory(_curdir+"/reveal/", path)
+# blog 方法主要將位於 blog目錄下的檔案送回瀏覽器
+'''
+目前在 CMSimfly 管理模式下已經無需透過 Flask 送回 reveal 與 Pelican blog 資料
+因為設計成使用者啟動隨身系統時, 除了 Flask 外還加上 http server 來檢視 reveal 與 Pelican blog 的資料
+'''
+@app.route('/blog/&lt;path:path&gt;')
+def blog(path):
+  return send_from_directory(_curdir+"/blog/", path)
+
 </t>
 <t tx="leo.20180630203825.1">def set_css2():
     outstring = '''&lt;!doctype html&gt;
 &lt;html&gt;&lt;head&gt;
 &lt;meta http-equiv="content-type" content="text/html;charset=utf-8"&gt;
-&lt;title&gt;CMSimply - Simple Cloud CMS in Python 3&lt;/title&gt; \
+&lt;title&gt;CMSimfly&lt;/title&gt; \
 &lt;link rel="stylesheet" type="text/css" href="./../static/cmsimply.css"&gt;
 '''+syntaxhighlight2()
 
@@ -2213,6 +2291,8 @@ window.location= 'https://' + location.host + location.pathname + location.searc
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="index.html"&gt;Home&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="sitemap.html"&gt;Site Map&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="./../reveal/index.html"&gt;reveal&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="./../blog/index.html"&gt;blog&lt;/a&gt;&lt;/li&gt;
 '''
     outstring += '''
 &lt;/ul&gt;
@@ -2225,47 +2305,15 @@ window.location= 'https://' + location.host + location.pathname + location.searc
 整體依附在 OpenShift 的部分必須刪除?
 
 可能在 generate_pages  時針對 downloads 與 images 目錄中的引用,  將動態格式轉為靜態格式</t>
-<t tx="leo.20180630233136.1">def syntaxhighlight2():
-    return '''
-&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shCore.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushJScript.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushJava.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushPython.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushSql.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushXml.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushPhp.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushLua.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushCpp.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushCss.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushCSharp.js"&gt;&lt;/script&gt;
-&lt;link type="text/css" rel="stylesheet" href="./../static/syntaxhighlighter/css/shCoreDefault.css"/&gt;
-&lt;script type="text/javascript"&gt;SyntaxHighlighter.all();&lt;/script&gt;
-
-&lt;!-- for LaTeX equations --&gt;
-&lt;script src="https://scrum-3.github.io/web/math/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"&gt;&lt;/script&gt;
-&lt;script type="text/javascript"&gt;
-init_mathjax = function() {
-    if (window.MathJax) {
-        // MathJax loaded
-        MathJax.Hub.Config({
-            tex2jax: {
-                inlineMath: [ ['$','$'], ["\\\\(","\\\\)"] ],
-                displayMath: [ ['$$','$$'], ["\\\\[","\\\\]"] ]
-            },
-            displayAlign: 'left', // Change this to 'center' to center equations.
-            "HTML-CSS": {
-                styles: {'.MathJax_Display': {"margin": 0}}
-            }
-        });
-        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
-    }
-}
-init_mathjax();
-&lt;/script&gt;
-&lt;script src="./../static/fengari-web.js"&gt;&lt;/script&gt;
+<t tx="leo.20180630233136.1">&lt;script src="./../static/fengari-web.js"&gt;&lt;/script&gt;
 &lt;script type="text/javascript" src="./../static/Cango-13v08-min.js"&gt;&lt;/script&gt;
 &lt;script type="text/javascript" src="./../static/CangoAxes-4v01-min.js"&gt;&lt;/script&gt;
 &lt;script type="text/javascript" src="./../static/gearUtils-05.js"&gt;&lt;/script&gt;
+--&gt;
+&lt;!-- for Brython 暫時不用
+&lt;script src="https://scrum-3.github.io/web/brython/brython.js"&gt;&lt;/script&gt;
+&lt;script src="https://scrum-3.github.io/web/brython/brython_stdlib.js"&gt;&lt;/script&gt;
+--&gt;
 '''
 </t>
 <t tx="leo.20180701102916.1">去除 OpenShift 相關程式碼
@@ -2451,5 +2499,7 @@ bpm.kill(kind="http")
 這是一個 bug, 目前若 title 有 tag, 則無法透過 get_page 辨識, 因此必須在存檔前移除所有 tags
 
 bug 180726</t>
+<t tx="leo.20180731143510.1">在頁面中加入 h4 標題後, 隨後的所有內容會全部被刪除
+</t>
 </tnodes>
 </leo_file>
