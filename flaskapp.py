@@ -21,6 +21,9 @@ import cgi
 # get the current directory of the file
 _curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
 import sys
+# for new parse_content function
+from bs4 import BeautifulSoup
+
 sys.path.append(_curdir)
 
 # 由 init.py 中的 uwsgi = False 或 True 決定在 uwsgi 模式或近端模式執行
@@ -1225,6 +1228,7 @@ def parse_config():
     password = config_data[1].split(":")[1]
     return site_title, password
 def parse_content():
+    """use bs4 and re module functions to parse content.htm"""
     #from pybean import Store, SQLiteWriter
     # if no content.db, create database file with cms table
     '''
@@ -1251,38 +1255,66 @@ def parse_content():
         File = open(config_dir+"content.htm", "w", encoding="utf-8")
         File.write("<h1>head 1</h1>content 1")
         File.close()
-    # deal with content has content but no heading
-    # replace subject content with special seperate string to avoid error 
-    subject = re.sub('#@CMSIMPLY_SPLIT@#', '井@CMSIMPLY_SPLIT@井', subject)
-    content_sep = '#@CMSIMPLY_SPLIT@#'
-    head_level = 3
-    # remove all attribute inside h1, h2 and h3 tags
-    subject = re.sub('<(h1|h2|h3)[^>]*>', r'<\1>', subject, flags=re.I)
-    content = re.split('</body>', subject)
-    result = re.sub('<h[1-'+str(head_level)+']>', content_sep, content[0])
-    # remove the first element contains html and body tags
-    data = result.split(content_sep)[1:]
+        subject = "<h1>head 1</h1>content 1"
+    # initialize the return lists
     head_list = []
     level_list = []
     page_list = []
-    order = 1
-    for index in range(len(data)):
-        #page_data = re.sub('</h[1-'+str(head_level)+']>', content_sep, data[index])
-        page_data = re.sub('</h', content_sep, data[index])
-        head = page_data.split(content_sep)[0]
-        # remove all tags from head - bug 180726
-        head = re.sub("<.*?>", "", head)
-        order += 1
-        head_list.append(head)
-        # put level data into level variable
-        level = page_data.split(content_sep)[1][0]
-        level_list.append(level)
-        # remove  1>,  2> or 3>
-        page = page_data.split(content_sep)[1][2:]
-        page_list.append(page)
-    # send head to unique function to avoid duplicate heading
-    #head_list = unique(head_list)
+    # make the soup out of the html content
+    soup = BeautifulSoup(subject, 'html.parser')
+    # get all h1, h2, h3 tags into list
+    htag= soup.find_all(['h1', 'h2', 'h3'])
+    n = len(htag)
+    # get all h tags
+    # g.es(soup.find_all(re.compile(r"^h\d$")))
+    # get the page content to split subject using each h tag
+    # i = 0
+    temp_data = subject.split(str(htag[0]))
+    # cut the first htag out
+    subject = temp_data[1]
+
+    if n >1:
+            # i from 1 to i-1
+            for i in range(1, len(htag)):
+                # add the first page title
+                head_list.append(htag[i-1].text.strip())
+                # use name attribute of h* tag to get h1, h2 or h3
+                # the number of h1, h2 or h3 is the level of page menu
+                level_list.append(htag[i-1].name[1])
+                temp_data = subject.split(str(htag[i]))
+                subject = temp_data[1]
+                # cut the other page content out of htag from 1 to i-1
+                cut = temp_data[0]
+                # add the page content
+                page_list.append(cut)
+
+            # last i
+            # add the last page title
+            head_list.append(htag[n-1].text.strip())
+            # add the last level
+            level_list.append(htag[n-1].name[1])
+            temp_data = subject.split(str(htag[n-1]))
+            # the last subject
+            subject = temp_data[0]
+            # cut the last page content out
+            cut = temp_data[0]
+            # the last page content
+            page_list.append(cut)
+    else:
+            # last i
+            # add the last page title
+            head_list.append(htag[n-1].text.strip())
+            # add the last level
+            level_list.append(htag[n-1].name[1])
+            temp_data = subject.split(str(htag[n-1]))
+            # the last subject
+            subject = temp_data[0]
+            # cut the last page content out
+            cut = temp_data[0]
+            # the last page content
+            page_list.append(cut)
     return head_list, level_list, page_list
+
 def render_menu(head, level, page, sitemap=0):
     directory = ""
     current_level = level[0]
