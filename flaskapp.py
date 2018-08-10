@@ -157,7 +157,7 @@ def doSearch():
                                 head[index] + "</a><br />"
         return set_css() + "<div class='container'><nav>"+ \
                    directory + "</nav><section><h1>Search Result</h1>keyword: " + \
-                   keyword.lower()+"<br /><br />in the following pages:<br /><br />" + \
+                   keyword.lower() + "<br /><br />in the following pages:<br /><br />" + \
                    match + "</section></div></body></html>"
 
 
@@ -839,13 +839,13 @@ def get_page2(heading, head, edit):
         if page_order == 0:
             last_page = ""
         else:
-            #last_page = head[page_order-1]+" << <a href='/get_page/"+head[page_order-1]+"'>Previous</a>"
+            #last_page = head[page_order-1]+ " << <a href='/get_page/" + head[page_order-1] + "'>Previous</a>"
             last_page = head[page_order-1] + " << <a href='"+head[page_order-1] + ".html'>Previous</a>"
         if page_order == len(head) - 1:
             # no next page
             next_page = ""
         else:
-            #next_page = "<a href='/get_page/"+head[page_order+1]+"'>Next</a> >> "+ head[page_order+1]
+            #next_page = "<a href='/get_page/"+head[page_order+1] + "'>Next</a> >> " + head[page_order+1]
             next_page = "<a href='" + head[page_order+1] + ".html'>Next</a> >> " + head[page_order+1]
         if len(page_order_list) > 1:
             return_content += last_page + " " + next_page + "<br /><h1>" + \
@@ -880,8 +880,8 @@ def get_page2(heading, head, edit):
                     outstring_duplicate += outstring_list[i] + "<br /><hr>"
                 return outstring_duplicate
             else:
-            #pagedata = "<h"+level[page_order]+">"+heading+"</h"+level[page_order]+">"+search_content(head, page, heading)
-            #outstring = last_page+" "+next_page+"<br />"+ tinymce_editor(directory, cgi.escape(pagedata), page_order)
+            #pagedata = "<h" + level[page_order]+">" + heading + "</h" + level[page_order] + ">" + search_content(head, page, heading)
+            #outstring = last_page + " " + next_page + "<br />" + tinymce_editor(directory, cgi.escape(pagedata), page_order)
                 return outstring
 
 
@@ -910,7 +910,7 @@ def image_delete_file():
                               filename[index] + "'><br />"
     outstring += "<br /><input type='submit' value='delete'></form>"
 
-    return set_css() + "<div class='container'><nav>"+ \
+    return set_css() + "<div class='container'><nav>" + \
              directory + "</nav><section><h1>Download List</h1>" + \
              outstring + "<br/><br /></body></html>"
 
@@ -941,7 +941,7 @@ def image_doDelete():
     head, level, page = parse_content()
     directory = render_menu(head, level, page)
 
-    return set_css() + "<div class='container'><nav>"+ \
+    return set_css() + "<div class='container'><nav>" + \
              directory + "</nav><section><h1>Image List</h1>" + \
              outstring + "<br/><br /></body></html>"
 
@@ -1327,7 +1327,7 @@ def loadlist_access_list(files, starti, endi, filedir):
     for index in range(int(starti)-1, int(endi)):
         fileName, fileExtension = os.path.splitext(files[index])
         fileExtension = fileExtension.lower()
-        fileSize = sizeof_fmt(os.path.getsize(config_dir+filedir+"_programs/"+files[index]))
+        fileSize = sizeof_fmt(os.path.getsize(config_dir + filedir + "_programs/" + files[index]))
         # images files
         if fileExtension == ".png" or fileExtension == ".jpg" or fileExtension == ".gif":
             outstring += '<input type="checkbox" name="filename" value="' + files[index] + \
@@ -1405,12 +1405,12 @@ def parse_content():
         library.commit()
     '''
     # if no content.htm, generate a head 1 and content 1 file
-    if not os.path.isfile(config_dir+"content.htm"):
+    if not os.path.isfile(config_dir + "content.htm"):
         # create content.htm if there is no content.htm
         File = open(config_dir + "content.htm", "w", encoding="utf-8")
         File.write("<h1>head 1</h1>content 1")
         File.close()
-    subject = file_get_contents(config_dir+"content.htm")
+    subject = file_get_contents(config_dir + "content.htm")
     # deal with content without content
     if subject == "":
         # create content.htm if there is no content.htm
@@ -1432,6 +1432,7 @@ def parse_content():
     # get the page content to split subject using each h tag
     # i = 0
     temp_data = subject.split(str(htag[0]))
+    # 若有重複標題頁面, 則切割後, 必須將序號 1 之後的資料進行接合
     if len(temp_data) > 2:
         subject = str(htag[0]).join(temp_data[1:])
     else:
@@ -1445,6 +1446,7 @@ def parse_content():
                 # the number of h1, h2 or h3 is the level of page menu
                 level_list.append(htag[i-1].name[1])
                 temp_data = subject.split(str(htag[i]))
+                # 若有重複標題頁面, 則切割後, 必須將序號 1 之後的資料進行接合
                 if len(temp_data) > 2:
                     subject = str(htag[i]).join(temp_data[1:])
                 else:
@@ -1469,6 +1471,7 @@ def parse_content():
 
 
 def render_menu(head, level, page, sitemap=0):
+    '''允許使用者在 h1 標題後直接加上 h3 標題, 或者隨後納入 h4 之後作為標題標註'''
     directory = ""
     # 從 level 數列第一個元素作為開端
     current_level = level[0]
@@ -1602,7 +1605,7 @@ def savePage():
     if page_content is None:
         return error_log("no content to save!")
     # we need to check if page heading is duplicated
-    file = open(config_dir+"content.htm", "w", encoding="utf-8")
+    file = open(config_dir + "content.htm", "w", encoding="utf-8")
     # in Windows client operator, to avoid textarea add extra \n
     page_content = page_content.replace("\n","")
     file.write(page_content)
@@ -1613,9 +1616,9 @@ def savePage():
     '''
     # need to parse_content() to eliminate duplicate heading
     head, level, page = parse_content()
-    file = open(config_dir+"content.htm", "w", encoding="utf-8")
+    file = open(config_dir + "content.htm", "w", encoding="utf-8")
     for index in range(len(head)):
-        file.write("<h"+str(level[index])+">"+str(head[index])+"</h"+str(level[index])+">"+str(page[index]))
+        file.write("<h" + str(level[index])+ ">" + str(head[index]) + "</h" + str(level[index]) + ">" + str(page[index]))
     file.close()
     '''
     return redirect("/edit_page")
@@ -1671,7 +1674,7 @@ def search_form(edit):
         head, level, page = parse_content()
         directory = render_menu(head, level, page)
         return set_css() + "<div class='container'><nav>" + \
-                 directory+"</nav><section><h1>Search</h1> \
+                 directory + "</nav><section><h1>Search</h1> \
                  <form method='post' action='doSearch'> \
                  keywords:<input type='text' name='keyword'> \
                  <input type='submit' value='search'></form> \
@@ -1864,8 +1867,6 @@ def set_footer():
         <br />Powered by <a href='http://cmsimple.cycu.org'>CMSimply</a> \
         </footer> \
         </body></html>"
-
-
 @app.route('/sitemap', defaults={'edit': 1})
 @app.route('/sitemap/<path:edit>')
 def sitemap(edit):
@@ -1876,8 +1877,6 @@ def sitemap(edit):
     return set_css() + "<div class='container'><nav>" + directory + \
              "</nav><section><h1>Site Map</h1>" + sitemap + \
              "</section></div></body></html>"
-
-
 def sitemap2(head):
     """sitemap for static content generation"""
     edit = 0
@@ -1896,8 +1895,6 @@ def sizeof_fmt(num):
             return "%3.1f%s" % (num, x)
         num /= 1024.0
     return "%3.1f%s" % (num, 'TB')
-
-
 @app.route('/ssavePage', methods=['POST'])
 def ssavePage():
     """seperate save page function"""
@@ -1931,8 +1928,8 @@ def ssavePage():
     if original_head_title is None:
         return redirect("/")
     if original_head_title == head[int(page_order)]:
-        #edit_url = "/get_page/"+urllib.parse.quote_plus(head[int(page_order)])+"&edit=1"
-        #edit_url = "/get_page/"+urllib.parse.quote_plus(original_head_title)+"/1"
+        #edit_url = "/get_page/" + urllib.parse.quote_plus(head[int(page_order)]) + "&edit=1"
+        #edit_url = "/get_page/" + urllib.parse.quote_plus(original_head_title) + "/1"
         edit_url = "/get_page/" + original_head_title + "/1"
         return redirect(edit_url)
     else:
@@ -1988,6 +1985,7 @@ def syntaxhighlight():
 <script src="https://scrum-3.github.io/web/brython/brython_stdlib.js"></script>
 -->
 '''
+
 
 
 def syntaxhighlight2():
@@ -2077,7 +2075,7 @@ def unique(items):
             keep.append(item)
         else:
             count[item] += 1
-            keep.append(str(item)+"_"+str(count[item]))
+            keep.append(str(item) + "_" + str(count[item]))
     return keep
 
 

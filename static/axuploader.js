@@ -34,7 +34,7 @@
         	      'enable':true,
         	      'chunkSize':1024*1024//default 1Mb
     	        };
-			
+
 				var _this=this;
 				if(options)	$.extend(settings,options);
 				var allowExt=settings.allowExt.join('|').toLowerCase();
@@ -53,7 +53,7 @@
 				\*================================================================================*/
 			    var fileCount=0;//Number of selected files
 			    var totalFiles=0;
-			    
+
 				/*================================================================================*\
 				 Form for classic upload
 				\*================================================================================*/
@@ -66,15 +66,15 @@
 			    		onFinish(this.contentWindow.document.body.innerHTML,'',$(_this).find('.ax-upload'));
 			    	}
 				});
-				
+
 			    var mainForm=$('<form target="ax-main-frame" method="POST" action="" encType="multipart/form-data" />').appendTo(_this);
-		
-				
+
+
 				/*================================================================================*\
 				 Browse input used for selecting files to upload. Cloned for normal upload
 				\*================================================================================*/
 
-			    
+
 			    var browse=$(_browse).attr('multiple',isAjaxUpload).appendTo(mainForm).bind('change',function(){
 					if(isAjaxUpload)
 					{
@@ -108,7 +108,7 @@
 						onLoadIframe=true;
 						var finalUrl=get_final_url('');
 						mainForm.attr('action',finalUrl).submit();
-						
+
 						$(_this).find('.ax-upload').attr('disabled',true);
 						if(settings.GIFprogress!='')
 							$(_this).find('.ax-progress-div').html('<img src="'+settings.GIFprogress+'" alt="uploading..." />');
@@ -116,7 +116,7 @@
 							$(_this).find('.ax-progress-div').html('Uploading...');
 					}
 				});
-				
+
 				/*================================================================================*\
 				Clear buttons that resets file list and variables
 				\*================================================================================*/
@@ -126,7 +126,7 @@
 					uploadAll.attr('disabled',fileCount==0);
 					fileList.children('tbody').remove();
 				});
-				
+
 
 				/*================================================================================*\
 				Table with the list of files and their details
@@ -138,8 +138,8 @@
 													 	'<th>Remove</th>'+
 													 	'<th>Upload</th>'+
 													 '</tr></thead>').appendTo(mainForm);
-			    
-			    
+
+
 				/*================================================================================*\
 				Functions that sets the url for sending additional data
 				\*================================================================================*/
@@ -149,18 +149,18 @@
 					 Encode remote path and calculate it if given as function
 					\*================================================================================*/
 					settings.remotePath=(typeof(settings.remotePath)=='function')?settings.remotePath():settings.remotePath;
-					
+
 					/*================================================================================*\
 					 set other URL data
 					\*================================================================================*/
-					
+
 					var c=(settings.url.indexOf('?')==-1)?'?':'&';
 					var url=settings.url+c+'ax-file-path='+encodeURIComponent(settings.remotePath)+'&ax-allow-ext='+encodeURIComponent(allowExt);
-						
+
 					settings.data=(typeof(settings.data)=='function')?settings.data():settings.data;
 					return url+'&ax-file-name='+enc_name+'&'+settings.data;//final url with other data
 			    }
-			    
+
 				/*================================================================================*\
 				Functions that executes and the end of file uploading
 				\*================================================================================*/
@@ -188,7 +188,7 @@
 				function add_file(t,o,n,s,numF)
 				{
 					var ext=n.split('.').pop().toLowerCase();//file ext
-					
+
 					/*================================================================================*\
 					File extension control
 					\*================================================================================*/
@@ -203,11 +203,11 @@
 						case 'kb':s=s/1024;break;
 					}
 					s=(Math.round(s*100)/100)+' '+settings.showSize;
-					
-					
+
+
 					fileCount++;//update file number
 					totalFiles++;
-					
+
 					uploadAll.attr('disabled',fileCount==0);
 					//remove button action bind
 					var rm=$('<input type="button" value="Remove" />').bind('click',function(){
@@ -216,10 +216,10 @@
 						uploadAll.attr('disabled',fileCount==0);
 						$(this).parents('tr:first').remove();
 					});
-					
+
 					//prepare abort and upload button
 					var up=$('<input type="button" value="Upload" class="ax-upload" />').bind('click',function(){ this.disabled=true; });
-					
+
 					var tr=$('<tr />').appendTo(t);
 					var td_n=$('<td class="ax-file-name" title="'+n+'" />').appendTo(tr).html(n);
 					var td_s=$('<td class="ax-size-td" />').appendTo(tr).html(s);
@@ -227,7 +227,7 @@
 					var div_p=$('<div  class="ax-progress-div" />').css({'width':'0%','background-color':'red'}).html(0).appendTo(td_p);
 					var td_r=$('<td class="ax-remove-td" />').appendTo(tr).append(rm);
 					var td_u=$('<td class="ax-upload-td" />').appendTo(tr).append(up);
-					
+
 					/*================================================================================*\
 					 Prepare to send
 					\*================================================================================*/
@@ -249,12 +249,12 @@
 							}).attr('load','0');
 							div_p.html('Uploading...');
 							targetFrame.attr('load','1');
-							
+
 							var finalUrl=get_final_url(enc_name);
 
 							$('<form method="POST" action="'+finalUrl+'" encType="multipart/form-data" />').attr('target','ax-frame-'+numF).appendTo(td_n).hide().append(o).submit();
 						});
-						
+
 						//clone browse file and append it to main form for selecting other files
 						$(o).clone(true).val('').prependTo(mainForm);
 					}
@@ -268,18 +268,18 @@
 						});
 					}
 				}
-				
+
 				//recrusive file upload with chunk method
 				function uploadFileXhr(o,start_byte,up,div_p)
 				{
 					var totals=o.size;
 					var chunk;	
 					var peice=settings.chunkSize;//bytes to upload at once
-					
+
 					var end_byte=start_byte+peice;
 					var peice_count=end_byte/peice;
 					var is_last=(totals-end_byte<=0)?1:0;
-									
+
 					/*===============================================================*\
 					 * Detect support slice method
 					 * if slice is not supported then send all file at once
@@ -318,7 +318,7 @@ reader.readAsBinaryString(chunk);
 						{
 							var perc = Math.round((e.loaded+peice_count*peice-peice)*100/totals);
 							div_p.html(perc+'%').css('width',perc+'%');
-						}  
+						}
 					};
 
 					xhr.upload.onerror=settings.error(xhr.responseText,o.name);
@@ -330,13 +330,13 @@ reader.readAsBinaryString(chunk);
                     xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
 					xhr.send(chunk);//send request of file 
 				}
-				
+
 				/*=======================================================
 				 * Disable option
 				 *======================================================*/
 	    	    if(!settings.enable)
 	    	    	$(this).find('input:not(:disabled), button:not(:disabled)').addClass('ax-disabled').attr('disabled',true);
-	    	    	
+
     	    });
 		},
 		enable:function()

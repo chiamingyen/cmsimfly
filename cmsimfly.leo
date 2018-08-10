@@ -52,7 +52,7 @@
 <v t="leo.20180625155248.1"><vh>@edit pybean.py</vh></v>
 <v t="leo.20180625155728.1"><vh>@edit schema.sql</vh></v>
 <v t="amd.20160718130611.1"><vh>@edit .gitignore</vh></v>
-<v t="amd.20160717222221.1"><vh>@path static</vh>
+<v t="amd.20160717222221.1" a="E"><vh>@path static</vh>
 <v t="amd.20160717222242.1"><vh>@edit axuploader.js</vh></v>
 <v t="amd.20160718125932.1"><vh>@edit viewstl.html</vh></v>
 <v t="amd.20160718125943.1"><vh>@edit stlviewer.js</vh></v>
@@ -253,7 +253,6 @@ if uwsgi:
 else:
     # 表示在近端執行, 以 python3 wsgi.py 執行
     flaskapp.app.run(host='127.0.0.1', port=9443, debug=True, ssl_context=context)
-
 </t>
 <t tx="amd.20160714230833.1"></t>
 <t tx="amd.20160714230833.16">@app.route('/download/', methods=['GET'])
@@ -443,6 +442,7 @@ def get_page(heading, edit):
 
 </t>
 <t tx="amd.20160714231359.1">def render_menu(head, level, page, sitemap=0):
+    '''允許使用者在 h1 標題後直接加上 h3 標題, 或者隨後納入 h4 之後作為標題標註'''
     directory = ""
     # 從 level 數列第一個元素作為開端
     current_level = level[0]
@@ -832,8 +832,6 @@ def file_lister(directory, type=None, page=1, item_per_page=10):
             return "%3.1f%s" % (num, x)
         num /= 1024.0
     return "%3.1f%s" % (num, 'TB')
-
-
 </t>
 <t tx="amd.20160714231934.1"># set_admin_css for administrator
 def set_admin_css():
@@ -958,45 +956,7 @@ window.location= 'https://' + location.host + location.pathname + location.searc
 '''
 
 
-def syntaxhighlight2():
-    return '''
-&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shCore.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushJScript.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushJava.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushPython.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushSql.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushXml.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushPhp.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushLua.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushCpp.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushCss.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushCSharp.js"&gt;&lt;/script&gt;
-&lt;link type="text/css" rel="stylesheet" href="./../static/syntaxhighlighter/css/shCoreDefault.css"/&gt;
-&lt;script type="text/javascript"&gt;SyntaxHighlighter.all();&lt;/script&gt;
 
-&lt;!-- for LaTeX equations 暫時不用
-&lt;script src="https://scrum-3.github.io/web/math/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"&gt;&lt;/script&gt;
-&lt;script type="text/javascript"&gt;
-init_mathjax = function() {
-    if (window.MathJax) {
-        // MathJax loaded
-        MathJax.Hub.Config({
-            tex2jax: {
-                inlineMath: [ ['$','$'], ["\\\\(","\\\\)"] ],
-                displayMath: [ ['$$','$$'], ["\\\\[","\\\\]"] ]
-            },
-            displayAlign: 'left', // Change this to 'center' to center equations.
-            "HTML-CSS": {
-                styles: {'.MathJax_Display': {"margin": 0}}
-            }
-        });
-        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
-    }
-}
-init_mathjax();
-&lt;/script&gt;
---&gt;
-&lt;!-- 暫時不用
 </t>
 <t tx="amd.20160714232140.1"># 與 file_selector 搭配的取檔程式
 def downloadselect_access_list(files, starti, endi):
@@ -1022,7 +982,7 @@ def downloadselect_access_list(files, starti, endi):
     for index in range(int(starti)-1, int(endi)):
         fileName, fileExtension = os.path.splitext(files[index])
         fileExtension = fileExtension.lower()
-        fileSize = sizeof_fmt(os.path.getsize(config_dir+filedir+"_programs/"+files[index]))
+        fileSize = sizeof_fmt(os.path.getsize(config_dir + filedir + "_programs/" + files[index]))
         # images files
         if fileExtension == ".png" or fileExtension == ".jpg" or fileExtension == ".gif":
             outstring += '&lt;input type="checkbox" name="filename" value="' + files[index] + \
@@ -1094,7 +1054,7 @@ a.xhfbfile:hover{
             keep.append(item)
         else:
             count[item] += 1
-            keep.append(str(item)+"_"+str(count[item]))
+            keep.append(str(item) + "_" + str(count[item]))
     return keep
 
 
@@ -1282,7 +1242,7 @@ def savePage():
     if page_content is None:
         return error_log("no content to save!")
     # we need to check if page heading is duplicated
-    file = open(config_dir+"content.htm", "w", encoding="utf-8")
+    file = open(config_dir + "content.htm", "w", encoding="utf-8")
     # in Windows client operator, to avoid textarea add extra \n
     page_content = page_content.replace("\n","")
     file.write(page_content)
@@ -1293,9 +1253,9 @@ def savePage():
     '''
     # need to parse_content() to eliminate duplicate heading
     head, level, page = parse_content()
-    file = open(config_dir+"content.htm", "w", encoding="utf-8")
+    file = open(config_dir + "content.htm", "w", encoding="utf-8")
     for index in range(len(head)):
-        file.write("&lt;h"+str(level[index])+"&gt;"+str(head[index])+"&lt;/h"+str(level[index])+"&gt;"+str(page[index]))
+        file.write("&lt;h" + str(level[index])+ "&gt;" + str(head[index]) + "&lt;/h" + str(level[index]) + "&gt;" + str(page[index]))
     file.close()
     '''
     return redirect("/edit_page")
@@ -1335,8 +1295,8 @@ def ssavePage():
     if original_head_title is None:
         return redirect("/")
     if original_head_title == head[int(page_order)]:
-        #edit_url = "/get_page/"+urllib.parse.quote_plus(head[int(page_order)])+"&amp;edit=1"
-        #edit_url = "/get_page/"+urllib.parse.quote_plus(original_head_title)+"/1"
+        #edit_url = "/get_page/" + urllib.parse.quote_plus(head[int(page_order)]) + "&amp;edit=1"
+        #edit_url = "/get_page/" + urllib.parse.quote_plus(original_head_title) + "/1"
         edit_url = "/get_page/" + original_head_title + "/1"
         return redirect(edit_url)
     else:
@@ -1873,7 +1833,7 @@ def image_delete_file():
                               filename[index] + "'&gt;&lt;br /&gt;"
     outstring += "&lt;br /&gt;&lt;input type='submit' value='delete'&gt;&lt;/form&gt;"
 
-    return set_css() + "&lt;div class='container'&gt;&lt;nav&gt;"+ \
+    return set_css() + "&lt;div class='container'&gt;&lt;nav&gt;" + \
              directory + "&lt;/nav&gt;&lt;section&gt;&lt;h1&gt;Download List&lt;/h1&gt;" + \
              outstring + "&lt;br/&gt;&lt;br /&gt;&lt;/body&gt;&lt;/html&gt;"
 
@@ -1938,7 +1898,7 @@ def image_doDelete():
     head, level, page = parse_content()
     directory = render_menu(head, level, page)
 
-    return set_css() + "&lt;div class='container'&gt;&lt;nav&gt;"+ \
+    return set_css() + "&lt;div class='container'&gt;&lt;nav&gt;" + \
              directory + "&lt;/nav&gt;&lt;section&gt;&lt;h1&gt;Image List&lt;/h1&gt;" + \
              outstring + "&lt;br/&gt;&lt;br /&gt;&lt;/body&gt;&lt;/html&gt;"
 
@@ -1952,7 +1912,7 @@ def search_form(edit):
         head, level, page = parse_content()
         directory = render_menu(head, level, page)
         return set_css() + "&lt;div class='container'&gt;&lt;nav&gt;" + \
-                 directory+"&lt;/nav&gt;&lt;section&gt;&lt;h1&gt;Search&lt;/h1&gt; \
+                 directory + "&lt;/nav&gt;&lt;section&gt;&lt;h1&gt;Search&lt;/h1&gt; \
                  &lt;form method='post' action='doSearch'&gt; \
                  keywords:&lt;input type='text' name='keyword'&gt; \
                  &lt;input type='submit' value='search'&gt;&lt;/form&gt; \
@@ -1979,7 +1939,7 @@ def doSearch():
                                 head[index] + "&lt;/a&gt;&lt;br /&gt;"
         return set_css() + "&lt;div class='container'&gt;&lt;nav&gt;"+ \
                    directory + "&lt;/nav&gt;&lt;section&gt;&lt;h1&gt;Search Result&lt;/h1&gt;keyword: " + \
-                   keyword.lower()+"&lt;br /&gt;&lt;br /&gt;in the following pages:&lt;br /&gt;&lt;br /&gt;" + \
+                   keyword.lower() + "&lt;br /&gt;&lt;br /&gt;in the following pages:&lt;br /&gt;&lt;br /&gt;" + \
                    match + "&lt;/section&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;"
 
 
@@ -2044,9 +2004,7 @@ def listdir():
 
 
 </t>
-<t tx="amd.20160715162003.1">
-
-@app.route('/sitemap', defaults={'edit': 1})
+<t tx="amd.20160715162003.1">@app.route('/sitemap', defaults={'edit': 1})
 @app.route('/sitemap/&lt;path:edit&gt;')
 def sitemap(edit):
     """sitemap for dynamic site"""
@@ -2313,13 +2271,13 @@ def get_page2(heading, head, edit):
         if page_order == 0:
             last_page = ""
         else:
-            #last_page = head[page_order-1]+" &lt;&lt; &lt;a href='/get_page/"+head[page_order-1]+"'&gt;Previous&lt;/a&gt;"
+            #last_page = head[page_order-1]+ " &lt;&lt; &lt;a href='/get_page/" + head[page_order-1] + "'&gt;Previous&lt;/a&gt;"
             last_page = head[page_order-1] + " &lt;&lt; &lt;a href='"+head[page_order-1] + ".html'&gt;Previous&lt;/a&gt;"
         if page_order == len(head) - 1:
             # no next page
             next_page = ""
         else:
-            #next_page = "&lt;a href='/get_page/"+head[page_order+1]+"'&gt;Next&lt;/a&gt; &gt;&gt; "+ head[page_order+1]
+            #next_page = "&lt;a href='/get_page/"+head[page_order+1] + "'&gt;Next&lt;/a&gt; &gt;&gt; " + head[page_order+1]
             next_page = "&lt;a href='" + head[page_order+1] + ".html'&gt;Next&lt;/a&gt; &gt;&gt; " + head[page_order+1]
         if len(page_order_list) &gt; 1:
             return_content += last_page + " " + next_page + "&lt;br /&gt;&lt;h1&gt;" + \
@@ -2354,15 +2312,13 @@ def get_page2(heading, head, edit):
                     outstring_duplicate += outstring_list[i] + "&lt;br /&gt;&lt;hr&gt;"
                 return outstring_duplicate
             else:
-            #pagedata = "&lt;h"+level[page_order]+"&gt;"+heading+"&lt;/h"+level[page_order]+"&gt;"+search_content(head, page, heading)
-            #outstring = last_page+" "+next_page+"&lt;br /&gt;"+ tinymce_editor(directory, cgi.escape(pagedata), page_order)
+            #pagedata = "&lt;h" + level[page_order]+"&gt;" + heading + "&lt;/h" + level[page_order] + "&gt;" + search_content(head, page, heading)
+            #outstring = last_page + " " + next_page + "&lt;br /&gt;" + tinymce_editor(directory, cgi.escape(pagedata), page_order)
                 return outstring
 
 
 </t>
-<t tx="leo.20180630203449.1">
-
-def sitemap2(head):
+<t tx="leo.20180630203449.1">def sitemap2(head):
     """sitemap for static content generation"""
     edit = 0
     not_used_head, level, page = parse_content()
@@ -2470,7 +2426,46 @@ window.location= 'https://' + location.host + location.pathname + location.searc
 整體依附在 OpenShift 的部分必須刪除?
 
 可能在 generate_pages  時針對 downloads 與 images 目錄中的引用,  將動態格式轉為靜態格式</t>
-<t tx="leo.20180630233136.1">&lt;script src="./../static/fengari-web.js"&gt;&lt;/script&gt;
+<t tx="leo.20180630233136.1">def syntaxhighlight2():
+    return '''
+&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shCore.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushJScript.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushJava.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushPython.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushSql.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushXml.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushPhp.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushLua.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushCpp.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushCss.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./../static/syntaxhighlighter/shBrushCSharp.js"&gt;&lt;/script&gt;
+&lt;link type="text/css" rel="stylesheet" href="./../static/syntaxhighlighter/css/shCoreDefault.css"/&gt;
+&lt;script type="text/javascript"&gt;SyntaxHighlighter.all();&lt;/script&gt;
+
+&lt;!-- for LaTeX equations 暫時不用
+&lt;script src="https://scrum-3.github.io/web/math/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+init_mathjax = function() {
+    if (window.MathJax) {
+        // MathJax loaded
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [ ['$','$'], ["\\\\(","\\\\)"] ],
+                displayMath: [ ['$$','$$'], ["\\\\[","\\\\]"] ]
+            },
+            displayAlign: 'left', // Change this to 'center' to center equations.
+            "HTML-CSS": {
+                styles: {'.MathJax_Display': {"margin": 0}}
+            }
+        });
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    }
+}
+init_mathjax();
+&lt;/script&gt;
+--&gt;
+&lt;!-- 暫時不用
+&lt;script src="./../static/fengari-web.js"&gt;&lt;/script&gt;
 &lt;script type="text/javascript" src="./../static/Cango-13v08-min.js"&gt;&lt;/script&gt;
 &lt;script type="text/javascript" src="./../static/CangoAxes-4v01-min.js"&gt;&lt;/script&gt;
 &lt;script type="text/javascript" src="./../static/gearUtils-05.js"&gt;&lt;/script&gt;
@@ -2505,7 +2500,15 @@ index.html 在純 WWW 模式下 redirect 到 content/index.html
 
 靜態網頁引用 static, downloads, images 目錄內容時, 以相對目錄指定 (./../)
 
-CMSimfly 之後將可以在動態或靜態模式下執行運作</t>
+CMSimfly 之後將可以在動態或靜態模式下執行運作
+
+2018.08.08 完成以下功能:
+
+1. 在動態與靜態網頁模式下, 允許重複標題頁面
+在動態模式採用允許重複頁面並存, 無論編輯或檢視, 都會調出各重複標題頁面
+在靜態模式則從數列元素重複標題後加上數字做為區分, 第一序號重複頁面標題加 1, 接著加 2, 依此類推
+2. 當使用者未按照 h1, h2, h3 順序建立頁面時, 會從表單與 sitemap 製作時, 
+將 h3 自動提升為 h2 解決產生頁面混亂結果</t>
 <t tx="leo.20180701205822.1">原來設定
 
 def editorhead():
@@ -2686,12 +2689,12 @@ bug 180726</t>
         library.commit()
     '''
     # if no content.htm, generate a head 1 and content 1 file
-    if not os.path.isfile(config_dir+"content.htm"):
+    if not os.path.isfile(config_dir + "content.htm"):
         # create content.htm if there is no content.htm
         File = open(config_dir + "content.htm", "w", encoding="utf-8")
         File.write("&lt;h1&gt;head 1&lt;/h1&gt;content 1")
         File.close()
-    subject = file_get_contents(config_dir+"content.htm")
+    subject = file_get_contents(config_dir + "content.htm")
     # deal with content without content
     if subject == "":
         # create content.htm if there is no content.htm
@@ -2713,6 +2716,7 @@ bug 180726</t>
     # get the page content to split subject using each h tag
     # i = 0
     temp_data = subject.split(str(htag[0]))
+    # 若有重複標題頁面, 則切割後, 必須將序號 1 之後的資料進行接合
     if len(temp_data) &gt; 2:
         subject = str(htag[0]).join(temp_data[1:])
     else:
@@ -2726,6 +2730,7 @@ bug 180726</t>
                 # the number of h1, h2 or h3 is the level of page menu
                 level_list.append(htag[i-1].name[1])
                 temp_data = subject.split(str(htag[i]))
+                # 若有重複標題頁面, 則切割後, 必須將序號 1 之後的資料進行接合
                 if len(temp_data) &gt; 2:
                     subject = str(htag[i]).join(temp_data[1:])
                 else:
@@ -2768,16 +2773,16 @@ def parse_content_old():
         library.commit()
     '''
     # if no content.htm, generate a head 1 and content 1 file
-    if not os.path.isfile(config_dir+"content.htm"):
+    if not os.path.isfile(config_dir + "content.htm"):
         # create content.htm if there is no content.htm
-        File = open(config_dir+"content.htm", "w", encoding="utf-8")
+        File = open(config_dir + "content.htm", "w", encoding="utf-8")
         File.write("&lt;h1&gt;head 1&lt;/h1&gt;content 1")
         File.close()
-    subject = file_get_contents(config_dir+"content.htm")
+    subject = file_get_contents(config_dir + "content.htm")
     # deal with content without content
     if subject == "":
         # create content.htm if there is no content.htm
-        File = open(config_dir+"content.htm", "w", encoding="utf-8")
+        File = open(config_dir + "content.htm", "w", encoding="utf-8")
         File.write("&lt;h1&gt;head 1&lt;/h1&gt;content 1")
         File.close()
     # deal with content has content but no heading
@@ -2788,7 +2793,7 @@ def parse_content_old():
     # remove all attribute inside h1, h2 and h3 tags
     subject = re.sub('&lt;(h1|h2|h3)[^&gt;]*&gt;', r'&lt;\1&gt;', subject, flags=re.I)
     content = re.split('&lt;/body&gt;', subject)
-    result = re.sub('&lt;h[1-'+str(head_level)+']&gt;', content_sep, content[0])
+    result = re.sub('&lt;h[1-'+str(head_level) + ']&gt;', content_sep, content[0])
     # remove the first element contains html and body tags
     data = result.split(content_sep)[1:]
     head_list = []
@@ -2796,7 +2801,7 @@ def parse_content_old():
     page_list = []
     order = 1
     for index in range(len(data)):
-        #page_data = re.sub('&lt;/h[1-'+str(head_level)+']&gt;', content_sep, data[index])
+        #page_data = re.sub('&lt;/h[1-' + str(head_level) + ']&gt;', content_sep, data[index])
         page_data = re.sub('&lt;/h', content_sep, data[index])
         head = page_data.split(content_sep)[0]
         # remove all tags from head - bug 180726

@@ -6,7 +6,7 @@ setup(name='CMSimfly 2016 Project',
       author='KMOL',
       author_email='course@mde.tw',
       url='https://www.python.org/community/sigs/current/distutils-sig',
- install_requires=['Flask>=0.10.1'],
+ install_requires=['Flask>=0.10.1', 'beautifulsoup4'],
 #install_requires=['Flask>=0.10.1', 'MarkupSafe', 'github3.py', 'authomatic','pytz', 'beautifulsoup4', 'pymysql', 'peewee'],
      )
      
