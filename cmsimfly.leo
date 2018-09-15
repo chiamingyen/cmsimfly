@@ -35,13 +35,14 @@
 <v t="leo.20180630211407.1"><vh>必須修改頁面內容</vh></v>
 </v>
 </v>
-<v t="leo.20180701102916.1" a="E"><vh>2018Summer 改版</vh>
+<v t="leo.20180701102916.1"><vh>2018Summer 改版</vh>
 <v t="leo.20180702104314.1"><vh>整合設定檔案</vh></v>
 <v t="leo.20180701205822.1"><vh>editorhead 修改</vh></v>
 <v t="leo.20180701212101.1"><vh>有關 Cango library</vh></v>
 <v t="leo.20180726214539.1"><vh>存檔時移除所有 tag of title</vh></v>
 <v t="leo.20180731143510.1"><vh>重大 bug</vh></v>
 </v>
+<v t="leo.20180915084539.1"><vh>20180915</vh></v>
 <v t="amd.20160718002238.1"><vh>參考資料</vh></v>
 <v t="amd.20160717220157.1"><vh>Flask 開講</vh></v>
 </v>
@@ -61,7 +62,7 @@
 <v t="amd.20160714230058.1" a="E"><vh>@clean wsgi.py</vh>
 <v t="amd.20160714230122.1"><vh>wsgi declarations</vh></v>
 </v>
-<v t="amd.20160714230833.1" a="E"><vh>編輯 flaskapp.py</vh>
+<v t="amd.20160714230833.1"><vh>編輯 flaskapp.py</vh>
 <v t="amd.20160714230833.2" a="E"><vh>@clean flaskapp.py</vh>
 <v t="amd.20160714230833.3"><vh>&lt;&lt;declarations&gt;&gt;</vh></v>
 <v t="amd.20160714230833.4"><vh>&lt;&lt;registers&gt;&gt;</vh></v>
@@ -2818,5 +2819,6 @@ def parse_content_old():
     #head_list = unique(head_list)
     return head_list, level_list, page_list
 </t>
+<t tx="leo.20180915084539.1">納入 Reveal.js 與 Pelican Blog</t>
 </tnodes>
 </leo_file>
