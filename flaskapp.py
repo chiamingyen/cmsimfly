@@ -1605,10 +1605,15 @@ def bad_parse_content():
 
 
 def parse_content():
+    """假如一律以 bad_parse_content() 處理, 可以移除空白標題"""
+    return bad_parse_content()
+
+    '''
     try:
         return good_parse_content()
     except:
         return bad_parse_content()
+    '''
 
 def render_menu(head, level, page, sitemap=0):
     '''允許使用者在 h1 標題後直接加上 h3 標題, 或者隨後納入 h4 之後作為標題標註'''

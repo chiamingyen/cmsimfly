@@ -42,6 +42,7 @@
 <v t="leo.20180726214539.1"><vh>存檔時移除所有 tag of title</vh></v>
 <v t="leo.20180731143510.1"><vh>重大 bug</vh></v>
 </v>
+<v t="leo.20181005174347.1"><vh>2018Fall 改版</vh></v>
 <v t="leo.20180915084539.1"><vh>20180915</vh></v>
 <v t="amd.20160718002238.1"><vh>參考資料</vh></v>
 <v t="amd.20160717220157.1"><vh>Flask 開講</vh></v>
@@ -2960,9 +2961,17 @@ def parse_content_old():
 
 </t>
 <t tx="leo.20181002215459.1">def parse_content():
+    """假如一律以 bad_parse_content() 處理, 可以移除空白標題"""
+    return bad_parse_content()
+
+    '''
     try:
         return good_parse_content()
     except:
-        return bad_parse_content()</t>
+        return bad_parse_content()
+    '''
+
+</t>
+<t tx="leo.20181005174347.1">處理空白標題問題 -- 將全部 parse_content 交由 bad_parse_content 處理</t>
 </tnodes>
 </leo_file>
