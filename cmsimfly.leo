@@ -107,9 +107,7 @@
 <v t="amd.20160715154321.1"><vh>logout</vh></v>
 <v t="amd.20160714231619.1"><vh>parse_config</vh></v>
 <v t="leo.20181002215447.1"><vh>_remove_h123_attrs</vh></v>
-<v t="leo.20180801042733.1"><vh>good_parse_content</vh></v>
-<v t="leo.20181002215437.1"><vh>bad_parse_content</vh></v>
-<v t="leo.20181002215459.1"><vh>parse_content</vh></v>
+<v t="leo.20181002215437.1"><vh>parse_content</vh></v>
 <v t="amd.20160714231359.1"><vh>render_menu</vh></v>
 <v t="leo.20180630203542.1"><vh>render_menu2</vh></v>
 <v t="amd.20160715161730.1"><vh>saveConfig</vh></v>
@@ -328,7 +326,9 @@ import urllib.parse
 import cgi
 import sys
 # for new parse_content function
-from bs4 import BeautifulSoup
+#from bs4 import BeautifulSoup
+# 為了使用 bs4.element, 改為 import bs4
+import bs4
 
 # get the current directory of the file
 _curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
@@ -2240,7 +2240,7 @@ def generate_pages():
         # 目前重複標題出現總數
         count = head[:i].count(v)
         # 針對重複標題者, 附加目前重複標題出現數 +1, 未重複採原標題
-        newhead.append(v + str(count + 1) if totalcount &gt; 1 else v)
+        newhead.append(v + "-" + str(count + 1) if totalcount &gt; 1 else v)
     # 刪除 content 目錄中所有 html 檔案
     filelist = [ f for f in os.listdir(_curdir + "\\content\\") if f.endswith(".html") ]
     for f in filelist:
@@ -2698,88 +2698,6 @@ bug 180726</t>
 
 20180801 bug, 已經使用 bs4 建立新的解讀函式
 </t>
-<t tx="leo.20180801042733.1">def good_parse_content():
-    """use bs4 and re module functions to parse content.htm"""
-    #from pybean import Store, SQLiteWriter
-    # if no content.db, create database file with cms table
-    '''
-    if not os.path.isfile(config_dir+"content.db"):
-        library = Store(SQLiteWriter(config_dir+"content.db", frozen=False))
-        cms = library.new("cms")
-        cms.follow = 0
-        cms.title = "head 1"
-        cms.content = "content 1"
-        cms.memo = "first memo"
-        library.save(cms)
-        library.commit()
-    '''
-    # if no content.htm, generate a head 1 and content 1 file
-    if not os.path.isfile(config_dir + "content.htm"):
-        # create content.htm if there is no content.htm
-        File = open(config_dir + "content.htm", "w", encoding="utf-8")
-        File.write("&lt;h1&gt;head 1&lt;/h1&gt;content 1")
-        File.close()
-    subject = file_get_contents(config_dir + "content.htm")
-    # deal with content without content
-    if subject == "":
-        # create content.htm if there is no content.htm
-        File = open(config_dir + "content.htm", "w", encoding="utf-8")
-        File.write("&lt;h1&gt;head 1&lt;/h1&gt;content 1")
-        File.close()
-        subject = "&lt;h1&gt;head 1&lt;/h1&gt;content 1"
-    # initialize the return lists
-    head_list = []
-    level_list = []
-    page_list = []
-    # make the soup out of the html content
-    soup = BeautifulSoup(subject, 'html.parser')
-    # get all h1, h2, h3 tags into list
-    htag= soup.find_all(['h1', 'h2', 'h3'])
-    n = len(htag)
-    # get all h tags
-    # g.es(soup.find_all(re.compile(r"^h\d$")))
-    # get the page content to split subject using each h tag
-    # i = 0
-    temp_data = subject.split(str(htag[0]))
-    # 若有重複標題頁面, 則切割後, 必須將序號 1 之後的資料進行接合
-    if len(temp_data) &gt; 2:
-        subject = str(htag[0]).join(temp_data[1:])
-    else:
-        subject = temp_data[1]
-    if n &gt;1:
-            # i from 1 to i-1
-            for i in range(1, len(htag)):
-                # add the first page title
-                head_list.append(htag[i-1].text.strip())
-                # use name attribute of h* tag to get h1, h2 or h3
-                # the number of h1, h2 or h3 is the level of page menu
-                level_list.append(htag[i-1].name[1])
-                temp_data = subject.split(str(htag[i]))
-                # 若有重複標題頁面, 則切割後, 必須將序號 1 之後的資料進行接合
-                if len(temp_data) &gt; 2:
-                    subject = str(htag[i]).join(temp_data[1:])
-                else:
-                    subject = temp_data[1]
-                # cut the other page content out of htag from 1 to i-1
-                cut = temp_data[0]
-                # add the page content
-                page_list.append(cut)
-    # last i
-    # add the last page title
-    head_list.append(htag[n-1].text.strip())
-    # add the last level
-    level_list.append(htag[n-1].name[1])
-    temp_data = subject.split(str(htag[n-1]))
-    # the last subject
-    subject = temp_data[0]
-    # cut the last page content out
-    cut = temp_data[0]
-    # the last page content
-    page_list.append(cut)
-    return head_list, level_list, page_list
-
-
-</t>
 <t tx="leo.20180801114529.1"></t>
 <t tx="leo.20180801114537.1">@language python
 # old parser, will erase content after h4 and so on (BUG)
@@ -2844,7 +2762,7 @@ def parse_content_old():
     return head_list, level_list, page_list
 </t>
 <t tx="leo.20180915084539.1">納入 Reveal.js 與 Pelican Blog</t>
-<t tx="leo.20181002215437.1">def bad_parse_content():
+<t tx="leo.20181002215437.1">def parse_content():
     """use bs4 and re module functions to parse content.htm"""
     #from pybean import Store, SQLiteWriter
     # if no content.db, create database file with cms table
@@ -2878,14 +2796,9 @@ def parse_content_old():
     level_list = []
     page_list = []
     # make the soup out of the html content
-    soup = BeautifulSoup(subject, 'html.parser')
-    # 嘗試移除 h 標註中的任何 attributes 設定
+    soup = bs4.BeautifulSoup(subject, 'html.parser')
+    # 嘗試解讀各種情況下的標題
     soup = _remove_h123_attrs(soup)
-    # 這裡還需要將 h1~h3 的內容中可能出現的各種標註去除
-    # 目前仍無法處理標題中的 &lt;p&gt; 標註
-    for title_tags in soup.find_all(['h1', 'h2', 'h3']):
-        title_text = title_tags.get_text()
-        title_tags.string.replace_with(title_text)
     # 改寫 content.htm 後重新取 subject
     with open(config_dir + "content.htm", "wb") as f:
         f.write(soup.encode("utf-8"))
@@ -2893,10 +2806,7 @@ def parse_content_old():
     # get all h1, h2, h3 tags into list
     htag= soup.find_all(['h1', 'h2', 'h3'])
     n = len(htag)
-    # get all h tags
-    # g.es(soup.find_all(re.compile(r"^h\d$")))
     # get the page content to split subject using each h tag
-    # i = 0
     temp_data = subject.split(str(htag[0]))
     if len(temp_data) &gt; 2:
         subject = str(htag[0]).join(temp_data[1:])
@@ -2905,12 +2815,7 @@ def parse_content_old():
     if n &gt;1:
             # i from 1 to i-1
             for i in range(1, len(htag)):
-                # add the first page title
-                #soup = BeautifulSoup(htag[i-1].text.strip())
-                #title_text = soup.get_text()
-                # 原先只有下列一行, 改為上面兩行與下面一行
                 head_list.append(htag[i-1].text.strip())
-                #head_list.append(title_text)
                 # use name attribute of h* tag to get h1, h2 or h3
                 # the number of h1, h2 or h3 is the level of page menu
                 level_list.append(htag[i-1].name[1])
@@ -2925,13 +2830,7 @@ def parse_content_old():
                 page_list.append(cut)
     # last i
     # add the last page title
-    # 再利用 bs4 移除標題中可能的其他標註
-    #soup = BeautifulSoup(htag[n-1].text.strip())
-    #title_text = soup.get_text()
-    # 原先只有下列一行
     head_list.append(htag[n-1].text.strip())
-    # 配合上上兩行, 改為下一行
-    #head_list.append(title_text)
     # add the last level
     level_list.append(htag[n-1].name[1])
     temp_data = subject.split(str(htag[n-1]))
@@ -2943,35 +2842,56 @@ def parse_content_old():
     page_list.append(cut)
     return head_list, level_list, page_list
 
-
 </t>
 <t tx="leo.20181002215447.1">def _remove_h123_attrs(soup):
-    for tag in soup.findAll(['h1', 'h2', 'h3']): 
-        # 去除標註中的所有 attributes
-        tag.attrs = {}
-        # 標註內容只留下字串, 必須要額外處理無字串的標題
-        # 例如: &lt;p&gt; 或 &lt;img&gt; 等標註, 若 h1, h2, h3 contents 中有 img, 則
-        # 利用 tag.replaceWithChildren() 只保留 img, 去除 h 標註
-        if (tag.string is not None) and (tag.get_text() is not None):
-            tag.string = tag.get_text()
+    tag_order = 0
+    for tag in soup.find_all(['h1', 'h2', 'h3']):
+        # 假如標註內容沒有字串
+        #if len(tag.text) == 0:
+        if len(tag.contents) ==0:
+            # 且該標註為排序第一
+            if tag_order == 0:
+                tag.string = "First"
+            else:
+                # 若該標註非排序第一, 則移除無內容的標題標註
+                tag.extract()
+        # 針對單一元件的標題標註
+        elif len(tag.contents) == 1:
+            # 若內容非為純文字, 表示內容為其他標註物件
+            if tag.get_text() == "":
+                # 且該標註為排序第一
+                if tag_order == 0:
+                    # 在最前方插入標題
+                    tag.insert_before(soup.new_tag('h1', 'First'))
+                else:
+                    # 移除 h1, h2 或 h3 標註, 只留下內容
+                    tag.replaceWithChildren()
+            # 針對其餘單一字串內容的標註, 則保持原樣
+        # 針對內容一個以上的標題標註
+        #elif len(tag.contents) &gt; 1:
         else:
-            # 只保留標題內容,  去除 h1, h2 或 h3 標註
-            tag.replaceWithChildren()
-    return soup
+            # 假如該標註內容長度大於 1
+            # 且該標註為排序第一
+            if tag_order == 0:
+                # 先移除 h1, h2 或 h3 標註, 只留下內容
+                #tag.replaceWithChildren()
+                # 在最前方插入標題
+                tag.insert_before(soup.new_tag('h1', 'First'))
+            else:
+                # 只保留標題內容,  去除 h1, h2 或 h3 標註
+                # 為了與前面的內文區隔, 先在最前面插入 br 標註
+                tag.insert_before(soup.new_tag('br'))
+                # 再移除非排序第一的 h1, h2 或 h3 標註, 只留下內容
+                tag.replaceWithChildren()
+        tag_order = tag_order + 1
 
-</t>
-<t tx="leo.20181002215459.1">def parse_content():
-    """假如一律以 bad_parse_content() 處理, 可以移除空白標題"""
-    return bad_parse_content()
+    return soup</t>
+<t tx="leo.20181005174347.1">若空白標題為第一標題, 則會補上 First 標題
+若空白標題非第一標題, 則刪除
 
-    '''
-    try:
-        return good_parse_content()
-    except:
-        return bad_parse_content()
-    '''
+其他 h1, h2, h3 標註中帶有屬性, 一律刪除
 
-</t>
-<t tx="leo.20181005174347.1">處理空白標題問題 -- 將全部 parse_content 交由 bad_parse_content 處理</t>
+若標題中帶有特殊超文件內容, 若非第一標題, 則移除 h1, h2 或 h3 標註, 留下內容
+若帶有特殊超文件內容的標題, 為第一標題, 則最前方加上 &lt;h1&gt;First&lt;/h1&gt; 標註</t>
 </tnodes>
 </leo_file>
