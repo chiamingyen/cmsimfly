@@ -329,6 +329,8 @@ import sys
 #from bs4 import BeautifulSoup
 # 為了使用 bs4.element, 改為 import bs4
 import bs4
+# for ssavePage and savePage
+import shutil
 
 # get the current directory of the file
 _curdir = os.path.join(os.getcwd(), os.path.dirname(__file__))
@@ -1240,13 +1242,15 @@ def logout():
 </t>
 <t tx="amd.20160715154534.1">@app.route('/savePage', methods=['POST'])
 def savePage():
+    """save all pages function"""
     page_content = request.form['page_content']
     # check if administrator
     if not isAdmin():
         return redirect("/login")
     if page_content is None:
         return error_log("no content to save!")
-    # we need to check if page heading is duplicated
+    # 在插入新頁面資料前, 先複製 content.htm 一分到 content_backup.htm
+    shutil.copy2(config_dir + "content.htm", config_dir + "content_backup.htm")
     file = open(config_dir + "content.htm", "w", encoding="utf-8")
     # in Windows client operator, to avoid textarea add extra \n
     page_content = page_content.replace("\n","")
@@ -1280,6 +1284,8 @@ def ssavePage():
     page_content = page_content.replace("\n","")
     head, level, page = parse_content()
     original_head_title = head[int(page_order)]
+    # 在插入新頁面資料前, 先複製 content.htm 一分到 content_backup.htm
+    shutil.copy2(config_dir + "content.htm", config_dir + "content_backup.htm")
     file = open(config_dir + "content.htm", "w", encoding="utf-8")
     for index in range(len(head)):
         if index == int(page_order):
