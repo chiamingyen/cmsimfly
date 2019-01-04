@@ -725,14 +725,12 @@ def generate_pages():
         os.remove(os.path.join(_curdir + "\\content\\", f))
     # 這裡需要建立專門寫出 html 的 write_page
     # index.html
-    file = open(_curdir + "\\content\\index.html", "w", encoding="utf-8")
-    file.write(get_page2(None, newhead, 0))
-    file.close()
+    with open(_curdir + "\\content\\index.html", "w", encoding="utf-8") as f:
+        f.write(get_page2(None, newhead, 0))
     # sitemap
-    file = open(_curdir + "\\content\\sitemap.html", "w", encoding="utf-8")
-    # sitemap2 需要 newhead
-    file.write(sitemap2(newhead))
-    file.close()
+    with open(_curdir + "\\content\\sitemap.html", "w", encoding="utf-8") as f:
+        # sitemap2 需要 newhead
+        f.write(sitemap2(newhead))
     # 以下轉檔, 改用 newhead 數列
 
     def visible(element):
@@ -747,13 +745,7 @@ def generate_pages():
         # 在此必須要將頁面中的 /images/ 字串換為 images/, /downloads/ 換為 downloads/
         # 因為 Flask 中靠 /images/ 取檔案, 但是一般 html 則採相對目錄取檔案
         # 此一字串置換在 get_page2 中進行
-        '''
-        file = open(_curdir + "\\content\\" + newhead[i] + ".html", "w", encoding="utf-8")
-        # 增加以 newhead 作為輸入
-        file.write(get_page2(newhead[i], newhead, 0))
-        file.close()
-        '''
-        # 改為加入 tipue search 模式
+        # 加入 tipue search 模式
         get_page_content = []
         html_doc = get_page2(newhead[i], newhead, 0, get_page_content)
         soup = bs4.BeautifulSoup(" ".join(get_page_content), "lxml")
@@ -1434,12 +1426,11 @@ def logout():
 def parse_config():
     if not os.path.isfile(config_dir+"config"):
         # create config file if there is no config file
-        file = open(config_dir + "config", "w", encoding="utf-8")
         # default password is admin
         password="admin"
         hashed_password = hashlib.sha512(password.encode('utf-8')).hexdigest()
-        file.write("siteTitle:CMSimfly \npassword:"+hashed_password)
-        file.close()
+        with open(config_dir + "config", "w", encoding="utf-8") as f:
+            f.write("siteTitle:CMSimfly \npassword:"+hashed_password)
     config = file_get_contents(config_dir + "config")
     config_data = config.split("\n")
     site_title = config_data[0].split(":")[1]
@@ -1514,16 +1505,14 @@ def parse_content():
     # if no content.htm, generate a head 1 and content 1 file
     if not os.path.isfile(config_dir+"content.htm"):
         # create content.htm if there is no content.htm
-        File = open(config_dir + "content.htm", "w", encoding="utf-8")
-        File.write("<h1>head 1</h1>content 1")
-        File.close()
+        with open(config_dir + "content.htm", "w", encoding="utf-8") as f:
+            f.write("<h1>head 1</h1>content 1")
     subject = file_get_contents(config_dir+"content.htm")
     # deal with content without content
     if subject == "":
         # create content.htm if there is no content.htm
-        File = open(config_dir + "content.htm", "w", encoding="utf-8")
-        File.write("<h1>head 1</h1>content 1")
-        File.close()
+        with open(config_dir + "content.htm", "w", encoding="utf-8") as f:
+            f.write("<h1>head 1</h1>content 1")
         subject = "<h1>head 1</h1>content 1"
     # initialize the return lists
     head_list = []
@@ -1715,22 +1704,10 @@ def savePage():
         return error_log("no content to save!")
     # 在插入新頁面資料前, 先複製 content.htm 一分到 content_backup.htm
     shutil.copy2(config_dir + "content.htm", config_dir + "content_backup.htm")
-    file = open(config_dir + "content.htm", "w", encoding="utf-8")
     # in Windows client operator, to avoid textarea add extra \n
     page_content = page_content.replace("\n","")
-    file.write(page_content)
-    file.close()
-
-    # if every savePage generate_pages needed
-    #generate_pages()
-    '''
-    # need to parse_content() to eliminate duplicate heading
-    head, level, page = parse_content()
-    file = open(config_dir + "content.htm", "w", encoding="utf-8")
-    for index in range(len(head)):
-        file.write("<h" + str(level[index])+ ">" + str(head[index]) + "</h" + str(level[index]) + ">" + str(page[index]))
-    file.close()
-    '''
+    with open(config_dir + "content.htm", "w", encoding="utf-8") as f:
+        f.write(page_content)
     return redirect("/edit_page")
 
 
