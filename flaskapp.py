@@ -734,14 +734,36 @@ def generate_pages():
     file.write(sitemap2(newhead))
     file.close()
     # 以下轉檔, 改用 newhead 數列
+
+    def visible(element):
+        if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
+            return False
+        elif re.match('<!--.*-->', str(element.encode('utf-8'))):
+            return False
+        return True
+
+    search_content = []
     for i in range(len(newhead)):
         # 在此必須要將頁面中的 /images/ 字串換為 images/, /downloads/ 換為 downloads/
         # 因為 Flask 中靠 /images/ 取檔案, 但是一般 html 則採相對目錄取檔案
         # 此一字串置換在 get_page2 中進行
+        '''
         file = open(_curdir + "\\content\\" + newhead[i] + ".html", "w", encoding="utf-8")
         # 增加以 newhead 作為輸入
         file.write(get_page2(newhead[i], newhead, 0))
         file.close()
+        '''
+        # 改為加入 tipue search 模式
+        get_page_content = []
+        html_doc = get_page2(newhead[i], newhead, 0, get_page_content)
+        soup = bs4.BeautifulSoup(" ".join(get_page_content), "lxml")
+        search_content.append({"title": newhead[i], "text": " ".join(filter(visible, soup.findAll(text=True))), "tags": "", "url": newhead[i] + ".html"})
+        with open(_curdir + "\\content\\" + newhead[i] + ".html", "w", encoding="utf-8") as f:
+            # 增加以 newhead 作為輸入
+            f.write(html_doc)
+    # GENERATE js file
+    with open(_curdir + "\\content\\tipuesearch_content.js", "w", encoding="utf-8") as f:
+        f.write("var tipuesearch = {\"pages\": " + str(search_content) + "};")
     # generate each page html under content directory
     return "已經將網站轉為靜態網頁. <a href='/'>Home</a>"
 # seperate page need heading and edit variables, if edit=1, system will enter edit mode
@@ -821,7 +843,9 @@ def get_page(heading, edit):
 @app.route('/get_page2/<heading>', defaults={'edit': 0})
 @app.route('/get_page2/<heading>/<int:edit>')
 '''
-def get_page2(heading, head, edit):
+# before add tipue search function
+#def get_page2(heading, head, edit):
+def get_page2(heading, head, edit, get_page_content = None):
     not_used_head, level, page = parse_content()
     # 直接在此將 /images/ 換為 ./../images/, /downloads/ 換為 ./../downloads/, 以 content 為基準的相對目錄設定
     page = [w.replace('/images/', './../images/') for w in page]
@@ -833,6 +857,8 @@ def get_page2(heading, head, edit):
         heading = head[0]
     # 因為同一 heading 可能有多頁, 因此不可使用 head.index(heading) 搜尋 page_order
     page_order_list, page_content_list = search_content(head, page, heading)
+    if get_page_content is not None:
+        get_page_content.extend(page_content_list)
     return_content = ""
     pagedata = ""
     outstring = ""
@@ -871,8 +897,13 @@ def get_page2(heading, head, edit):
     
     # edit=0 for viewpage
     if edit == 0:
+        '''
+        # before add tipue search function
         return set_css2() + "<div class='container'><nav>"+ \
         directory + "</nav><section>" + return_content + "</section></div></body></html>"
+        '''
+        return set_css2() + "<div class='container'><nav>"+ \
+        directory + "</nav><section><div id=\"tipue_search_content\">" + return_content + "</div></section></div></body></html>"
     # enter edit mode
     else:
         # check if administrator
@@ -1604,7 +1635,9 @@ def render_menu2(head, level, page, sitemap=0):
     if sitemap:
         directory += "<ul>"
     else:
-        directory += "<ul id='css3menu1' class='topmenu'>"
+        # before add tipue search function
+        #directory += "<ul id='css3menu1' class='topmenu'>"
+        directory += "<ul id='css3menu1' class='topmenu'><div class=\"tipue_search_group\"><input style=\"width: 6vw;\" type=\"text\" name=\"q\" id=\"tipue_search_input\" pattern=\".{2,}\" title=\"Press enter key to search\" required></div>"
     for index in range(len(head)):
         this_level = level[index]
         # 若處理中的層級比上一層級高超過一層, 則將處理層級升級 (處理 h1 後直接接 h3 情況)
@@ -1898,14 +1931,23 @@ def set_css2():
 <meta http-equiv="content-type" content="text/html;charset=utf-8">
 <title>''' + init.Init.site_title + '''</title> \
 <link rel="stylesheet" type="text/css" href="./../static/cmsimply.css">
+<script src="tipuesearch_content.js"></script>
+<script src="./../static/jquery.js"></script>
+<link rel="stylesheet" href="./../static/tipuesearch/css/tipuesearch.css">
+<script src="./../static/tipuesearch/tipuesearch_set.js"></script>
+<script src="./../static/tipuesearch/tipuesearch.min.js"></script>
 ''' + syntaxhighlight2()
 
     outstring += '''
-<script src="./../static/jquery.js"></script>
 <script type="text/javascript">
 $(function(){
     $("ul.topmenu> li:has(ul) > a").append('<div class="arrow-right"></div>');
     $("ul.topmenu > li ul li:has(ul) > a").append('<div class="arrow-right"></div>');
+});
+$(document).ready(function() {
+     $('#tipue_search_input').tipuesearch({
+        newWindow: true, minimumLength: 2
+     });
 });
 </script>
 '''

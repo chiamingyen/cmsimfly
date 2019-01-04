@@ -41,6 +41,7 @@
 </v>
 <v t="leo.20181005174347.1"><vh>2018Fall 改版</vh></v>
 <v t="leo.20180915084539.1"><vh>20180915</vh></v>
+<v t="leo.20190104175029.1"><vh>20190104</vh></v>
 <v t="amd.20160718002238.1"><vh>參考資料</vh></v>
 <v t="amd.20160717220157.1"><vh>Flask 開講</vh></v>
 </v>
@@ -2260,14 +2261,36 @@ def generate_pages():
     file.write(sitemap2(newhead))
     file.close()
     # 以下轉檔, 改用 newhead 數列
+
+    def visible(element):
+        if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
+            return False
+        elif re.match('&lt;!--.*--&gt;', str(element.encode('utf-8'))):
+            return False
+        return True
+
+    search_content = []
     for i in range(len(newhead)):
         # 在此必須要將頁面中的 /images/ 字串換為 images/, /downloads/ 換為 downloads/
         # 因為 Flask 中靠 /images/ 取檔案, 但是一般 html 則採相對目錄取檔案
         # 此一字串置換在 get_page2 中進行
+        '''
         file = open(_curdir + "\\content\\" + newhead[i] + ".html", "w", encoding="utf-8")
         # 增加以 newhead 作為輸入
         file.write(get_page2(newhead[i], newhead, 0))
         file.close()
+        '''
+        # 改為加入 tipue search 模式
+        get_page_content = []
+        html_doc = get_page2(newhead[i], newhead, 0, get_page_content)
+        soup = bs4.BeautifulSoup(" ".join(get_page_content), "lxml")
+        search_content.append({"title": newhead[i], "text": " ".join(filter(visible, soup.findAll(text=True))), "tags": "", "url": newhead[i] + ".html"})
+        with open(_curdir + "\\content\\" + newhead[i] + ".html", "w", encoding="utf-8") as f:
+            # 增加以 newhead 作為輸入
+            f.write(html_doc)
+    # GENERATE js file
+    with open(_curdir + "\\content\\tipuesearch_content.js", "w", encoding="utf-8") as f:
+        f.write("var tipuesearch = {\"pages\": " + str(search_content) + "};")
     # generate each page html under content directory
     return "已經將網站轉為靜態網頁. &lt;a href='/'&gt;Home&lt;/a&gt;"
 </t>
@@ -2278,7 +2301,9 @@ def generate_pages():
 @app.route('/get_page2/&lt;heading&gt;', defaults={'edit': 0})
 @app.route('/get_page2/&lt;heading&gt;/&lt;int:edit&gt;')
 '''
-def get_page2(heading, head, edit):
+# before add tipue search function
+#def get_page2(heading, head, edit):
+def get_page2(heading, head, edit, get_page_content = None):
     not_used_head, level, page = parse_content()
     # 直接在此將 /images/ 換為 ./../images/, /downloads/ 換為 ./../downloads/, 以 content 為基準的相對目錄設定
     page = [w.replace('/images/', './../images/') for w in page]
@@ -2290,6 +2315,8 @@ def get_page2(heading, head, edit):
         heading = head[0]
     # 因為同一 heading 可能有多頁, 因此不可使用 head.index(heading) 搜尋 page_order
     page_order_list, page_content_list = search_content(head, page, heading)
+    if get_page_content is not None:
+        get_page_content.extend(page_content_list)
     return_content = ""
     pagedata = ""
     outstring = ""
@@ -2328,8 +2355,13 @@ def get_page2(heading, head, edit):
     
     # edit=0 for viewpage
     if edit == 0:
+        '''
+        # before add tipue search function
         return set_css2() + "&lt;div class='container'&gt;&lt;nav&gt;"+ \
         directory + "&lt;/nav&gt;&lt;section&gt;" + return_content + "&lt;/section&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;"
+        '''
+        return set_css2() + "&lt;div class='container'&gt;&lt;nav&gt;"+ \
+        directory + "&lt;/nav&gt;&lt;section&gt;&lt;div id=\"tipue_search_content\"&gt;" + return_content + "&lt;/div&gt;&lt;/section&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;"
     # enter edit mode
     else:
         # check if administrator
@@ -2368,7 +2400,9 @@ def get_page2(heading, head, edit):
     if sitemap:
         directory += "&lt;ul&gt;"
     else:
-        directory += "&lt;ul id='css3menu1' class='topmenu'&gt;"
+        # before add tipue search function
+        #directory += "&lt;ul id='css3menu1' class='topmenu'&gt;"
+        directory += "&lt;ul id='css3menu1' class='topmenu'&gt;&lt;div class=\"tipue_search_group\"&gt;&lt;input style=\"width: 6vw;\" type=\"text\" name=\"q\" id=\"tipue_search_input\" pattern=\".{2,}\" title=\"Press enter key to search\" required&gt;&lt;/div&gt;"
     for index in range(len(head)):
         this_level = level[index]
         # 若處理中的層級比上一層級高超過一層, 則將處理層級升級 (處理 h1 後直接接 h3 情況)
@@ -2416,14 +2450,23 @@ def get_page2(heading, head, edit):
 &lt;meta http-equiv="content-type" content="text/html;charset=utf-8"&gt;
 &lt;title&gt;''' + init.Init.site_title + '''&lt;/title&gt; \
 &lt;link rel="stylesheet" type="text/css" href="./../static/cmsimply.css"&gt;
+&lt;script src="tipuesearch_content.js"&gt;&lt;/script&gt;
+&lt;script src="./../static/jquery.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" href="./../static/tipuesearch/css/tipuesearch.css"&gt;
+&lt;script src="./../static/tipuesearch/tipuesearch_set.js"&gt;&lt;/script&gt;
+&lt;script src="./../static/tipuesearch/tipuesearch.min.js"&gt;&lt;/script&gt;
 ''' + syntaxhighlight2()
 
     outstring += '''
-&lt;script src="./../static/jquery.js"&gt;&lt;/script&gt;
 &lt;script type="text/javascript"&gt;
 $(function(){
     $("ul.topmenu&gt; li:has(ul) &gt; a").append('&lt;div class="arrow-right"&gt;&lt;/div&gt;');
     $("ul.topmenu &gt; li ul li:has(ul) &gt; a").append('&lt;div class="arrow-right"&gt;&lt;/div&gt;');
+});
+$(document).ready(function() {
+     $('#tipue_search_input').tipuesearch({
+        newWindow: true, minimumLength: 2
+     });
 });
 &lt;/script&gt;
 '''
@@ -2906,5 +2949,6 @@ def parse_content_old():
 
 若標題中帶有特殊超文件內容, 若非第一標題, 則移除 h1, h2 或 h3 標註, 留下內容
 若帶有特殊超文件內容的標題, 為第一標題, 則最前方加上 &lt;h1&gt;First&lt;/h1&gt; 標註</t>
+<t tx="leo.20190104175029.1">add tipu search javascript package</t>
 </tnodes>
 </leo_file>
