@@ -2366,8 +2366,9 @@ def get_page2(heading, head, edit, get_page_content = None):
     not_used_head, level, page = parse_content()
     directory = render_menu2(head, level, page)
     sitemap = render_menu2(head, level, page, sitemap=1)
+    # add tipue search id
     return set_css2() + "&lt;div class='container'&gt;&lt;nav&gt;" + directory + \
-             "&lt;/nav&gt;&lt;section&gt;&lt;h1&gt;Site Map&lt;/h1&gt;" + sitemap + \
+             "&lt;/nav&gt;&lt;section&gt;&lt;h1&gt;Site Map&lt;/h1&gt;&lt;div id=\"tipue_search_content\"&gt;&lt;/div&gt;" + sitemap + \
              "&lt;/section&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;"
 
 
@@ -2438,15 +2439,17 @@ def get_page2(heading, head, edit, get_page_content = None):
 
     outstring += '''
 &lt;script type="text/javascript"&gt;
+/*shorthand of $(document).ready(function(){};); */
 $(function(){
     $("ul.topmenu&gt; li:has(ul) &gt; a").append('&lt;div class="arrow-right"&gt;&lt;/div&gt;');
     $("ul.topmenu &gt; li ul li:has(ul) &gt; a").append('&lt;div class="arrow-right"&gt;&lt;/div&gt;');
 });
-$(document).ready(function() {
+function doSearch() {
      $('#tipue_search_input').tipuesearch({
         newWindow: true, minimumLength: 2
      });
-});
+}
+$(document).ready(doSearch);
 &lt;/script&gt;
 '''
     if uwsgi:

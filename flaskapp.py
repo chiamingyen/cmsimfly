@@ -1917,15 +1917,17 @@ def set_css2():
 
     outstring += '''
 <script type="text/javascript">
+/*shorthand of $(document).ready(function(){};); */
 $(function(){
     $("ul.topmenu> li:has(ul) > a").append('<div class="arrow-right"></div>');
     $("ul.topmenu > li ul li:has(ul) > a").append('<div class="arrow-right"></div>');
 });
-$(document).ready(function() {
+function doSearch() {
      $('#tipue_search_input').tipuesearch({
         newWindow: true, minimumLength: 2
      });
-});
+}
+$(document).ready(doSearch);
 </script>
 '''
     if uwsgi:
@@ -1979,8 +1981,9 @@ def sitemap2(head):
     not_used_head, level, page = parse_content()
     directory = render_menu2(head, level, page)
     sitemap = render_menu2(head, level, page, sitemap=1)
+    # add tipue search id
     return set_css2() + "<div class='container'><nav>" + directory + \
-             "</nav><section><h1>Site Map</h1>" + sitemap + \
+             "</nav><section><h1>Site Map</h1><div id=\"tipue_search_content\"></div>" + sitemap + \
              "</section></div></body></html>"
 
 

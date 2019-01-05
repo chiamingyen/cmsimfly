@@ -56,15 +56,17 @@ init_mathjax();
 -->
 
 <script type="text/javascript">
+/*shorthand of $(document).ready(function(){};); */
 $(function(){
     $("ul.topmenu> li:has(ul) > a").append('<div class="arrow-right"></div>');
     $("ul.topmenu > li ul li:has(ul) > a").append('<div class="arrow-right"></div>');
 });
-$(document).ready(function() {
+function doSearch() {
      $('#tipue_search_input').tipuesearch({
         newWindow: true, minimumLength: 2
      });
-});
+}
+$(document).ready(doSearch);
 </script>
 
 </head><header><h1>CMSimfly - 動靜皆宜的簡潔網際內容管理</h1> <confmenu>
