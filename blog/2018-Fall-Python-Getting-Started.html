@@ -18,7 +18,7 @@
 
   <!-- Feed -->
         <link href="https://chiamingyen.github.io/cmsimfly/blog/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="CMSimfly 網際內容管理 Full Atom Feed" />
-          <link href="https://chiamingyen.github.io/cmsimfly/blog/feeds/python.atom.xml" type="application/atom+xml" rel="alternate" title="CMSimfly 網際內容管理 Categories Atom Feed" />
+          <link href="https://chiamingyen.github.io/cmsimfly/blog/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="CMSimfly 網際內容管理 Categories Atom Feed" />
 
   <link href="https://chiamingyen.github.io/cmsimfly/blog/theme/css/style.css" type="text/css" rel="stylesheet" />
 
@@ -42,7 +42,7 @@
 
     <link href="https://chiamingyen.github.io/cmsimfly/blog/2018-Fall-Python-Getting-Started.html" rel="canonical" />
 
-        <meta name="description" content="以下程式架構取自 http://lab.kmol.info/blog/brython-programming-environment.html, 使用 static/py/ 目錄中的 ace.py 程式定義.">
+        <meta name="description" content="以下程式架構取自 http://lab.kmol.info/blog/brython-programming-environment.html, 使用 static/py/ 目錄中的 ace.py 程式定義. canvas { border: 1px solid...">
 
         <meta name="author" content="yen">
 
@@ -54,7 +54,7 @@
 <!-- Open Graph -->
 <meta property="og:site_name" content="CMSimfly 網際內容管理"/>
 <meta property="og:title" content="Python Getting Started"/>
-<meta property="og:description" content="以下程式架構取自 http://lab.kmol.info/blog/brython-programming-environment.html, 使用 static/py/ 目錄中的 ace.py 程式定義."/>
+<meta property="og:description" content="以下程式架構取自 http://lab.kmol.info/blog/brython-programming-environment.html, 使用 static/py/ 目錄中的 ace.py 程式定義. canvas { border: 1px solid..."/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="https://chiamingyen.github.io/cmsimfly/blog/2018-Fall-Python-Getting-Started.html"/>
 <meta property="og:type" content="article"/>
@@ -82,21 +82,21 @@
   },
   "image": "https://chiamingyen.github.io/cmsimfly/blog/theme/images/post-bg.jpg",
   "url": "https://chiamingyen.github.io/cmsimfly/blog/2018-Fall-Python-Getting-Started.html",
-  "description": "以下程式架構取自 http://lab.kmol.info/blog/brython-programming-environment.html, 使用 static/py/ 目錄中的 ace.py 程式定義."
+  "description": "以下程式架構取自 http://lab.kmol.info/blog/brython-programming-environment.html, 使用 static/py/ 目錄中的 ace.py 程式定義. canvas { border: 1px solid..."
 }
 </script>
-<script type="text/javascript" src="./../static/syntaxhighlighter/shCore.js"></script>
-<script type="text/javascript" src="./../static/syntaxhighlighter/shBrushJScript.js"></script>
-<script type="text/javascript" src="./../static/syntaxhighlighter/shBrushJava.js"></script>
-<script type="text/javascript" src="./../static/syntaxhighlighter/shBrushPython.js"></script>
-<script type="text/javascript" src="./../static/syntaxhighlighter/shBrushSql.js"></script>
-<script type="text/javascript" src="./../static/syntaxhighlighter/shBrushXml.js"></script>
-<script type="text/javascript" src="./../static/syntaxhighlighter/shBrushPhp.js"></script>
-<script type="text/javascript" src="./../static/syntaxhighlighter/shBrushCpp.js"></script>
-<script type="text/javascript" src="./../static/syntaxhighlighter/shBrushCss.js"></script>
-<script type="text/javascript" src="./../static/syntaxhighlighter/shBrushCSharp.js"></script>
-<script type="text/javascript" src="./../static/syntaxhighlighter/shBrushBash.js"></script>
-<script type="text/javascript" src="./../static/syntaxhighlighter/shBrushLua.js"></script>
+<script type="text/javascript" src="./../data/syntaxhighlighter/shCore.js"></script>
+<script type="text/javascript" src="./../data/syntaxhighlighter/shBrushJScript.js"></script>
+<script type="text/javascript" src="./../data/syntaxhighlighter/shBrushJava.js"></script>
+<script type="text/javascript" src="./../data/syntaxhighlighter/shBrushPython.js"></script>
+<script type="text/javascript" src="./../data/syntaxhighlighter/shBrushSql.js"></script>
+<script type="text/javascript" src="./../data/syntaxhighlighter/shBrushXml.js"></script>
+<script type="text/javascript" src="./../data/syntaxhighlighter/shBrushPhp.js"></script>
+<script type="text/javascript" src="./../data/syntaxhighlighter/shBrushCpp.js"></script>
+<script type="text/javascript" src="./../data/syntaxhighlighter/shBrushCss.js"></script>
+<script type="text/javascript" src="./../data/syntaxhighlighter/shBrushCSharp.js"></script>
+<script type="text/javascript" src="./../data/syntaxhighlighter/shBrushBash.js"></script>
+<script type="text/javascript" src="./../data/syntaxhighlighter/shBrushLua.js"></script>
 <script type='text/javascript'>
 	(function(){
 		var corecss = document.createElement('link');
@@ -134,7 +134,7 @@
 </script>
 
 <!-- for LaTeX equations -->
-<script src="https://scrum-3.github.io/web/math/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
+<script src="./../data/math/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
 <script type="text/javascript">
 init_mathjax = function() {
     if (window.MathJax) {

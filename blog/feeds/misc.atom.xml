@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>CMSimfly 網際內容管理 - Misc</title><link href="https://chiamingyen.github.io/cmsimfly/blog/" rel="alternate"></link><link href="https://chiamingyen.github.io/cmsimfly/blog/feeds/misc.atom.xml" rel="self"></link><id>https://chiamingyen.github.io/cmsimfly/blog/</id><updated>2018-09-10T11:00:00+08:00</updated><entry><title>2018 Fall CP 課程</title><link href="https://chiamingyen.github.io/cmsimfly/blog/2018-Fall-32-bit-Windows.html" rel="alternate"></link><published>2018-09-10T11:00:00+08:00</published><updated>2018-09-10T11:00:00+08:00</updated><author><name>yen</name></author><id>tag:chiamingyen.github.io,2018-09-10:/cmsimfly/blog/2018-Fall-32-bit-Windows.html</id><summary type="html">&lt;p&gt;2018 Fall 一開始, 在一台已經 10 年的 32 位元的 Windows 7 操作系統中工作. 可攜的 Python 3.7.0 仍然可以配置, Leo Editor、PyQt5、flask、Markdown、pelican 與 bs4 的安裝, 也都沒有問題. 只有 Eric6 因為缺少必要模組與 Python 3.7.0 對應的 pyqt5-tools, 因此沒有安裝.&lt;/p&gt;
-</summary><content type="html">&lt;p&gt;2018 Fall 一開始, 在一台已經 10 年的 32 位元的 Windows 7 操作系統中工作. 可攜的 Python 3.7.0 仍然可以配置, Leo Editor、PyQt5、flask、Markdown、pelican 與 bs4 的安裝, 也都沒有問題. 只有 Eric6 因為缺少必要模組與 Python 3.7.0 對應的 pyqt5-tools, 因此沒有安裝.&lt;/p&gt;
+
+
+&lt;h2&gt;電腦規格&lt;/h2&gt;
+&lt;p&gt;目前系上已經沒有 32 位元 Windows 操作系統的電腦, 所以先前只要有學生提到所使用的電腦是舊型 32 位元的 Windows XP 或 Windows …&lt;/p&gt;</summary><content type="html">&lt;p&gt;2018 Fall 一開始, 在一台已經 10 年的 32 位元的 Windows 7 操作系統中工作. 可攜的 Python 3.7.0 仍然可以配置, Leo Editor、PyQt5、flask、Markdown、pelican 與 bs4 的安裝, 也都沒有問題. 只有 Eric6 因為缺少必要模組與 Python 3.7.0 對應的 pyqt5-tools, 因此沒有安裝.&lt;/p&gt;
 
 
 &lt;h2&gt;電腦規格&lt;/h2&gt;
