@@ -255,7 +255,7 @@ if uwsgi:
     application = flaskapp.app
 else:
     # 表示在近端執行, 以 python3 wsgi.py 執行
-    flaskapp.app.run(host='127.0.0.1', port=9443, debug=True, ssl_context=context)
+    flaskapp.app.run(host='127.0.0.1', port=8443, debug=True, ssl_context=context)
 </t>
 <t tx="amd.20160714230833.1"></t>
 <t tx="amd.20160714230833.16">@app.route('/download/', methods=['GET'])
@@ -1245,9 +1245,6 @@ def logout():
 def savePage():
     """save all pages function"""
     page_content = request.form['page_content']
-    # when element_format : "html", need to remove the annoying comment to prevent brython exec
-    page_content = [w.replace('// &lt;![CDATA[', '') for w in page_content]
-    page_content = [w.replace('// ]]&gt;', '') for w in page_content]
     # check if administrator
     if not isAdmin():
         return redirect("/login")
@@ -1267,9 +1264,6 @@ def savePage():
 def ssavePage():
     """seperate save page function"""
     page_content = request.form['page_content']
-    # when element_format : "html", need to remove the annoying comment to prevent brython exec
-    page_content = page_content.replace('// &lt;![CDATA[', '')
-    page_content = page_content.replace('// ]]&gt;', '')
     page_order = request.form['page_order']
     if not isAdmin():
         return redirect("/login")
@@ -2343,7 +2337,8 @@ def get_page2(heading, head, edit, get_page_content = None):
     
     # edit=0 for viewpage
     if edit == 0:
-        return set_css2() + "&lt;div class='container'&gt;&lt;nav&gt;"+ \
+        return set_css2() + '''&lt;div class='container'&gt;&lt;nav&gt;
+        '''+ \
         directory + "&lt;div id=\"tipue_search_content\"&gt;" + return_content + \
         '''&lt;/div&gt;
         
@@ -2422,7 +2417,7 @@ def get_page2(heading, head, edit, get_page_content = None):
 
 </t>
 <t tx="leo.20180630203542.1">def render_menu3(head, level, page, sitemap=0):
-    """render menu for static site"""
+    """render menu for static sitemap"""
     directory = ""
     current_level = level[0]
     if sitemap:
@@ -2495,6 +2490,9 @@ def get_page2(heading, head, edit, get_page_content = None):
             .site-section {
             background-color: #FFFF;
             padding: 40px 40px;
+            }
+            body &gt; div &gt; div.dropdown.open {
+                display: block;
             }
         &lt;/style&gt;
     '''
@@ -3016,9 +3014,14 @@ js 與 css, fonts, scss 位於 /static/chimper 目錄中
     &lt;/div&gt;
     
             &lt;header class="site-navbar py-4 bg-white" role="banner"&gt;
-              &lt;div class="container"&gt;
+              &lt;div class="container-fluid"&gt;
                 &lt;div class="row align-items-center"&gt;
                 &lt;h1&gt;''' + site_title + '''&lt;/h1&gt;
+                &lt;div class="pl-4"&gt;
+                    &lt;form&gt;
+                    &lt;input type="text" placeholder="Search" name="q" id="tipue_search_input" pattern=".{2,}" title="At least 2 characters" required&gt;
+                    &lt;/form&gt;
+                &lt;/div&gt;
                   &lt;!-- &lt;div class="col-11 col-xl-2"&gt;
                     &lt;h1 class="mb-0 site-logo"&gt;&lt;a href="index.html" class="text-black h2 mb-0"&gt;''' + site_title + '''&lt;/a&gt;&lt;/h1&gt; 
                   &lt;/div&gt;
@@ -3041,15 +3044,7 @@ js 與 css, fonts, scss 位於 /static/chimper 目錄中
 &lt;/li&gt;
         '''
     else:
-        directory += '''&lt;ul class='site-menu js-clone-nav mr-auto d-none d-lg-block'&gt;
-&lt;li&gt;
-&lt;form&gt;
-&lt;div class="tipue_search_group"&gt;
-&lt;input type="text" name="q" id="tipue_search_input" pattern=".{2,}" title="At least 2 characters" required&gt;&lt;button type="submit" class="tipue_search_button"&gt;&lt;div class="tipue_search_icon"&gt;&amp;#9906;&lt;/div&gt;&lt;/button&gt;
-&lt;/div&gt;
-&lt;/form&gt;
-&lt;/li&gt;
-        '''
+        directory += '''&lt;ul class='site-menu js-clone-nav mr-auto d-none d-lg-block'&gt;'''
     # 納入主頁與表單
     directory += '''
                         &lt;li class="active has-children"&gt;&lt;a href="index.html"&gt;Home&lt;/a&gt;
@@ -3082,7 +3077,7 @@ js 與 css, fonts, scss 位於 /static/chimper 目錄中
                 next_level = level[index+1]
                 if this_level &lt; next_level:
                     # 表示要加上 class=dropdown
-                    directory += "&lt;li class='active has-children'&gt;&lt;a href='" + head[index] + ".html'&gt;" + head[index] + "&amp;nbsp;&lt;i class='glyphicon glyphicon-triangle-bottom'&gt;&lt;/i&gt;&lt;/a&gt;"
+                    directory += "&lt;li class='has-children'&gt;&lt;a href='" + head[index] + ".html'&gt;" + head[index] + "&lt;/a&gt;"
                 else:
                     directory += "&lt;li&gt;&lt;a href='" + head[index] + ".html'&gt;" + head[index] + "&lt;/a&gt;"
             else:
@@ -3097,7 +3092,7 @@ js 與 css, fonts, scss 位於 /static/chimper 目錄中
                 next_level = level[index+1]
                 if this_level &lt; next_level:
                     # 表示要加上 class=dropdown
-                    directory += "&lt;li class='active has-children'&gt;&lt;a href='" + head[index] + ".html'&gt;" + head[index] + "&amp;nbsp;&lt;i class='glyphicon glyphicon-triangle-bottom'&gt;&lt;/i&gt;&lt;/a&gt;"
+                    directory += "&lt;li class='has-children'&gt;&lt;a href='" + head[index] + ".html'&gt;" + head[index] + "&lt;/a&gt;"
                 else:
                     directory += "&lt;li&gt;&lt;a href='" + head[index] + ".html'&gt;" + head[index] + "&lt;/a&gt;"
             else:
@@ -3111,7 +3106,7 @@ js 與 css, fonts, scss 位於 /static/chimper 目錄中
                 next_level = level[index+1]
                 if this_level &lt; next_level:
                     # 表示要加上 class=dropdown
-                    directory += "&lt;li class='active has-children'&gt;&lt;a href='" + head[index] + ".html'&gt;" + head[index] + "&amp;nbsp;&lt;i class='glyphicon glyphicon-triangle-bottom'&gt;&lt;/i&gt;&lt;/a&gt;"
+                    directory += "&lt;li class='has-children'&gt;&lt;a href='" + head[index] + ".html'&gt;" + head[index] + "&lt;/a&gt;"
                 else:
                     directory += "&lt;li&gt;&lt;a href='" + head[index] + ".html'&gt;" + head[index] + "&lt;/a&gt;"
             else:

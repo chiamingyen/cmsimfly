@@ -889,7 +889,8 @@ def get_page2(heading, head, edit, get_page_content = None):
     
     # edit=0 for viewpage
     if edit == 0:
-        return set_css2() + "<div class='container'><nav>"+ \
+        return set_css2() + '''<div class='container'><nav>
+        '''+ \
         directory + "<div id=\"tipue_search_content\">" + return_content + \
         '''</div>
         
@@ -1671,9 +1672,14 @@ def render_menu2(head, level, page, sitemap=0):
     </div>
     
             <header class="site-navbar py-4 bg-white" role="banner">
-              <div class="container">
+              <div class="container-fluid">
                 <div class="row align-items-center">
                 <h1>''' + site_title + '''</h1>
+                <div class="pl-4">
+                    <form>
+                    <input type="text" placeholder="Search" name="q" id="tipue_search_input" pattern=".{2,}" title="At least 2 characters" required>
+                    </form>
+                </div>
                   <!-- <div class="col-11 col-xl-2">
                     <h1 class="mb-0 site-logo"><a href="index.html" class="text-black h2 mb-0">''' + site_title + '''</a></h1> 
                   </div>
@@ -1696,15 +1702,7 @@ def render_menu2(head, level, page, sitemap=0):
 </li>
         '''
     else:
-        directory += '''<ul class='site-menu js-clone-nav mr-auto d-none d-lg-block'>
-<li>
-<form>
-<div class="tipue_search_group">
-<input type="text" name="q" id="tipue_search_input" pattern=".{2,}" title="At least 2 characters" required><button type="submit" class="tipue_search_button"><div class="tipue_search_icon">&#9906;</div></button>
-</div>
-</form>
-</li>
-        '''
+        directory += '''<ul class='site-menu js-clone-nav mr-auto d-none d-lg-block'>'''
     # 納入主頁與表單
     directory += '''
                         <li class="active has-children"><a href="index.html">Home</a>
@@ -1737,7 +1735,7 @@ def render_menu2(head, level, page, sitemap=0):
                 next_level = level[index+1]
                 if this_level < next_level:
                     # 表示要加上 class=dropdown
-                    directory += "<li class='active has-children'><a href='" + head[index] + ".html'>" + head[index] + "&nbsp;<i class='glyphicon glyphicon-triangle-bottom'></i></a>"
+                    directory += "<li class='has-children'><a href='" + head[index] + ".html'>" + head[index] + "</a>"
                 else:
                     directory += "<li><a href='" + head[index] + ".html'>" + head[index] + "</a>"
             else:
@@ -1752,7 +1750,7 @@ def render_menu2(head, level, page, sitemap=0):
                 next_level = level[index+1]
                 if this_level < next_level:
                     # 表示要加上 class=dropdown
-                    directory += "<li class='active has-children'><a href='" + head[index] + ".html'>" + head[index] + "&nbsp;<i class='glyphicon glyphicon-triangle-bottom'></i></a>"
+                    directory += "<li class='has-children'><a href='" + head[index] + ".html'>" + head[index] + "</a>"
                 else:
                     directory += "<li><a href='" + head[index] + ".html'>" + head[index] + "</a>"
             else:
@@ -1766,7 +1764,7 @@ def render_menu2(head, level, page, sitemap=0):
                 next_level = level[index+1]
                 if this_level < next_level:
                     # 表示要加上 class=dropdown
-                    directory += "<li class='active has-children'><a href='" + head[index] + ".html'>" + head[index] + "&nbsp;<i class='glyphicon glyphicon-triangle-bottom'></i></a>"
+                    directory += "<li class='has-children'><a href='" + head[index] + ".html'>" + head[index] + "</a>"
                 else:
                     directory += "<li><a href='" + head[index] + ".html'>" + head[index] + "</a>"
             else:
@@ -1787,7 +1785,7 @@ def render_menu2(head, level, page, sitemap=0):
     '''
     return directory
 def render_menu3(head, level, page, sitemap=0):
-    """render menu for static site"""
+    """render menu for static sitemap"""
     directory = ""
     current_level = level[0]
     if sitemap:
@@ -1866,9 +1864,6 @@ def saveConfig():
 def savePage():
     """save all pages function"""
     page_content = request.form['page_content']
-    # when element_format : "html", need to remove the annoying comment to prevent brython exec
-    page_content = [w.replace('// <![CDATA[', '') for w in page_content]
-    page_content = [w.replace('// ]]>', '') for w in page_content]
     # check if administrator
     if not isAdmin():
         return redirect("/login")
@@ -2099,6 +2094,9 @@ def set_css2():
             background-color: #FFFF;
             padding: 40px 40px;
             }
+            body > div > div.dropdown.open {
+                display: block;
+            }
         </style>
     '''
     outstring = '''<!DOCTYPE html><html>''' + static_head + '''
@@ -2189,9 +2187,6 @@ def sizeof_fmt(num):
 def ssavePage():
     """seperate save page function"""
     page_content = request.form['page_content']
-    # when element_format : "html", need to remove the annoying comment to prevent brython exec
-    page_content = page_content.replace('// <![CDATA[', '')
-    page_content = page_content.replace('// ]]>', '')
     page_order = request.form['page_order']
     if not isAdmin():
         return redirect("/login")

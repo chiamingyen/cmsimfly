@@ -21,6 +21,9 @@
             background-color: #FFFF;
             padding: 40px 40px;
             }
+            body > div > div.dropdown.open {
+                display: block;
+            }
         </style>
     
         <!-- <script src="./../static/jquery.js"></script> -->
@@ -110,9 +113,14 @@ init_mathjax();
     </div>
     
             <header class="site-navbar py-4 bg-white" role="banner">
-              <div class="container">
+              <div class="container-fluid">
                 <div class="row align-items-center">
                 <h1>CMSimfly - 動靜皆宜的簡潔網際內容管理</h1>
+                <div class="pl-4">
+                    <form>
+                    <input type="text" placeholder="Search" name="q" id="tipue_search_input" pattern=".{2,}" title="At least 2 characters" required>
+                    </form>
+                </div>
                   <!-- <div class="col-11 col-xl-2">
                     <h1 class="mb-0 site-logo"><a href="index.html" class="text-black h2 mb-0">CMSimfly - 動靜皆宜的簡潔網際內容管理</a></h1> 
                   </div>
@@ -120,14 +128,6 @@ init_mathjax();
                   <div class="col-12 col-md-10 d-none d-xl-block">
                     <nav class="site-navigation position-relative text-right" role="navigation">
     <ul class='site-menu js-clone-nav mr-auto d-none d-lg-block'>
-<li>
-<form>
-<div class="tipue_search_group">
-<input type="text" name="q" id="tipue_search_input" pattern=".{2,}" title="At least 2 characters" required><button type="submit" class="tipue_search_button"><div class="tipue_search_icon">&#9906;</div></button>
-</div>
-</form>
-</li>
-        
                         <li class="active has-children"><a href="index.html">Home</a>
                         <ul class="dropdown">
                             <li><a href="sitemap.html">Site Map</a></li>
@@ -135,7 +135,7 @@ init_mathjax();
                             <li><a href="./../blog/index.html">blog</a></li>
                         </ul>
                       </li>
-                     <li><a href='簡介.html'>簡介</a><li><a href='目錄結構.html'>目錄結構</a><li class='active has-children'><a href='頁面編輯.html'>頁面編輯&nbsp;<i class='glyphicon glyphicon-triangle-bottom'></i></a><ul class='dropdown'><li class='active has-children'><a href='插入程式碼.html'>插入程式碼&nbsp;<i class='glyphicon glyphicon-triangle-bottom'></i></a><ul class='dropdown'><li><a href='Java 程式碼.html'>Java 程式碼</a><li><a href='Python 程式碼.html'>Python 程式碼</a><li><a href='C或C++程式碼.html'>C或C++程式碼</a><li><a href='Lua 程式碼.html'>Lua 程式碼</a><li><a href='Javascript 程式碼.html'>Javascript 程式碼</a><li><a href='Html 原始碼.html'>Html 原始碼</a></li></li></ul></ul><li><a href='網際簡報.html'>網際簡報</a><li><a href='網誌編輯.html'>網誌編輯</a><li><a href='已知錯誤.html'>已知錯誤</a></li>
+                     <li><a href='簡介.html'>簡介</a><li><a href='目錄結構.html'>目錄結構</a><li class='has-children'><a href='頁面編輯.html'>頁面編輯</a><ul class='dropdown'><li class='has-children'><a href='插入程式碼.html'>插入程式碼</a><ul class='dropdown'><li><a href='Java 程式碼.html'>Java 程式碼</a><li><a href='Python 程式碼.html'>Python 程式碼</a><li><a href='C或C++程式碼.html'>C或C++程式碼</a><li><a href='Lua 程式碼.html'>Lua 程式碼</a><li><a href='Javascript 程式碼.html'>Javascript 程式碼</a><li><a href='Html 原始碼.html'>Html 原始碼</a></li></li></ul></ul><li><a href='網際簡報.html'>網際簡報</a><li><a href='網誌編輯.html'>網誌編輯</a><li><a href='已知錯誤.html'>已知錯誤</a></li>
                       </ul>
                 </nav>
               </div>
