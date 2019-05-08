@@ -2217,12 +2217,15 @@ def ssavePage():
     # 嘗試避免因最後一個標題刪除儲存後產生 internal error 問題
     if original_head_title is None:
         return redirect("/")
-    if original_head_title == head[int(page_order)]:
-        #edit_url = "/get_page/" + urllib.parse.quote_plus(head[int(page_order)]) + "&edit=1"
-        #edit_url = "/get_page/" + urllib.parse.quote_plus(original_head_title) + "/1"
-        edit_url = "/get_page/" + original_head_title + "/1"
-        return redirect(edit_url)
-    else:
+    try:
+        if original_head_title == head[int(page_order)]:
+            #edit_url = "/get_page/" + urllib.parse.quote_plus(head[int(page_order)]) + "&edit=1"
+            #edit_url = "/get_page/" + urllib.parse.quote_plus(original_head_title) + "/1"
+            edit_url = "/get_page/" + original_head_title + "/1"
+            return redirect(edit_url)
+        else:
+            return redirect("/")
+    except:
         return redirect("/")
 
 

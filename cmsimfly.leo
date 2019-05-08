@@ -43,6 +43,7 @@
 <v t="leo.20181005174347.1"><vh>2018Fall 改版</vh></v>
 <v t="leo.20180915084539.1"><vh>20180915</vh></v>
 <v t="leo.20190104175029.1"><vh>20190104</vh></v>
+<v t="leo.20190502201351.1"><vh>20190501</vh></v>
 <v t="amd.20160718002238.1"><vh>參考資料</vh></v>
 <v t="amd.20160717220157.1"><vh>Flask 開講</vh></v>
 </v>
@@ -255,7 +256,7 @@ if uwsgi:
     application = flaskapp.app
 else:
     # 表示在近端執行, 以 python3 wsgi.py 執行
-    flaskapp.app.run(host='127.0.0.1', port=8443, debug=True, ssl_context=context)
+    flaskapp.app.run(host='127.0.0.1', port=9443, debug=True, ssl_context=context)
 </t>
 <t tx="amd.20160714230833.1"></t>
 <t tx="amd.20160714230833.16">@app.route('/download/', methods=['GET'])
@@ -1294,12 +1295,15 @@ def ssavePage():
     # 嘗試避免因最後一個標題刪除儲存後產生 internal error 問題
     if original_head_title is None:
         return redirect("/")
-    if original_head_title == head[int(page_order)]:
-        #edit_url = "/get_page/" + urllib.parse.quote_plus(head[int(page_order)]) + "&amp;edit=1"
-        #edit_url = "/get_page/" + urllib.parse.quote_plus(original_head_title) + "/1"
-        edit_url = "/get_page/" + original_head_title + "/1"
-        return redirect(edit_url)
-    else:
+    try:
+        if original_head_title == head[int(page_order)]:
+            #edit_url = "/get_page/" + urllib.parse.quote_plus(head[int(page_order)]) + "&amp;edit=1"
+            #edit_url = "/get_page/" + urllib.parse.quote_plus(original_head_title) + "/1"
+            edit_url = "/get_page/" + original_head_title + "/1"
+            return redirect(edit_url)
+        else:
+            return redirect("/")
+    except:
         return redirect("/")
 
 
@@ -2202,6 +2206,8 @@ def downloads(path):
 <t tx="leo.20180625155103.1">2018.06.25 啟動
 
 使用 SQLite 資料庫儲存檔案, 而且可以轉為純 html 文件
+
+2018.08 已經直接透過 generate_pages 將 config/conten.htm 轉為 content 目錄中的靜態網頁
 
 </t>
 <t tx="leo.20180625155310.1">CMSimfly 所需欄位
@@ -3127,5 +3133,6 @@ js 與 css, fonts, scss 位於 /static/chimper 目錄中
     '''
     return directory
 </t>
+<t tx="leo.20190502201351.1">使用 Bootstrap 4 作為靜態網頁的前端, 所 generate_pages 出來在 content 中的頁面可自動在電腦與手機螢幕自行縮放</t>
 </tnodes>
 </leo_file>
