@@ -1257,7 +1257,9 @@ def savePage():
     # 在插入新頁面資料前, 先複製 content.htm 一分到 content_backup.htm
     shutil.copy2(config_dir + "content.htm", config_dir + "content_backup.htm")
     # in Windows client operator, to avoid textarea add extra \n
-    page_content = page_content.replace("\n","")
+    # fix list object has no attribute "replace"
+    #page_content = page_content.replace("\n","")
+    page_content =  [w.replace('\n', '') for w in page_content]
     with open(config_dir + "content.htm", "w", encoding="utf-8") as f:
         f.write(page_content)
     return redirect("/edit_page")
@@ -2300,8 +2302,8 @@ def generate_pages():
 def get_page2(heading, head, edit, get_page_content = None):
     not_used_head, level, page = parse_content()
     # 直接在此將 /images/ 換為 ./../images/, /downloads/ 換為 ./../downloads/, 以 content 為基準的相對目錄設定
-    page = [w.replace('/images/', './../images/') for w in page]
-    page = [w.replace('/downloads/', './../downloads/') for w in page]
+    page = [w.replace('src="/images/', 'src="./../images/') for w in page]
+    page = [w.replace('href="/downloads/', 'href="./../downloads/') for w in page]
     # 假如有 src="/static/ace/則換為 src="./../static/ace/
     page = [w.replace('src="/static/', 'src="./../static/') for w in page]
     directory = render_menu2(head, level, page)
