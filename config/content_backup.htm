@@ -1,6 +1,7 @@
 <h1>簡介</h1>
 <p>CMSimfly (<a href="https://github.com/chiamingyen/cmsimfly">https://github.com/chiamingyen/cmsimfly)</a> 是一套簡單的網際內容管理系統, 採用 Flask 網際框架, 以 Beautifulsoup 解讀分頁內容.</p>
-<p><img alt="" height="471" src="/images/gocycle4.png" width="587"/></p><h1>目錄結構</h1>
+<p><img alt="" height="471" src="/images/gocycle4.png" width="587"/></p>
+<h1>目錄結構</h1>
 <p>CMSimfly 的動態系統採用 Python3 + Flask 建構, 並且利用 Beatifulsoup 解讀位於 contig 目錄中的 content.htm 超文件檔案.</p>
 <p>content.htm 檔案可以透過動態系統中的 generate_pages 功能, 將超文件轉為位於 content 目錄中的個別頁面檔案.</p>
 <p>動態系統與靜態系統則共用 downloads, images, static 等目錄, 其中 downloads 目錄存放在動態系統上傳的文件檔, 而 images 目錄則存放動態系統所上傳的影像檔案, 包括 jpg, png 與 gif 等格式圖檔.</p>
@@ -11,7 +12,8 @@
 <h2>插入程式碼</h2>
 <p>CMSimfly 目前使用 Syntaxhighlighter 3.0.83:</p>
 <p> <a href="http://alexgorbatchev.com/SyntaxHighlighter/">http://alexgorbatchev.com/SyntaxHighlighter/</a> </p>
-<p>進行頁面中的程式碼高亮顯示.</p><h3>Java 程式碼</h3>
+<p>進行頁面中的程式碼高亮顯示.</p>
+<h3>Java 程式碼</h3>
 <pre class="brush:java;auto-links:false;toolbar:false" contenteditable="false">import java.util.Scanner;
 
 public class Life {
@@ -91,7 +93,8 @@ public class Life {
     }
 
 }</pre>
-<p></p><h3>Python 程式碼</h3>
+<p></p>
+<h3>Python 程式碼</h3>
 <pre class="brush:py;auto-links:false;toolbar:false" contenteditable="false">def parse_content():
     """use bs4 and re module functions to parse content.htm"""
     #from pybean import Store, SQLiteWriter
@@ -173,7 +176,8 @@ public class Life {
     return head_list, level_list, page_list
 
 </pre>
-<p></p><h3>C或C++程式碼</h3>
+<p></p>
+<h3>C或C++程式碼</h3>
 <p>請注意, 目前 CMSimfly 標題內文無法解讀 "/" 符號, 因此若本頁面的標題為  "C/C++程式碼", 則無法進行分頁.</p>
 <pre class="brush:cpp;auto-links:false;toolbar:false" contenteditable="false">/* Runge Kutta for a set of first order differential equations */
  
@@ -269,7 +273,8 @@ double f(double x, double y[], int i){
     x=-y[0]-0.5*y[1];
   return x;
 }</pre>
-<p></p><h3>Lua 程式碼</h3>
+<p></p>
+<h3>Lua 程式碼</h3>
 <pre class="brush:lua;auto-links:false;toolbar:false" contenteditable="false">-- 導入 js 模組
 js = require("js")
 -- 取得 window
@@ -297,7 +302,8 @@ while answer ~= tonumber(guess) do
 end
 print("總共猜了 "..num.." 次, answer=guess="..answer.." - correct")
     </pre>
-<p></p><h3>Javascript 程式碼</h3>
+<p></p>
+<h3>Javascript 程式碼</h3>
 <pre class="brush:js;auto-links:false;toolbar:false" contenteditable="false">STLViewer = function(stlpath, plotarea) {
 
 	var mycanvas = document.getElementById(plotarea);
@@ -382,7 +388,8 @@ print("總共猜了 "..num.." 次, answer=guess="..answer.." - correct")
 	}
 }
 </pre>
-<p></p><h3>Html 原始碼</h3>
+<p></p>
+<h3>Html 原始碼</h3>
 <pre class="brush:html;auto-links:false;toolbar:false" contenteditable="false">&lt;html&gt;
    &lt;head&gt;
       &lt;meta http-equiv="content-type" content="text/html;charset=utf-8"&gt;
@@ -426,7 +433,8 @@ print("總共猜了 "..num.." 次, answer=guess="..answer.." - correct")
    &lt;/body&gt;
 &lt;/html&gt;
 COPY TO CLIPBOARD	</pre>
-<p></p><h1>網際簡報</h1>
+<p></p>
+<h1>網際簡報</h1>
 <p>CMSimfly 中採用 <a href="https://revealjs.com/#/">Reveal.js</a> 作為網際簡報, 其中的維護檔案位於 config/reveal.js, 而對應的簡報檔案則位於 reveal 目錄中.</p>
 <h1>網誌編輯</h1>
 <p>CMSimfly 採用 <a href="https://blog.getpelican.com/">Pelican blog</a> 系統, 編輯檔案位於 config/pelican.leo, 對應的</p>
@@ -434,7 +442,10 @@ COPY TO CLIPBOARD	</pre>
 <p>執行 Pelican 之前, 必須先安裝下列模組:</p>
 <p style="padding-left: 30px;">pip install pelican Markdown</p>
 <p>其餘在網誌文章中所需要的 Javascript 或 Brython 程式檔案, 則與 CMSimfly 及 Reveal.js 共用, 位於 static 目錄下.</p>
-<p>上傳檔案與圖檔的引用則與 CMSimfly 架構相同.</p><h1>已知錯誤</h1>
+<p>上傳檔案與圖檔的引用則與 CMSimfly 架構相同.</p>
+<h1>已知錯誤</h1>
+<p>插入圖檔連結</p>
+<p><img alt="" height="460" src="http://cpgx.kmol.info/wcm2019/images/web_developer_2019_intro.png" width="1149"/></p>
 <h4>全部頁面會因無法正確解讀而誤刪</h4>
 <p>在特定情況下, 系統會誤刪 config/content.htm 檔案, 目前在單頁或全部頁面編輯存檔之前, 或將上一版本的 content.htm 存入 content_back.htm, 若 content.htm 內容被程式誤刪, 可以利用備份檔案複製回原始內容後, 再進行後續處理.</p>
 <h4>頁面標題不支援特殊符號</h4>

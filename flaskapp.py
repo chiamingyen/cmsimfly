@@ -1865,8 +1865,8 @@ def savePage():
     """save all pages function"""
     page_content = request.form['page_content']
     # when element_format : "html", need to remove the annoying comment to prevent brython exec
-    page_content = [w.replace('// <![CDATA[', '') for w in page_content]
-    page_content = [w.replace('// ]]>', '') for w in page_content]
+    page_content = page_content.replace('// <![CDATA[', '')
+    page_content = page_content.replace('// ]]>', '')
     # check if administrator
     if not isAdmin():
         return redirect("/login")
@@ -1876,8 +1876,8 @@ def savePage():
     shutil.copy2(config_dir + "content.htm", config_dir + "content_backup.htm")
     # in Windows client operator, to avoid textarea add extra \n
     # fix list object has no attribute "replace"
-    #page_content = page_content.replace("\n","")
-    page_content =  [w.replace('\n', '') for w in page_content]
+    page_content = page_content.replace("\n","")
+    #page_content =  [w.replace('\n', '') for w in page_content]
     with open(config_dir + "content.htm", "w", encoding="utf-8") as f:
         f.write(page_content)
     return redirect("/edit_page")
