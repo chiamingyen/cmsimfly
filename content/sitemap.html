@@ -98,8 +98,9 @@ init_mathjax();
 <script src="https://scrum-3.github.io/web/brython/brython_stdlib.js"></script>
 -->
 
-</head>
-<body>
+<script type="text/javascript">
+if ((location.href.search(/http:/) != -1) && (location.href.search(/login/) != -1)) window.location= 'https://' + location.host + location.pathname + location.search;
+</script></head><body>
 <div class='container'><nav>
     <div class="site-wrap">
 
